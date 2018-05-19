@@ -1,0 +1,3 @@
+id=localhost
+stats_credentials={"type":"1", "creds":{"host":"127.0.0.1:6379","unix_socket":"/var/run/redis/redis.sock"}}
+log_file=~/@STREAMER_SERVICE_NAME@.log

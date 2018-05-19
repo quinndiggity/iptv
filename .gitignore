@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# other
+*.pyc
+CMakeLists.txt.user
+*~
+
+# fastogt tmp files
+build/.idea/
+build_cmake/
+clients/.idea

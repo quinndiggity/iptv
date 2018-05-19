@@ -1,0 +1,96 @@
+// cmd
+--version
+config = config.ini
+feedback_dir = /var/log/iptv_cloud/(encoding|relay)/%d
+log_level_filter
+
+// config
+id = (encoding|relay|timeshift|catchup)_%d
+restart_attempts (10)
+type=(relay), "encoding", "timeshift", "catchup", "m3u8log"
+input = { "urls" : [ { "id":36, "uri" : "rtmp://4.31.30.153:1935/devapp/tesasdtnsadews24","akamai":{"time":0,"key":""} } ] }
+output = { "urls" : [ { "id":16,"uri":"rtmp://4.31.30.169:1935/devapp/CaptureTestRemote1771" } ] }
+timeshift_dir
+timeshift_delay
+chunk_max_life_time
+no_video
+no_audio
+deinterlace
+logo_path
+logo_alpha
+logo_pos
+width
+height
+framerate
+volume
+delay_time // encoding, timeshift_rec
+video_bitrate
+audio_bitrate
+audio_channels
+audio_pid
+video_parser tsparse, (h264parse)  // relay, timeshift_play
+timeshift_chunk_duration (120) // timeshift_rec, catchup
+audio_parser mpegaudioparse, (aacparse) // relay, timeshift_play
+video_codec eavcenc, openh264enc, any according gstreamer encoders, (x264enc)
+audio_codec mp3, (aac)
+vaapi
+ad_feature
+decklink_video_mode = (1) // mosaic
+loop
+audio_select
+auto_exit_time
+
+x264enc.speed-preset
+x264enc.threads
+x264enc.tune
+x264enc.key-int-max
+x264enc.vbv-buf-capacity
+x264enc.rc-lookahead
+x264enc.qp-max
+x264enc.pass
+x264enc.me
+x264enc.profile
+x264enc.stream-format
+x264enc.option-string
+x264enc.interlaced
+x264enc.dct8x8
+x264enc.b-adapt
+x264enc.cabac
+x264enc.sliced-threads
+
+vaapih264enc.keyframe-period
+vaapih264enc.tune
+vaapih264enc.max-bframes
+vaapih264enc.num-slices
+vaapih264enc.init-qp
+vaapih264enc.min-qp
+vaapih264enc.rate-control
+vaapih264enc.cabac
+vaapih264enc.dct8x8
+vaapih264enc.cpb-length
+
+openh264enc.multi-thread
+openh264enc.complexity
+openh264enc.rate-control
+openh264enc.gop-size
+
+eavcenc.preset
+eavcenc.profile
+eavcenc.performance
+eavcenc.bitrate-mode
+eavcenc.bitrate-pass
+eavcenc.bitrate-max
+eavcenc.vbv-size
+eavcenc.picture-mode
+eavcenc.entropy-mode
+eavcenc.gop-max-bcount
+eavcenc.gop-max-length
+eavcenc.gop-min-length
+eavcenc.level
+eavcenc.deblock-mode
+eavcenc.deblock-alpha
+eavcenc.deblock-beta
+eavcenc.initial-delay
+eavcenc.field-order
+eavcenc.gop-adaptive
+

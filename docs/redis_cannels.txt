@@ -1,0 +1,5 @@
+stream listen requsts 
+(encoding|relay)_%d 
+
+responce send to
+streamui_(encoding|relay)_%d

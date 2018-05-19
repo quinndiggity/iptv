@@ -1,0 +1,6 @@
+{"cmd": "restart", "type": "soft|hard", "delay": 0 }
+{"cmd": "stop", "delay": 0 }
+{"cmd": "start", "delay": 0 }
+{"cmd": "ping"} => {"cmd": "pong"}
+{"cmd": "play", "uri": "file:///home/sasha/h264_aac.ts"}
+{"cmd": "stop_play", "uri": "file:///home/sasha/dump.mp4"}

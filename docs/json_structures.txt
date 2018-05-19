@@ -1,0 +1,69 @@
+# start new stream
+{ "cmd": "start", "config": {...}, "command_line": {...} }
+
+# restart streams
+{ "cmd": "restart_stream" }
+
+# change save directories
+{ "cmd": "save_directory", "jobs_directory": "...", "timeshifts_directory": "...", "hls_directory": "...", "ads_directory": "...", "playlists_directory": "...", "dvb_directory": "...", "capture_card_directory": "..." }
+
+# stop daemon
+{ "cmd": "stop" }
+
+# restart daemon
+{ "cmd": "restart" }
+
+# activate request
+{ "cmd": "activate_request", "key": "XXXXXXXXXXXXXXXXXX" } => { "cmd": "activate_response", "activated" : true }
+
+# get log of given job
+{ "cmd": "get_log", "id": "...", "feedback_dir": "...", "uri": "..." }
+
+# array of working time ranges  -- available on `job_id:master' key
+[ { "start_time": 1501518307, "end_time": 1501518307 }, { "start_time": 1501521548, "end_time": 1501521548 }, { "start_time": 1501587738, "end_time": 1501587738 }, { "start_time": 1501588597, "end_time": 1501588597 }, { "start_time": 1501593284, "end_time": 1501593284 }, { "start_time": 1501594196, "end_time": 1501594196 }]
+
+# job status -- available on `job_id:slave' key
+{ "id": "relay_71", "input_streams": [ { "id": 204, "last_pull_time": 1505147456, "bytes_in": 4439628, "in_bps": 201801, "is_broken": false } ], "output_streams": [ { "id": 201, "last_push_time": 1505147458, "bytes_out": 2719891, "out_bps": 123631, "is_broken": false } ], "uptime": 21, "rss": 32280, "cpu": 1.0012515644555695, "status_text": "Streaming", "restarts": 0, "start_time": 1505147437, "cur_time": 1505147458 }
+id -- job id
+input_streams -- array of input streams:
+  id             -- stream id
+  last_pull_time -- local unix time when data were received from this input
+  bytes_in       -- total amount of bytes received from this stream
+  in_bps         -- received bytes per second since last update
+  is_broken      -- true if stream doesn't work
+output_streams -- array of output streams:
+  id             -- stream id
+  last_push_time -- local unix time when data were sended to this output
+  bytes_out      -- total amount of bytes sended to this stream
+  out_bps        -- sended bytes per second since last update
+  is_broken      -- true if stream doesn't work
+uptime      -- seconds since last restart 
+rss         -- resident set size, the non-swapped physical memory that a task has used, in kB
+cpu         -- cpu utilization of the process
+status_text -- job status
+restarts    -- number of restarts
+start_time  -- local unix time when job started
+cur_time    -- current local unix time
+
+# system stats -- available on `node_id:stats' key
+{ "cpu": 0.650,"gpu": 0,"load_average": "2112 3904 2464","memory_total": 16302724,"memory_free": 14881536,"memory_availible": 15291576,"hdd_total": 232105976,"hdd_free": 191327580,"bandwidth_in": 254,"bandwidth_out": 76,"uptime": 342 ,"timestamp": 1500555311 ,"streamer_version": "1.17.5.0 beta Revision: ed8f119", "media_library":{"version": "1.12.0","video_codecs": ["x264enc","vaapih264enc","vaapimpeg2enc"], "audio_codecs": ["faac"]} }
+cpu              -- current CPU load
+gpu              -- current GPU load
+load_average     -- system load average over the last 1, 5 and 15 minutes
+memory_total     -- total usable RAM in kB (i.e. physical RAM minus a few reserved bits and the kernel binary code)
+memory_free      -- the amount of physical RAM, in kilobytes, left unused by the system
+memory_available -- an estimate of how much memory is available for starting new applications, without swapping
+hdd_total        -- total amount of HDD memory in kB
+hdd_free         -- amount of unused HDD memory in kB
+bandwidth_in     -- kilobytes received since last update
+bandwidth_out    -- kilobytes sended since last update
+uptime           -- seconds since boot
+timestamp        -- current unix time in UTC
+media_library -- info about installed media library:
+  version      -- gstreamer version
+  video_codecs -- array of available video codecs
+  audio_codecs -- array of available audio codecs
+
+# array of active tasks -- available on `node_id:active_tasks' key
+[ "encoding_122", "encoding_124", "encoding_143", "encoding_187", "encoding_192", "relay_417", "relay_76", "timeshift_player_19", "timeshift_player_25", "timeshift_player_26", "timeshift_player_27", "timeshift_player_30", "timeshift_player_31", "timeshift_recorder_12", "timeshift_recorder_26", "timeshift_recorder_31", "timeshift_recorder_32" ]
+

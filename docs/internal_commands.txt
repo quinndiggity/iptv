@@ -1,0 +1,25 @@
+# quit child command
+{ "cmd": "quit" }
+
+# restart child command
+{ "cmd": "restart" }
+
+# child play ad command
+{ "cmd": "play", "uri": "..." } => { "cmd": "played", "uri": "..."}
+
+# child stop ad command
+{ "cmd": "stop_play", "uri": "..." } => { "cmd": "stop_played", "uri": "..." }
+
+# child dump pipeline command
+{ "cmd": "dump", "uri": "..." } => { "cmd": "dumped", "uri": "..." }
+
+# sources changed response
+{ "cmd": "source_changed", "uri": "..." }
+
+# file posted response
+{ "cmd": "file_posted", "path": "...", "utc": "...", "uri": "...", "key": "..." }
+path -- path to file
+utc  -- unix time in UTC when post request was created
+uri  -- uri where file was posted
+key  -- license key
+
