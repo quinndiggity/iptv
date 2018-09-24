@@ -26,7 +26,7 @@ namespace elements {
 namespace muxer {
 
 class ElementMPEGTSMux : public ElementEx<ELEMENT_MPEGTS_MUX> {
- public:
+public:
   typedef ElementEx<ELEMENT_MPEGTS_MUX> base_class;
   using base_class::base_class;
 };
@@ -34,25 +34,24 @@ class ElementMPEGTSMux : public ElementEx<ELEMENT_MPEGTS_MUX> {
 typedef ElementEx<ELEMENT_RTP_MUX> ElementRTPMux;
 
 class ElementFLVMux : public ElementEx<ELEMENT_FLV_MUX> {
- public:
+public:
   typedef ElementEx<ELEMENT_FLV_MUX> base_class;
   using base_class::base_class;
 
-  void SetStreamable(bool streamable = false);  // Default: false
+  void SetStreamable(bool streamable = false); // Default: false
 };
 
-template <typename T>
-T* make_muxer(element_id_t muxer_id) {
+template <typename T> T *make_muxer(element_id_t muxer_id) {
   return make_element<T>(common::MemSPrintf(MUXER_NAME_1U, muxer_id));
 }
 
-ElementFLVMux* make_flvmux(bool streamable, element_id_t muxer_id);
-ElementRTPMux* make_rtpmux(element_id_t muxer_id);
-ElementMPEGTSMux* make_mpegtsmux(element_id_t muxer_id);
+ElementFLVMux *make_flvmux(bool streamable, element_id_t muxer_id);
+ElementRTPMux *make_rtpmux(element_id_t muxer_id);
+ElementMPEGTSMux *make_mpegtsmux(element_id_t muxer_id);
 
-Element* make_muxer(common::uri::Url::scheme scheme, element_id_t muxer_id);
+Element *make_muxer(common::uri::Url::scheme scheme, element_id_t muxer_id);
 
-}  // namespace muxer
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace muxer
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

@@ -29,79 +29,96 @@
 namespace iptv_cloud {
 namespace stream {
 
-class ProcessWrapper : public common::libev::IoLoopObserver, public IBaseStream::IStreamClient {
- public:
+class ProcessWrapper : public common::libev::IoLoopObserver,
+                       public IBaseStream::IStreamClient {
+public:
   typedef uint64_t seq_id_t;
-  enum constants : uint32_t { restart_attempts = 10, restart_after_frozen_sec = 60 };
+  enum constants : uint32_t {
+    restart_attempts = 10,
+    restart_after_frozen_sec = 60
+  };
 
-  ProcessWrapper(const std::string& process_name,
-                 const std::string& feedback_dir,
-                 const utils::ArgsMap& config_args,
-                 common::libev::IoClient* command_client,
-                 StreamStruct* mem);
+  ProcessWrapper(const std::string &process_name,
+                 const std::string &feedback_dir,
+                 const utils::ArgsMap &config_args,
+                 common::libev::IoClient *command_client, StreamStruct *mem);
   ~ProcessWrapper();
 
   int Exec();
 
- protected:
-  virtual common::Error HandleRequestCommand(common::libev::IoClient* client,
-                                             protocol::sequance_id_t id,
-                                             int argc,
-                                             char* argv[]) WARN_UNUSED_RESULT;
-  virtual common::Error HandleResponceCommand(common::libev::IoClient* client,
-                                              protocol::sequance_id_t id,
-                                              int argc,
-                                              char* argv[]) WARN_UNUSED_RESULT;
+protected:
+  virtual common::ErrnoError
+  HandleRequestCommand(common::libev::IoClient *client,
+                       protocol::sequance_id_t id, int argc,
+                       char *argv[]) WARN_UNUSED_RESULT;
+  virtual common::ErrnoError
+  HandleResponceCommand(common::libev::IoClient *client,
+                        protocol::sequance_id_t id, int argc,
+                        char *argv[]) WARN_UNUSED_RESULT;
 
- private:
+private:
   protocol::sequance_id_t NextRequestID();
 
-  common::Error HandleRequestStopStream(common::libev::IoClient* client,
-                                        protocol::sequance_id_t id,
-                                        int argc,
-                                        char* argv[]) WARN_UNUSED_RESULT;
-  common::Error HandleRequestRestartStream(common::libev::IoClient* client,
-                                           protocol::sequance_id_t id,
-                                           int argc,
-                                           char* argv[]) WARN_UNUSED_RESULT;
+  common::ErrnoError HandleRequestStopStream(common::libev::IoClient *client,
+                                             protocol::sequance_id_t id,
+                                             int argc,
+                                             char *argv[]) WARN_UNUSED_RESULT;
+  common::ErrnoError
+  HandleRequestRestartStream(common::libev::IoClient *client,
+                             protocol::sequance_id_t id, int argc,
+                             char *argv[]) WARN_UNUSED_RESULT;
 
   void Stop();
   void Restart();
 
-  virtual void PreLooped(common::libev::IoLoop* loop) override;
-  virtual void PostLooped(common::libev::IoLoop* loop) override;
-  virtual void Accepted(common::libev::IoClient* client) override;
-  virtual void Moved(common::libev::IoLoop* server, common::libev::IoClient* client) override;
-  virtual void Closed(common::libev::IoClient* client) override;
+  virtual void PreLooped(common::libev::IoLoop *loop) override;
+  virtual void PostLooped(common::libev::IoLoop *loop) override;
+  virtual void Accepted(common::libev::IoClient *client) override;
+  virtual void Moved(common::libev::IoLoop *server,
+                     common::libev::IoClient *client) override;
+  virtual void Closed(common::libev::IoClient *client) override;
 
-  virtual void TimerEmited(common::libev::IoLoop* loop, common::libev::timer_id_t id) override;
+  virtual void TimerEmited(common::libev::IoLoop *loop,
+                           common::libev::timer_id_t id) override;
 
-  virtual void Accepted(common::libev::IoChild* child) override;
-  virtual void Moved(common::libev::IoLoop* server, common::libev::IoChild* child) override;
-  virtual void ChildStatusChanged(common::libev::IoChild* child, int status) override;
+  virtual void Accepted(common::libev::IoChild *child) override;
+  virtual void Moved(common::libev::IoLoop *server,
+                     common::libev::IoChild *child) override;
+  virtual void ChildStatusChanged(common::libev::IoChild *child,
+                                  int status) override;
 
-  virtual void DataReceived(common::libev::IoClient* client) override;
-  virtual void DataReadyToWrite(common::libev::IoClient* client) override;
+  virtual void DataReceived(common::libev::IoClient *client) override;
+  virtual void DataReadyToWrite(common::libev::IoClient *client) override;
 
-  common::Error StreamDataRecived(common::libev::IoClient* client) WARN_UNUSED_RESULT;
+  common::ErrnoError
+  StreamDataRecived(common::libev::IoClient *client) WARN_UNUSED_RESULT;
   void StopStream();
   void RestartStream();
 
-  virtual void OnStatusChanged(IBaseStream* stream, StreamStatus status) override;
-  virtual GstPadProbeInfo* OnCheckReveivedData(IBaseStream* stream, Probe* probe, GstPadProbeInfo* info) override;
-  virtual GstPadProbeInfo* OnCheckReveivedOutputData(IBaseStream* stream, Probe* probe, GstPadProbeInfo* info) override;
-  virtual void OnProbeEvent(IBaseStream* stream, Probe* probe, GstEvent* event) override;
-  virtual void OnPipelineEOS(IBaseStream* stream) override;
-  virtual void OnTimeoutUpdated(IBaseStream* stream) override;
-  virtual void OnSyncMessageReceived(IBaseStream* stream, GstMessage* message) override;
-  virtual void OnASyncMessageReceived(IBaseStream* stream, GstMessage* message) override;
-  virtual void OnInputChanged(const InputUri& uri) override;
+  virtual void OnStatusChanged(IBaseStream *stream,
+                               StreamStatus status) override;
+  virtual GstPadProbeInfo *OnCheckReveivedData(IBaseStream *stream,
+                                               Probe *probe,
+                                               GstPadProbeInfo *info) override;
+  virtual GstPadProbeInfo *
+  OnCheckReveivedOutputData(IBaseStream *stream, Probe *probe,
+                            GstPadProbeInfo *info) override;
+  virtual void OnProbeEvent(IBaseStream *stream, Probe *probe,
+                            GstEvent *event) override;
+  virtual void OnPipelineEOS(IBaseStream *stream) override;
+  virtual void OnTimeoutUpdated(IBaseStream *stream) override;
+  virtual void OnSyncMessageReceived(IBaseStream *stream,
+                                     GstMessage *message) override;
+  virtual void OnASyncMessageReceived(IBaseStream *stream,
+                                      GstMessage *message) override;
+  virtual void OnInputChanged(const InputUri &uri) override;
 
-  virtual void OnPipelineCreated(IBaseStream* stream) override;
+  virtual void OnPipelineCreated(IBaseStream *stream) override;
 
-  common::ErrnoError SendResponceToParent(const std::string& cmd) WARN_UNUSED_RESULT;
+  common::ErrnoError
+  SendResponceToParent(const std::string &cmd) WARN_UNUSED_RESULT;
 
-  void DumpStreamStatus(StreamStruct* stat, StreamStatus st);
+  void DumpStreamStatus(StreamStruct *stat, StreamStatus st);
 
   size_t max_restart_attempts_;
   const std::string process_name_;
@@ -115,18 +132,18 @@ class ProcessWrapper : public common::libev::IoLoopObserver, public IBaseStream:
   std::string channel_id_;
 
   std::thread ev_thread_;
-  common::libev::IoLoop* loop_;
+  common::libev::IoLoop *loop_;
   common::libev::timer_id_t ttl_master_timer_;
   time_t ttl_sec_;
   common::threads::barrier libev_stated_;
 
-  StreamStruct* mem_;
+  StreamStruct *mem_;
 
   //
-  IBaseStream* origin_;
+  IBaseStream *origin_;
 
   std::atomic<seq_id_t> id_;
 };
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

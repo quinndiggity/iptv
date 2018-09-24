@@ -18,21 +18,22 @@
 namespace iptv_cloud {
 namespace server {
 
-class StopStreamInfo : public common::serializer::JsonSerializer<StopStreamInfo> {
- public:
+class StopStreamInfo
+    : public common::serializer::JsonSerializer<StopStreamInfo> {
+public:
   typedef JsonSerializer<StopStreamInfo> base_class;
   StopStreamInfo();
-  explicit StopStreamInfo(const std::string& stream_id);
+  explicit StopStreamInfo(const std::string &stream_id);
 
   std::string GetStreamID() const;
 
- protected:
-  virtual common::Error DoDeSerialize(json_object* serialized) override;
-  virtual common::Error SerializeFields(json_object* out) const override;
+protected:
+  virtual common::Error DoDeSerialize(json_object *serialized) override;
+  virtual common::Error SerializeFields(json_object *out) const override;
 
- private:
+private:
   std::string stream_id_;
 };
 
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace server
+} // namespace iptv_cloud

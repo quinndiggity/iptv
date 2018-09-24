@@ -18,6 +18,6 @@ namespace iptv_cloud {
 namespace stream {
 namespace elements {
 namespace sources {}
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

@@ -22,46 +22,65 @@
 #define STOP_STREAM_RESP_SUCCESS GENEATATE_SUCCESS(STOP_STREAM)
 #define STOP_STREAM_RESP_FAIL_1E GENEATATE_FAIL_FMT(STOP_STREAM, "'%s'")
 
-#define CHANGED_SOURCES_STREAM_REQ_1E GENERATE_REQUEST_FMT_ARGS(CHANGED_SOURCES_STREAM, "'%s'")
-#define CHANGED_SOURCES_STREAM_RESP_SUCCESS GENEATATE_SUCCESS(CHANGED_SOURCES_STREAM)
-#define CHANGED_SOURCES_STREAM_RESP_FAIL_1E GENEATATE_FAIL_FMT(CHANGED_SOURCES_STREAM, "'%s'")
+#define CHANGED_SOURCES_STREAM_REQ_1E                                          \
+  GENERATE_REQUEST_FMT_ARGS(CHANGED_SOURCES_STREAM, "'%s'")
+#define CHANGED_SOURCES_STREAM_RESP_SUCCESS                                    \
+  GENEATATE_SUCCESS(CHANGED_SOURCES_STREAM)
+#define CHANGED_SOURCES_STREAM_RESP_FAIL_1E                                    \
+  GENEATATE_FAIL_FMT(CHANGED_SOURCES_STREAM, "'%s'")
 
-#define STATISTIC_STREAM_REQ_1E GENERATE_REQUEST_FMT_ARGS(STATISTIC_STREAM, "'%s'")
+#define STATISTIC_STREAM_REQ_1E                                                \
+  GENERATE_REQUEST_FMT_ARGS(STATISTIC_STREAM, "'%s'")
 #define STATISTIC_STREAM_RESP_SUCCESS GENEATATE_SUCCESS(STATISTIC_STREAM)
-#define STATISTIC_STREAM_RESP_FAIL_1E GENEATATE_FAIL_FMT(STATISTIC_STREAM, "'%s'")
+#define STATISTIC_STREAM_RESP_FAIL_1E                                          \
+  GENEATATE_FAIL_FMT(STATISTIC_STREAM, "'%s'")
 
 namespace iptv_cloud {
 
-protocol::request_t RestartStreamRequest(protocol::sequance_id_t id, protocol::serializet_t msg) {
-  return common::protocols::three_way_handshake::MakeRequest(id, RESTART_STREAM_REQ_1E, msg);
+protocol::request_t RestartStreamRequest(protocol::sequance_id_t id,
+                                         protocol::serializet_t msg) {
+  return common::protocols::three_way_handshake::MakeRequest(
+      id, RESTART_STREAM_REQ_1E, msg);
 }
 
 protocol::responce_t RestartStreamResponceSuccess(protocol::sequance_id_t id) {
-  return common::protocols::three_way_handshake::MakeResponce(id, RESTART_STREAM_RESP_SUCCESS);
+  return common::protocols::three_way_handshake::MakeResponce(
+      id, RESTART_STREAM_RESP_SUCCESS);
 }
 
-protocol::request_t StopStreamRequest(protocol::sequance_id_t id, protocol::serializet_t msg) {
-  return common::protocols::three_way_handshake::MakeRequest(id, STOP_STREAM_REQ_1E, msg);
+protocol::request_t StopStreamRequest(protocol::sequance_id_t id,
+                                      protocol::serializet_t msg) {
+  return common::protocols::three_way_handshake::MakeRequest(
+      id, STOP_STREAM_REQ_1E, msg);
 }
 
 protocol::responce_t StopStreamResponceSuccess(protocol::sequance_id_t id) {
-  return common::protocols::three_way_handshake::MakeResponce(id, STOP_STREAM_RESP_SUCCESS);
+  return common::protocols::three_way_handshake::MakeResponce(
+      id, STOP_STREAM_RESP_SUCCESS);
 }
 
-protocol::request_t ChangedSourcesStreamRequest(protocol::sequance_id_t id, protocol::serializet_t msg) {
-  return common::protocols::three_way_handshake::MakeRequest(id, CHANGED_SOURCES_STREAM_REQ_1E, msg);
+protocol::request_t ChangedSourcesStreamRequest(protocol::sequance_id_t id,
+                                                protocol::serializet_t msg) {
+  return common::protocols::three_way_handshake::MakeRequest(
+      id, CHANGED_SOURCES_STREAM_REQ_1E, msg);
 }
 
-protocol::responce_t ChangedSourcesStreamResponceSuccess(protocol::sequance_id_t id) {
-  return common::protocols::three_way_handshake::MakeResponce(id, CHANGED_SOURCES_STREAM_RESP_SUCCESS);
+protocol::responce_t
+ChangedSourcesStreamResponceSuccess(protocol::sequance_id_t id) {
+  return common::protocols::three_way_handshake::MakeResponce(
+      id, CHANGED_SOURCES_STREAM_RESP_SUCCESS);
 }
 
-protocol::request_t StatisticStreamRequest(protocol::sequance_id_t id, protocol::serializet_t msg) {
-  return common::protocols::three_way_handshake::MakeRequest(id, STATISTIC_STREAM_REQ_1E, msg);
+protocol::request_t StatisticStreamRequest(protocol::sequance_id_t id,
+                                           protocol::serializet_t msg) {
+  return common::protocols::three_way_handshake::MakeRequest(
+      id, STATISTIC_STREAM_REQ_1E, msg);
 }
 
-protocol::responce_t StatisticStreamResponceSuccess(protocol::sequance_id_t id) {
-  return common::protocols::three_way_handshake::MakeResponce(id, STATISTIC_STREAM_RESP_SUCCESS);
+protocol::responce_t
+StatisticStreamResponceSuccess(protocol::sequance_id_t id) {
+  return common::protocols::three_way_handshake::MakeResponce(
+      id, STATISTIC_STREAM_RESP_SUCCESS);
 }
 
-}  // namespace iptv_cloud
+} // namespace iptv_cloud

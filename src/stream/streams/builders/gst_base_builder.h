@@ -26,8 +26,8 @@ namespace builders {
 // input => prepostproc (udb) => | postproc (raw image) | => convert => output
 
 class GstBaseBuilder : public IBaseBuilder {
- public:
-  GstBaseBuilder(Config* api, IBaseBuilderObserver* observer);
+public:
+  GstBaseBuilder(Config *api, IBaseBuilderObserver *observer);
   virtual ~GstBaseBuilder();
 
   virtual Connector BuildInput() = 0;
@@ -37,11 +37,11 @@ class GstBaseBuilder : public IBaseBuilder {
   virtual Connector BuildConverter(Connector conn) = 0;
   virtual Connector BuildOutput(Connector conn) = 0;
 
- protected:
+protected:
   virtual bool InitPipeline() override final;
 };
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

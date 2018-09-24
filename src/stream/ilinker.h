@@ -22,14 +22,15 @@ class Element;
 }
 
 class ILinker {
- public:
-  virtual bool ElementAdd(elements::Element* elem) = 0;
-  virtual bool ElementLink(elements::Element* src, elements::Element* dest) = 0;
-  virtual bool ElementRemove(elements::Element* elem) = 0;
-  virtual bool ElementLinkRemove(elements::Element* src, elements::Element* dest) = 0;
+public:
+  virtual bool ElementAdd(elements::Element *elem) = 0;
+  virtual bool ElementLink(elements::Element *src, elements::Element *dest) = 0;
+  virtual bool ElementRemove(elements::Element *elem) = 0;
+  virtual bool ElementLinkRemove(elements::Element *src,
+                                 elements::Element *dest) = 0;
 
   virtual ~ILinker();
 };
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

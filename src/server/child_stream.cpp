@@ -23,48 +23,42 @@
 namespace iptv_cloud {
 namespace server {
 
-ChildStream::ChildStream(common::libev::IoLoop* server, StreamStruct* mem)
+ChildStream::ChildStream(common::libev::IoLoop *server, StreamStruct *mem)
     : base_class(server), mem_(mem), pipe_client_(nullptr) {}
 
-ChildStream::~ChildStream() {
-  FreeSharedStreamStruct(&mem_);
-}
+ChildStream::~ChildStream() { FreeSharedStreamStruct(&mem_); }
 
-channel_id_t ChildStream::GetChannelId() const {
-  return mem_->id;
-}
+channel_id_t ChildStream::GetChannelId() const { return mem_->id; }
 
-bool ChildStream::Equals(const ChildStream& stream) const {
+bool ChildStream::Equals(const ChildStream &stream) const {
   return mem_->id == stream.mem_->id;
 }
 
-pipe::PipeClient* ChildStream::GetPipe() const {
-  return pipe_client_;
-}
+pipe::PipeClient *ChildStream::GetPipe() const { return pipe_client_; }
 
-void ChildStream::SetPipe(pipe::PipeClient* pipe) {
-  pipe_client_ = pipe;
-}
+void ChildStream::SetPipe(pipe::PipeClient *pipe) { pipe_client_ = pipe; }
 
-common::Error ChildStream::SendStop(protocol::sequance_id_t id) {
+common::ErrnoError ChildStream::SendStop(protocol::sequance_id_t id) {
   if (!pipe_client_) {
-    return common::make_error_inval();
+    return common::make_errno_error_inval();
   }
 
-  pipe::ProtocoledPipeClient* pipe = static_cast<pipe::ProtocoledPipeClient*>(pipe_client_);
+  pipe::ProtocoledPipeClient *pipe =
+      static_cast<pipe::ProtocoledPipeClient *>(pipe_client_);
   protocol::request_t req = StopStreamRequest(id, "{}");
   return pipe->WriteRequest(req);
 }
 
-common::Error ChildStream::SendRestart(protocol::sequance_id_t id) {
+common::ErrnoError ChildStream::SendRestart(protocol::sequance_id_t id) {
   if (!pipe_client_) {
-    return common::make_error_inval();
+    return common::make_errno_error_inval();
   }
 
-  pipe::ProtocoledPipeClient* pipe = static_cast<pipe::ProtocoledPipeClient*>(pipe_client_);
+  pipe::ProtocoledPipeClient *pipe =
+      static_cast<pipe::ProtocoledPipeClient *>(pipe_client_);
   protocol::request_t req = RestartStreamRequest(id, "{}");
   return pipe->WriteRequest(req);
 }
 
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace server
+} // namespace iptv_cloud

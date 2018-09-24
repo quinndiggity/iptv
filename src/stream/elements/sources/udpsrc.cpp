@@ -19,26 +19,23 @@ namespace stream {
 namespace elements {
 namespace sources {
 
-void ElementUDPSrc::SetUri(const std::string& uri) {
-  SetProperty("uri", uri);
-}
+void ElementUDPSrc::SetUri(const std::string &uri) { SetProperty("uri", uri); }
 
-void ElementUDPSrc::SetAddress(const std::string& host) {
+void ElementUDPSrc::SetAddress(const std::string &host) {
   SetProperty("address", host);
 }
 
-void ElementUDPSrc::SetPort(uint16_t port) {
-  SetProperty("port", port);
-}
+void ElementUDPSrc::SetPort(uint16_t port) { SetProperty("port", port); }
 
-ElementUDPSrc* make_udp_src(const common::net::HostAndPort& host, element_id_t input_id) {
-  ElementUDPSrc* udpsrc = make_sources<ElementUDPSrc>(input_id);
+ElementUDPSrc *make_udp_src(const common::net::HostAndPort &host,
+                            element_id_t input_id) {
+  ElementUDPSrc *udpsrc = make_sources<ElementUDPSrc>(input_id);
   udpsrc->SetAddress(host.GetHost());
   udpsrc->SetPort(host.GetPort());
   return udpsrc;
 }
 
-}  // namespace sources
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sources
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

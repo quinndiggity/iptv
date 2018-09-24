@@ -44,15 +44,15 @@
 namespace iptv_cloud {
 namespace stream {
 
-bool IsScreenUrl(const common::uri::Url& url) {
+bool IsScreenUrl(const common::uri::Url &url) {
   return url == common::uri::Url(SCREEN_URL);
 }
 
-bool IsDecklinkUrl(const common::uri::Url& url) {
+bool IsDecklinkUrl(const common::uri::Url &url) {
   return url == common::uri::Url(DECKLINK_URL);
 }
 
-bool IsDeviceOutUrl(const common::uri::Url& url, SinkDeviceType* type) {
+bool IsDeviceOutUrl(const common::uri::Url &url, SinkDeviceType *type) {
   if (IsScreenUrl(url)) {
     if (type) {
       *type = SCREEN_OUTPUT;
@@ -68,15 +68,15 @@ bool IsDeviceOutUrl(const common::uri::Url& url, SinkDeviceType* type) {
   return false;
 }
 
-bool IsRecordingUrl(const common::uri::Url& url) {
+bool IsRecordingUrl(const common::uri::Url &url) {
   return url == common::uri::Url(RECORDING_URL);
 }
 
-bool IsFakeUrl(const common::uri::Url& url) {
+bool IsFakeUrl(const common::uri::Url &url) {
   return url == common::uri::Url(FAKE_URL);
 }
 
-bool GetElementId(const std::string& name, element_id_t* elem_id) {
+bool GetElementId(const std::string &name, element_id_t *elem_id) {
   if (!elem_id) {
     return false;
   }
@@ -94,7 +94,7 @@ bool GetElementId(const std::string& name, element_id_t* elem_id) {
   return true;
 }
 
-bool GetPadId(const std::string& name, int* pad_id) {
+bool GetPadId(const std::string &name, int *pad_id) {
   if (!pad_id) {
     return false;
   }
@@ -112,7 +112,7 @@ bool GetPadId(const std::string& name, int* pad_id) {
   return true;
 }
 
-bool IsOtherFromType(const std::string& type, SupportedOtherType* oc) {
+bool IsOtherFromType(const std::string &type, SupportedOtherType *oc) {
   if (type.empty() || !oc) {
     return false;
   }
@@ -143,7 +143,7 @@ bool IsOtherFromType(const std::string& type, SupportedOtherType* oc) {
   return false;
 }
 
-bool IsDemuxerFromType(const std::string& type, SupportedDemuxers* dc) {
+bool IsDemuxerFromType(const std::string &type, SupportedDemuxers *dc) {
   if (type.empty() || !dc) {
     return false;
   }
@@ -159,7 +159,7 @@ bool IsDemuxerFromType(const std::string& type, SupportedDemuxers* dc) {
   return false;
 }
 
-bool IsVideoCodecFromType(const std::string& type, SupportedVideoCodecs* vc) {
+bool IsVideoCodecFromType(const std::string &type, SupportedVideoCodecs *vc) {
   if (type.empty() || !vc) {
     return false;
   }
@@ -178,7 +178,7 @@ bool IsVideoCodecFromType(const std::string& type, SupportedVideoCodecs* vc) {
   return false;
 }
 
-bool IsAudioCodecFromType(const std::string& type, SupportedAudioCodecs* ac) {
+bool IsAudioCodecFromType(const std::string &type, SupportedAudioCodecs *ac) {
   if (type.empty() || !ac) {
     return false;
   }
@@ -194,7 +194,7 @@ bool IsAudioCodecFromType(const std::string& type, SupportedAudioCodecs* ac) {
   return false;
 }
 
-bool IsRawStreamFromType(const std::string& type, SupportedRawStreams* rc) {
+bool IsRawStreamFromType(const std::string &type, SupportedRawStreams *rc) {
   if (type.empty() || !rc) {
     return false;
   }
@@ -214,7 +214,7 @@ std::string GenHttpTsTemplate(time_t msec) {
   return common::MemSPrintf("%lu_%s", msec, TS_TEMPLATE);
 }
 
-bool GetIndexFromHttpTsTemplate(const std::string& file_name, uint64_t* index) {
+bool GetIndexFromHttpTsTemplate(const std::string &file_name, uint64_t *index) {
   if (!index) {
     return false;
   }
@@ -231,5 +231,5 @@ bool GetIndexFromHttpTsTemplate(const std::string& file_name, uint64_t* index) {
   return false;
 }
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

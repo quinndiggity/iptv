@@ -22,23 +22,24 @@ namespace utils {
 
 ChunkInfo::ChunkInfo() : path(), duration(0), index(0) {}
 
-ChunkInfo::ChunkInfo(const std::string& path, uint64_t duration, uint64_t index)
+ChunkInfo::ChunkInfo(const std::string &path, uint64_t duration, uint64_t index)
     : path(path), duration(duration), index(index) {}
 
 double ChunkInfo::GetDurationInSecconds() const {
   return duration / static_cast<double>(SECOND);
 }
 
-}  // namespace utils
-}  // namespace iptv_cloud
+} // namespace utils
+} // namespace iptv_cloud
 
 namespace common {
 
-std::string ConvertToString(const iptv_cloud::utils::ChunkInfo& value) {
+std::string ConvertToString(const iptv_cloud::utils::ChunkInfo &value) {
   return MemSPrintf("%s:%llu:%llu", value.path, value.index, value.duration);
 }
 
-bool ConvertFromString(const std::string& from, iptv_cloud::utils::ChunkInfo* out) {
+bool ConvertFromString(const std::string &from,
+                       iptv_cloud::utils::ChunkInfo *out) {
   if (from.empty() || !out) {
     return false;
   }
@@ -75,4 +76,4 @@ bool ConvertFromString(const std::string& from, iptv_cloud::utils::ChunkInfo* ou
   *out = res;
   return true;
 }
-}  // namespace common
+} // namespace common

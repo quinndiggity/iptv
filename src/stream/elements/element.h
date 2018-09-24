@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <string>  // for string
+#include <string> // for string
 #include <vector>
 
 #include <gst/gstbin.h>
@@ -22,7 +22,11 @@
 
 #include <common/macros.h>
 
-enum GstAutoplugSelectResult { GST_AUTOPLUG_SELECT_TRY, GST_AUTOPLUG_SELECT_EXPOSE, GST_AUTOPLUG_SELECT_SKIP };
+enum GstAutoplugSelectResult {
+  GST_AUTOPLUG_SELECT_TRY,
+  GST_AUTOPLUG_SELECT_EXPOSE,
+  GST_AUTOPLUG_SELECT_SKIP
+};
 
 namespace iptv_cloud {
 namespace stream {
@@ -124,271 +128,290 @@ enum SupportedElements {
   ELEMENTS_COUNT
 };
 
-template <SupportedElements el>
-struct ElementsTraits {
+template <SupportedElements el> struct ElementsTraits {
   enum { value = el };
-  static const char* name();
+  static const char *name();
 };
 
 // wrapper for GstElement
 class Element {
- public:
-  std::string GetPluginName() const;  // gst plugin name
+public:
+  std::string GetPluginName() const; // gst plugin name
   std::string GetName() const;
   bool IsValid() const;
 
-  GstElement* GetGstElement() const;
-  pad::Pad* StaticPad(const gchar* name) const;   // allocate pad::Pad
-  pad::Pad* RequestPad(const gchar* name) const;  // allocate pad::Pad
-  void ReleaseRequestedPad(pad::Pad* pad);
+  GstElement *GetGstElement() const;
+  pad::Pad *StaticPad(const gchar *name) const;  // allocate pad::Pad
+  pad::Pad *RequestPad(const gchar *name) const; // allocate pad::Pad
+  void ReleaseRequestedPad(pad::Pad *pad);
 
   virtual ~Element();
 
-  void SetProperty(const char* property, bool val);
-  void SetProperty(const char* property, gfloat val);
-  void SetProperty(const char* property, gdouble val);
-  void SetProperty(const char* property, gint8 val);
-  void SetProperty(const char* property, guint8 val);
-  void SetProperty(const char* property, gint16 val);
-  void SetProperty(const char* property, guint16 val);
-  void SetProperty(const char* property, gint val);
-  void SetProperty(const char* property, guint val);
-  void SetProperty(const char* property, gint64 val);
-  void SetProperty(const char* property, guint64 val);
-  void SetProperty(const char* property, const char* val);
-  void SetProperty(const char* property, const std::string& val);
-  void SetProperty(const char* property, void* val);
-  void SetFractionProperty(const char* property, gint num, gint den);
+  void SetProperty(const char *property, bool val);
+  void SetProperty(const char *property, gfloat val);
+  void SetProperty(const char *property, gdouble val);
+  void SetProperty(const char *property, gint8 val);
+  void SetProperty(const char *property, guint8 val);
+  void SetProperty(const char *property, gint16 val);
+  void SetProperty(const char *property, guint16 val);
+  void SetProperty(const char *property, gint val);
+  void SetProperty(const char *property, guint val);
+  void SetProperty(const char *property, gint64 val);
+  void SetProperty(const char *property, guint64 val);
+  void SetProperty(const char *property, const char *val);
+  void SetProperty(const char *property, const std::string &val);
+  void SetProperty(const char *property, void *val);
+  void SetFractionProperty(const char *property, gint num, gint den);
 
-  GValue GetProperty(const char* property, GType type) const;
+  GValue GetProperty(const char *property, GType type) const;
 
-  static std::string GetElementName(GstElement* element);
-  static std::string GetPluginName(GstElement* element);
+  static std::string GetElementName(GstElement *element);
+  static std::string GetPluginName(GstElement *element);
 
- protected:
-  Element(const std::string& plugin_name, const std::string& name);  // allocate element
-  Element(const std::string& plugin_name,
-          const std::string& name,
-          GstElement* const element);  // take poiner of element
+protected:
+  Element(const std::string &plugin_name,
+          const std::string &name); // allocate element
+  Element(const std::string &plugin_name, const std::string &name,
+          GstElement *const element); // take poiner of element
 
-  gboolean RegisterCallback(const char* signal_name, GCallback cb, gpointer user_data) WARN_UNUSED_RESULT;
+  gboolean RegisterCallback(const char *signal_name, GCallback cb,
+                            gpointer user_data) WARN_UNUSED_RESULT;
 
- private:
+private:
   void UnRegisterCallback(gulong signal_id);
 
   const std::string name_;
   const std::string plugin_name_;
-  GstElement* const element_;
+  GstElement *const element_;
 
   std::vector<gulong> signals_;
 };
 
-template <SupportedElements el>
-class ElementEx : public Element {
- public:
+template <SupportedElements el> class ElementEx : public Element {
+public:
   typedef ElementsTraits<el> traits_t;
   typedef Element base_class;
 
-  ElementEx(const std::string& name) : Element(GetPluginName(), name) {}  // allocate element
-  ElementEx(const std::string& name, GstElement* const element)
-      : Element(GetPluginName(), name, element) {}  // take poiner of element, only wrap
+  ElementEx(const std::string &name)
+      : Element(GetPluginName(), name) {} // allocate element
+  ElementEx(const std::string &name, GstElement *const element)
+      : Element(GetPluginName(), name, element) {
+  } // take poiner of element, only wrap
 
   static std::string GetPluginName() { return traits_t::name(); }
 };
 
-template <SupportedElements el>
-class ElementBinEx : public ElementEx<el> {
- public:
+template <SupportedElements el> class ElementBinEx : public ElementEx<el> {
+public:
   typedef ElementEx<el> base_class;
   using base_class::base_class;
 
-  typedef void (*element_added_callback_t)(GstBin* bin, GstElement* element, gpointer user_data);
-  typedef void (*element_removed_callback_t)(GstBin* bin, GstElement* element, gpointer user_data);
-  typedef void (*element_deep_added_callback_t)(GstBin* bin, GstBin* sub_bin, GstElement* element, gpointer user_data);
-  typedef void (*element_deep_removed_callback_t)(GstBin* bin,
-                                                  GstBin* sub_bin,
-                                                  GstElement* element,
+  typedef void (*element_added_callback_t)(GstBin *bin, GstElement *element,
+                                           gpointer user_data);
+  typedef void (*element_removed_callback_t)(GstBin *bin, GstElement *element,
+                                             gpointer user_data);
+  typedef void (*element_deep_added_callback_t)(GstBin *bin, GstBin *sub_bin,
+                                                GstElement *element,
+                                                gpointer user_data);
+  typedef void (*element_deep_removed_callback_t)(GstBin *bin, GstBin *sub_bin,
+                                                  GstElement *element,
                                                   gpointer user_data);
 
-  GstElement* GetElementByName(const char* name) {
+  GstElement *GetElementByName(const char *name) {
     return gst_bin_get_by_name(GST_BIN(base_class::GetGstElement()), name);
   }
 
-  gboolean RegisterElementAdded(element_added_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT {
-    return base_class::RegisterCallback("element-added", G_CALLBACK(cb), user_data);
+  gboolean RegisterElementAdded(element_added_callback_t cb,
+                                gpointer user_data) WARN_UNUSED_RESULT {
+    return base_class::RegisterCallback("element-added", G_CALLBACK(cb),
+                                        user_data);
   }
 
-  gboolean RegisterElementRemoved(element_removed_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT {
-    return base_class::RegisterCallback("element-removed", G_CALLBACK(cb), user_data);
+  gboolean RegisterElementRemoved(element_removed_callback_t cb,
+                                  gpointer user_data) WARN_UNUSED_RESULT {
+    return base_class::RegisterCallback("element-removed", G_CALLBACK(cb),
+                                        user_data);
   }
 
-  gboolean RegisterDeepElementAdded(element_deep_added_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT {
-    return base_class::RegisterCallback("deep-element-added", G_CALLBACK(cb), user_data);
+  gboolean RegisterDeepElementAdded(element_deep_added_callback_t cb,
+                                    gpointer user_data) WARN_UNUSED_RESULT {
+    return base_class::RegisterCallback("deep-element-added", G_CALLBACK(cb),
+                                        user_data);
   }
 
-  gboolean RegisterDeepElementRemoved(element_deep_removed_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT {
-    return base_class::RegisterCallback("deep-element-removed", G_CALLBACK(cb), user_data);
+  gboolean RegisterDeepElementRemoved(element_deep_removed_callback_t cb,
+                                      gpointer user_data) WARN_UNUSED_RESULT {
+    return base_class::RegisterCallback("deep-element-removed", G_CALLBACK(cb),
+                                        user_data);
   }
 };
 
 // decoders elements
 class ElementDecodebin : public ElementBinEx<ELEMENT_DECODEBIN> {
- public:
+public:
   typedef ElementBinEx<ELEMENT_DECODEBIN> base_class;
   using base_class::base_class;
 
-  typedef void (*pad_added_callback_t)(GstElement* src, GstPad* new_pad, gpointer user_data);
-  typedef gboolean (*autoplug_continue_callback_t)(GstElement* elem, GstPad* pad, GstCaps* caps, gpointer user_data);
-
-  typedef GValueArray* (*autoplug_sort_callback_t)(GstElement* bin,
-                                                   GstPad* pad,
-                                                   GstCaps* caps,
-                                                   GValueArray* factories,
+  typedef void (*pad_added_callback_t)(GstElement *src, GstPad *new_pad,
+                                       gpointer user_data);
+  typedef gboolean (*autoplug_continue_callback_t)(GstElement *elem,
+                                                   GstPad *pad, GstCaps *caps,
                                                    gpointer user_data);
-  typedef GstAutoplugSelectResult (*autoplug_select_callback_t)(GstElement* bin,
-                                                                GstPad* pad,
-                                                                GstCaps* caps,
-                                                                GstElementFactory* factory,
-                                                                gpointer user_data);
 
-  void SetUseBuffering(bool use_buffering = false);  // Default: false
+  typedef GValueArray *(*autoplug_sort_callback_t)(GstElement *bin, GstPad *pad,
+                                                   GstCaps *caps,
+                                                   GValueArray *factories,
+                                                   gpointer user_data);
+  typedef GstAutoplugSelectResult (*autoplug_select_callback_t)(
+      GstElement *bin, GstPad *pad, GstCaps *caps, GstElementFactory *factory,
+      gpointer user_data);
 
-  gboolean RegisterPadAddedCallback(pad_added_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT;
-  gboolean RegisterAutoplugContinue(autoplug_continue_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT;
-  gboolean RegisterAutoplugSelect(autoplug_select_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT;
-  gboolean RegisterAutoplugSort(autoplug_sort_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT;
+  void SetUseBuffering(bool use_buffering = false); // Default: false
+
+  gboolean RegisterPadAddedCallback(pad_added_callback_t cb,
+                                    gpointer user_data) WARN_UNUSED_RESULT;
+  gboolean RegisterAutoplugContinue(autoplug_continue_callback_t cb,
+                                    gpointer user_data) WARN_UNUSED_RESULT;
+  gboolean RegisterAutoplugSelect(autoplug_select_callback_t cb,
+                                  gpointer user_data) WARN_UNUSED_RESULT;
+  gboolean RegisterAutoplugSort(autoplug_sort_callback_t cb,
+                                gpointer user_data) WARN_UNUSED_RESULT;
 };
 
 class ElementVaapiDecodebin : public ElementBinEx<ELEMENT_VAAPI_DECODEBIN> {
- public:
+public:
   typedef ElementBinEx<ELEMENT_VAAPI_DECODEBIN> base_class;
   using base_class::base_class;
 };
 
 class ElementVaapiPostProc : public ElementBinEx<ELEMENT_VAAPI_POST_PROC> {
- public:
+public:
   typedef ElementBinEx<ELEMENT_VAAPI_POST_PROC> base_class;
   using base_class::base_class;
 
-  void SetDinterlaceMode(gint deinterlace_method = 0);  // Default value: Auto Detection (0),
-                                                        // Allowed values: Auto Detection (0),
-                                                        //                 Force Deinterlace (1),
-                                                        //                 Never Deinterlace (2)
+  void SetDinterlaceMode(
+      gint deinterlace_method = 0); // Default value: Auto Detection (0),
+                                    // Allowed values: Auto Detection (0),
+                                    //                 Force Deinterlace (1),
+                                    //                 Never Deinterlace (2)
 
-  void SetFormat(gint format = 1);                // Default value: Encoded (1),
-  void SetWidth(guint width = 0);                 // Range: 0 - 2147483647 Default: 0
-  void SetHeight(guint height = 0);               // Range: 0 - 2147483647 Default: 0
-  void SetForceAspectRatio(bool ratio = true);    // Default: true
-  void SetScaleMethod(guint met = 0);             // Range: 1 - 2 Default: 0
-  void SetDeinerlaceMethod(guint met = 1);        // Range: 1 - 4 Default: 1, "bob"
-  void SetDenoise(gfloat denoise = 0);            // Range: [0,1] Default: 0"
-  void SetSkinToneEnhancement(bool val = false);  // Default: false
+  void SetFormat(gint format = 1);  // Default value: Encoded (1),
+  void SetWidth(guint width = 0);   // Range: 0 - 2147483647 Default: 0
+  void SetHeight(guint height = 0); // Range: 0 - 2147483647 Default: 0
+  void SetForceAspectRatio(bool ratio = true); // Default: true
+  void SetScaleMethod(guint met = 0);          // Range: 1 - 2 Default: 0
+  void SetDeinerlaceMethod(guint met = 1);     // Range: 1 - 4 Default: 1, "bob"
+  void SetDenoise(gfloat denoise = 0);         // Range: [0,1] Default: 0"
+  void SetSkinToneEnhancement(bool val = false); // Default: false
 };
 
 class ElementMFXVpp : public ElementEx<ELEMENT_MFX_VPP> {
- public:
+public:
   typedef ElementEx<ELEMENT_MFX_VPP> base_class;
   using base_class::base_class;
-  void SetForceAspectRatio(bool ratio = true);  // Default: true
-  void SetWidth(gint width = 0);                // Range: 0 - 2147483647 Default: 0
-  void SetHeight(gint height = 0);              // Range: 0 - 2147483647 Default: 0
-  void SetFrameRate(int framerate = 0);         // Range: 0 - 2147483647 Default: 0
+  void SetForceAspectRatio(bool ratio = true); // Default: true
+  void SetWidth(gint width = 0);        // Range: 0 - 2147483647 Default: 0
+  void SetHeight(gint height = 0);      // Range: 0 - 2147483647 Default: 0
+  void SetFrameRate(int framerate = 0); // Range: 0 - 2147483647 Default: 0
   void SetDinterlaceMode(int mode);
 };
 
 class ElementMFXH264Decode : public ElementEx<ELEMENT_MFX_H264_DEC> {
- public:
+public:
   typedef ElementEx<ELEMENT_MFX_H264_DEC> base_class;
   using base_class::base_class;
-  void SetLiveMode(bool mode = false);  // Default: false
+  void SetLiveMode(bool mode = false); // Default: false
 };
 
 class ElementAvdecH264 : public ElementEx<ELEMENT_AVDEC_H264> {
- public:
+public:
   typedef ElementEx<ELEMENT_AVDEC_H264> base_class;
   using base_class::base_class;
 
-  void SetMaxThreads(gint threads = 0);  // Default value: 0 (auto), Allowed
-                                         // values: [0, 2147483647]
+  void SetMaxThreads(gint threads = 0); // Default value: 0 (auto), Allowed
+                                        // values: [0, 2147483647]
 
-  void SetSkipFrame(gint skip_frame = 0);  // Default vaule:  Skip Nothing (0)
-                                           // Allowed values: Skip Nothing (0),
-                                           //                 Skip B-Frames (1),
-                                           //                 Skip IDCT-Dequantization (2)
-                                           //                 Skip everything (5)
+  void
+  SetSkipFrame(gint skip_frame = 0); // Default vaule:  Skip Nothing (0)
+                                     // Allowed values: Skip Nothing (0),
+                                     //                 Skip B-Frames (1),
+                                     //                 Skip IDCT-Dequantization
+                                     //                 (2) Skip everything (5)
 
-  void SetOutputCorrupt(gboolean output_corrupt = true);  // Default value: true
+  void SetOutputCorrupt(gboolean output_corrupt = true); // Default value: true
 };
 
 class ElementAvdecAc3 : public ElementEx<ELEMENT_AVDEC_AC3> {
- public:
+public:
   typedef ElementEx<ELEMENT_AVDEC_AC3> base_class;
   using base_class::base_class;
 };
 
 class ElementAvdecAc3Fixed : public ElementEx<ELEMENT_AVDEC_AC3_FIXED> {
- public:
+public:
   typedef ElementEx<ELEMENT_AVDEC_AC3_FIXED> base_class;
   using base_class::base_class;
 };
 
 // demuxer elements
 class ElementHlsDemux : public ElementBinEx<ELEMENT_HLS_DEMUX> {
- public:
+public:
   typedef ElementBinEx<ELEMENT_HLS_DEMUX> base_class;
   using base_class::base_class;
 };
 
 class ElementTsDemux : public ElementBinEx<ELEMENT_TS_DEMUX> {
- public:
+public:
   typedef ElementBinEx<ELEMENT_TS_DEMUX> base_class;
   using base_class::base_class;
 
-  void SetParsePrivateSections(gboolean parse_private_sections = true);  // Default value: true
+  void SetParsePrivateSections(
+      gboolean parse_private_sections = true); // Default value: true
 };
 
 // common elements
 class ElementQueue : public ElementEx<ELEMENT_QUEUE> {
- public:
+public:
   typedef ElementEx<ELEMENT_QUEUE> base_class;
   using base_class::base_class;
 
-  void SetMaxSizeBuffers(guint val = 200);         // 0 - 4294967295 Default: 200
-  void SetMaxSizeTime(guint val = 10485760);       // 0 - 4294967295 Default: 10485760
-  void SetMaxSizeBytes(guint64 val = 1000000000);  // 0 - 18446744073709551615 Default: 1000000000
+  void SetMaxSizeBuffers(guint val = 200);   // 0 - 4294967295 Default: 200
+  void SetMaxSizeTime(guint val = 10485760); // 0 - 4294967295 Default: 10485760
+  void SetMaxSizeBytes(
+      guint64 val = 1000000000); // 0 - 18446744073709551615 Default: 1000000000
 };
 
 class ElementQueue2 : public ElementEx<ELEMENT_QUEUE2> {
- public:
+public:
   typedef ElementEx<ELEMENT_QUEUE2> base_class;
   using base_class::base_class;
 
-  void SetMaxSizeBuffers(guint val = 100);           // 0 - 4294967295 Default: 100
-  void SetMaxSizeTime(guint64 val = 2000000000);     // 0 - 18446744073709551615 Default: 2000000000
-  void SetMaxSizeBytes(guint val = 2097152);         // 0 - 4294967295 Default: 2097152
-  void SetUseBuffering(bool use_buffering = false);  // true - false: false
+  void SetMaxSizeBuffers(guint val = 100); // 0 - 4294967295 Default: 100
+  void SetMaxSizeTime(
+      guint64 val = 2000000000); // 0 - 18446744073709551615 Default: 2000000000
+  void SetMaxSizeBytes(guint val = 2097152); // 0 - 4294967295 Default: 2097152
+  void SetUseBuffering(bool use_buffering = false); // true - false: false
 };
 
 class ElementTee : public ElementEx<ELEMENT_TEE> {
- public:
+public:
   typedef ElementEx<ELEMENT_TEE> base_class;
   using base_class::base_class;
 };
 
 class ElementCapsFilter : public ElementEx<ELEMENT_CAPS_FILTER> {
- public:
+public:
   typedef ElementEx<ELEMENT_CAPS_FILTER> base_class;
   using base_class::base_class;
 
-  void SetCaps(GstCaps* caps);
+  void SetCaps(GstCaps *caps);
 };
 
-template <typename T>
-T* make_element(const std::string& name) {
-  T* element = new T(name);
+template <typename T> T *make_element(const std::string &name) {
+  T *element = new T(name);
   return element;
 }
 
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

@@ -20,33 +20,26 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-AudioVideoConfig::AudioVideoConfig(const base_class& config)
-    : base_class(config), have_video_(true), have_audio_(true), audio_select_(DEFAULT_AUDIO_SELECT) {}
+AudioVideoConfig::AudioVideoConfig(const base_class &config)
+    : base_class(config), have_video_(true), have_audio_(true),
+      audio_select_(DEFAULT_AUDIO_SELECT) {}
 
-bool AudioVideoConfig::HaveVideo() const {
-  return have_video_;
-}
+bool AudioVideoConfig::HaveVideo() const { return have_video_; }
 
 void AudioVideoConfig::SetHaveVideo(bool have_video) {
   have_video_ = have_video;
 }
 
-bool AudioVideoConfig::HaveAudio() const {
-  return have_audio_;
-}
+bool AudioVideoConfig::HaveAudio() const { return have_audio_; }
 
 void AudioVideoConfig::SetHaveAudio(bool have_audio) {
   have_audio_ = have_audio;
 }
 
-int AudioVideoConfig::GetAudioSelect() const {
-  return audio_select_;
-}
+int AudioVideoConfig::GetAudioSelect() const { return audio_select_; }
 
-void AudioVideoConfig::SetAudioSelect(int sel) {
-  audio_select_ = sel;
-}
+void AudioVideoConfig::SetAudioSelect(int sel) { audio_select_ = sel; }
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

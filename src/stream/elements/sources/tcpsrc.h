@@ -18,7 +18,7 @@
 
 // for element_id_t
 
-#include "stream/elements/element.h"  // for ElementEx, SupportedElements::ELEMENT_...
+#include "stream/elements/element.h" // for ElementEx, SupportedElements::ELEMENT_...
 #include "stream/elements/sources/sources.h"
 
 namespace iptv_cloud {
@@ -27,17 +27,19 @@ namespace elements {
 namespace sources {
 
 class ElementTCPSrc : public ElementEx<ELEMENT_TCP_SERVER_SRC> {
- public:
+public:
   typedef ElementEx<ELEMENT_TCP_SERVER_SRC> base_class;
   using base_class::base_class;
 
-  void SetHost(const std::string& host = "localhost");  // String. Default: "localhost"
+  void SetHost(
+      const std::string &host = "localhost"); // String. Default: "localhost"
   void SetPort(uint16_t port);
 };
 
-ElementTCPSrc* make_tcp_server_src(const common::net::HostAndPort& location, element_id_t input_id);
+ElementTCPSrc *make_tcp_server_src(const common::net::HostAndPort &location,
+                                   element_id_t input_id);
 
-}  // namespace sources
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sources
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

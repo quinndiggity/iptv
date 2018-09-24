@@ -22,69 +22,69 @@ namespace elements {
 namespace audio {
 
 class ElementAudioConvert : public ElementEx<ELEMENT_AUDIO_CONVERT> {
- public:
+public:
   typedef ElementEx<ELEMENT_AUDIO_CONVERT> base_class;
   using base_class::base_class;
 };
 
 class ElementAudioResample : public ElementEx<ELEMENT_AUDIO_RESAMPLE> {
- public:
+public:
   typedef ElementEx<ELEMENT_AUDIO_RESAMPLE> base_class;
   using base_class::base_class;
 };
 
 class ElementVolume : public ElementEx<ELEMENT_VOLUME> {
- public:
+public:
   typedef ElementEx<ELEMENT_VOLUME> base_class;
   using base_class::base_class;
 
-  void SetVolume(gdouble volume = 1);  // 0 - 10 Default: 1
+  void SetVolume(gdouble volume = 1); // 0 - 10 Default: 1
 };
 
 class ElementRGVolume : public ElementEx<ELEMENT_RG_VOLUME> {
- public:
+public:
   typedef ElementEx<ELEMENT_RG_VOLUME> base_class;
   using base_class::base_class;
 
-  void SetPreAmp(gdouble volume = 0);  // -60 - 60 Default: 0
+  void SetPreAmp(gdouble volume = 0); // -60 - 60 Default: 0
 };
 
 class ElementAudioMixer : public ElementEx<ELEMENT_AUDIO_MIXER> {
- public:
+public:
   typedef ElementEx<ELEMENT_AUDIO_MIXER> base_class;
   using base_class::base_class;
 };
 
 class ElementIterleave : public ElementEx<ELEMENT_INTERLEAVE> {
- public:
+public:
   typedef ElementEx<ELEMENT_INTERLEAVE> base_class;
   using base_class::base_class;
 };
 
 class ElementDeinterleave : public ElementEx<ELEMENT_DEINTERLEAVE> {
- public:
+public:
   typedef ElementEx<ELEMENT_DEINTERLEAVE> base_class;
   using base_class::base_class;
 };
 
 class ElementSpectrum : public ElementEx<ELEMENT_SPECTRUM> {
- public:
+public:
   typedef ElementEx<ELEMENT_SPECTRUM> base_class;
   using base_class::base_class;
 
-  void SetBands(guint bands = 128);           // 2 - 1073741824 Default: 128
-  void SetTheshold(gint threshold = -60);     // -2147483648 - 0 Default: -60
-  void SetPostMessage(gboolean pm = true);    // Default: true
-  void SetMessagePhase(gboolean mp = false);  // Defaut: false
+  void SetBands(guint bands = 128);          // 2 - 1073741824 Default: 128
+  void SetTheshold(gint threshold = -60);    // -2147483648 - 0 Default: -60
+  void SetPostMessage(gboolean pm = true);   // Default: true
+  void SetMessagePhase(gboolean mp = false); // Defaut: false
 };
 
 class ElementLevel : public ElementEx<ELEMENT_LEVEL> {
- public:
+public:
   typedef ElementEx<ELEMENT_LEVEL> base_class;
   using base_class::base_class;
 };
 
-}  // namespace audio
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace audio
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

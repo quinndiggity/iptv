@@ -21,16 +21,15 @@ namespace stream {
 namespace elements {
 namespace pay {
 
-template <SupportedElements el>
-class ElementRtpPay : public ElementEx<el> {
- public:
+template <SupportedElements el> class ElementRtpPay : public ElementEx<el> {
+public:
   typedef ElementEx<el> base_class;
   using base_class::base_class;
 
   void SetPt(guint pt) { ElementEx<el>::SetProperty("pt", pt); }
 };
 
-}  // namespace pay
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace pay
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

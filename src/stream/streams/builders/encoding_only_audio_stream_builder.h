@@ -22,15 +22,16 @@ namespace streams {
 namespace builders {
 
 class EncodingOnlyAudioStreamBuilder : public EncodingStreamBuilder {
- public:
-  EncodingOnlyAudioStreamBuilder(EncodingConfig* api, SrcDecodeBinStream* observer);
+public:
+  EncodingOnlyAudioStreamBuilder(EncodingConfig *api,
+                                 SrcDecodeBinStream *observer);
 
- protected:
+protected:
   virtual elements_line_t BuildVideoPostProc(element_id_t video_id) override;
   virtual elements_line_t BuildVideoConverter(element_id_t video_id) override;
 };
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

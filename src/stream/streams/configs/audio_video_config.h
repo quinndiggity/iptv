@@ -21,25 +21,25 @@ namespace stream {
 namespace streams {
 
 class AudioVideoConfig : public Config {
- public:
+public:
   typedef Config base_class;
-  explicit AudioVideoConfig(const base_class& config);
+  explicit AudioVideoConfig(const base_class &config);
 
-  bool HaveVideo() const;  // relay, encoding
+  bool HaveVideo() const; // relay, encoding
   void SetHaveVideo(bool have_video);
 
-  bool HaveAudio() const;  // relay, encoding
+  bool HaveAudio() const; // relay, encoding
   void SetHaveAudio(bool have_audio);
 
   int GetAudioSelect() const;
   void SetAudioSelect(int sel);
 
- private:
+private:
   bool have_video_;
   bool have_audio_;
   int audio_select_;
 };
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

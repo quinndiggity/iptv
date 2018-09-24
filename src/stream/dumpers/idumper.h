@@ -23,11 +23,13 @@ namespace stream {
 namespace dumper {
 
 class IDumper {
- public:
-  virtual bool Dump(GstBin* pipeline, const common::file_system::ascii_file_string_path& path) = 0;
+public:
+  virtual bool
+  Dump(GstBin *pipeline,
+       const common::file_system::ascii_file_string_path &path) = 0;
   virtual ~IDumper();
 };
 
-}  // namespace dumper
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace dumper
+} // namespace stream
+} // namespace iptv_cloud

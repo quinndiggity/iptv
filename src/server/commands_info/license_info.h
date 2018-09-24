@@ -19,20 +19,20 @@ namespace iptv_cloud {
 namespace server {
 
 class LicenseInfo : public common::serializer::JsonSerializer<LicenseInfo> {
- public:
+public:
   typedef JsonSerializer<LicenseInfo> base_class;
   LicenseInfo();
-  explicit LicenseInfo(const std::string& license);
+  explicit LicenseInfo(const std::string &license);
 
   std::string GetLicense() const;
 
- protected:
-  virtual common::Error DoDeSerialize(json_object* serialized) override;
-  virtual common::Error SerializeFields(json_object* out) const override;
+protected:
+  virtual common::Error DoDeSerialize(json_object *serialized) override;
+  virtual common::Error SerializeFields(json_object *out) const override;
 
- private:
-  std::string license_;  // utc time
+private:
+  std::string license_; // utc time
 };
 
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace server
+} // namespace iptv_cloud

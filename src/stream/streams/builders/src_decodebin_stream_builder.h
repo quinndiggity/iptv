@@ -26,15 +26,15 @@ class SrcDecodeBinStream;
 namespace builders {
 
 class SrcDecodeStreamBuilder : public GstBaseBuilder {
- public:
-  SrcDecodeStreamBuilder(Config* api, SrcDecodeBinStream* observer);
+public:
+  SrcDecodeStreamBuilder(Config *api, SrcDecodeBinStream *observer);
 
   virtual Connector BuildInput() override;
-  virtual elements::Element* BuildInputSrc();
+  virtual elements::Element *BuildInputSrc();
 
   virtual Connector BuildUdbConnections(Connector conn) override;
-  virtual elements::Element* BuildVideoUdbConnection();
-  virtual elements::Element* BuildAudioUdbConnection();
+  virtual elements::Element *BuildVideoUdbConnection();
+  virtual elements::Element *BuildAudioUdbConnection();
 
   virtual Connector BuildPostProc(Connector conn) override = 0;
   virtual Connector BuildConverter(Connector conn) override = 0;
@@ -43,11 +43,11 @@ class SrcDecodeStreamBuilder : public GstBaseBuilder {
   virtual SupportedVideoCodecs GetVideoCodecType() const = 0;
   virtual SupportedAudioCodecs GetAudioCodecType() const = 0;
 
- protected:
-  void HandleDecodebinCreated(elements::ElementDecodebin* decodebin);
+protected:
+  void HandleDecodebinCreated(elements::ElementDecodebin *decodebin);
 };
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

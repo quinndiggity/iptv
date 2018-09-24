@@ -24,11 +24,11 @@ namespace iptv_cloud {
 namespace utils {
 
 class M3u8Reader {
- public:
+public:
   M3u8Reader();
 
-  bool Parse(const std::string& path);
-  bool Parse(const common::file_system::ascii_file_string_path& path);
+  bool Parse(const std::string &path);
+  bool Parse(const common::file_system::ascii_file_string_path &path);
 
   int GetVersion() const;
   bool IsAllowCache() const;
@@ -36,11 +36,11 @@ class M3u8Reader {
   int GetTargetDuration() const;
   std::vector<ChunkInfo> GetChunks() const;
 
- private:
+private:
   void Clear();
 
-  bool ParseFile(FILE* file);
-  bool ParseChunks(FILE* file);
+  bool ParseFile(FILE *file);
+  bool ParseChunks(FILE *file);
 
   int version_;
   bool allow_cache_;
@@ -50,5 +50,5 @@ class M3u8Reader {
   std::vector<ChunkInfo> chunks_;
 };
 
-}  // namespace utils
-}  // namespace iptv_cloud
+} // namespace utils
+} // namespace iptv_cloud

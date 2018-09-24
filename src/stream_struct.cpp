@@ -28,12 +28,12 @@ std::string ConvertToString(iptv_cloud::StreamStatus st) {
   return StreamStatuses[st];
 }
 
-}  // namespace common
+} // namespace common
 
 namespace iptv_cloud {
 
 namespace {
-output_stream_info_t make_outputs(const std::vector<stream_id_t>& output) {
+output_stream_info_t make_outputs(const std::vector<stream_id_t> &output) {
   output_stream_info_t res;
   for (stream_id_t out : output) {
     res.push_back(new StreamStats(out));
@@ -41,38 +41,38 @@ output_stream_info_t make_outputs(const std::vector<stream_id_t>& output) {
   return res;
 }
 
-input_stream_info_t make_inputs(const std::vector<stream_id_t>& input) {
+input_stream_info_t make_inputs(const std::vector<stream_id_t> &input) {
   input_stream_info_t res;
   for (stream_id_t in : input) {
     res.push_back(new StreamStats(in));
   }
   return res;
 }
-}  // namespace
+} // namespace
 
-bool StreamInfo::Equals(const StreamInfo& inf) const {
-  return id == inf.id && type == inf.type && input == inf.input && output == inf.output;
+bool StreamInfo::Equals(const StreamInfo &inf) const {
+  return id == inf.id && type == inf.type && input == inf.input &&
+         output == inf.output;
 }
 
 StreamStruct::StreamStruct() : StreamStruct(StreamInfo()) {}
 
-StreamStruct::StreamStruct(const StreamInfo& sha) : StreamStruct(sha, common::time::current_mstime() / 1000, 0, 0) {}
+StreamStruct::StreamStruct(const StreamInfo &sha)
+    : StreamStruct(sha, common::time::current_mstime() / 1000, 0, 0) {}
 
-StreamStruct::StreamStruct(const StreamInfo& sha, time_t start_time, time_t lst, size_t rest)
-    : StreamStruct(sha.id, sha.type, make_inputs(sha.input), make_outputs(sha.output), start_time, lst, rest) {}
-
-StreamStruct::StreamStruct(channel_id_t cid,
-                           StreamType type,
-                           input_stream_info_t input,
-                           output_stream_info_t output,
-                           time_t start_time,
-                           time_t lst,
+StreamStruct::StreamStruct(const StreamInfo &sha, time_t start_time, time_t lst,
                            size_t rest)
-    : id(cid), type(type), start_time(start_time), loop_start_time(lst), restarts(rest), input(input), output(output) {}
+    : StreamStruct(sha.id, sha.type, make_inputs(sha.input),
+                   make_outputs(sha.output), start_time, lst, rest) {}
 
-bool StreamStruct::IsValid() const {
-  return !id.empty();
-}
+StreamStruct::StreamStruct(channel_id_t cid, StreamType type,
+                           input_stream_info_t input,
+                           output_stream_info_t output, time_t start_time,
+                           time_t lst, size_t rest)
+    : id(cid), type(type), start_time(start_time), loop_start_time(lst),
+      restarts(rest), input(input), output(output) {}
+
+bool StreamStruct::IsValid() const { return !id.empty(); }
 
 StreamStruct::~StreamStruct() {
   for (size_t i = 0; i < output.size(); ++i) {
@@ -102,4 +102,4 @@ void StreamStruct::ResetDataWait() {
   }
 }
 
-}  // namespace iptv_cloud
+} // namespace iptv_cloud

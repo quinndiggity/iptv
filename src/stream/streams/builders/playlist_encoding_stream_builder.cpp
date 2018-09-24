@@ -25,15 +25,15 @@ namespace stream {
 namespace streams {
 namespace builders {
 
-PlaylistEncodingStreamBuilder::PlaylistEncodingStreamBuilder(PlaylistEncodingConfig* api,
-                                                             PlaylistEncodingStream* observer)
+PlaylistEncodingStreamBuilder::PlaylistEncodingStreamBuilder(
+    PlaylistEncodingConfig *api, PlaylistEncodingStream *observer)
     : EncodingStreamBuilder(api, observer) {}
 
-elements::Element* PlaylistEncodingStreamBuilder::BuildInputSrc() {
-  elements::sources::ElementAppSrc* appsrc = elements::sources::make_app_src(0);
+elements::Element *PlaylistEncodingStreamBuilder::BuildInputSrc() {
+  elements::sources::ElementAppSrc *appsrc = elements::sources::make_app_src(0);
 
   // g_signal_connect(appsrc, "enough-data", G_CALLBACK(enough_data), this);
-  pad::Pad* src_pad = appsrc->StaticPad("src");
+  pad::Pad *src_pad = appsrc->StaticPad("src");
   if (src_pad->IsValid()) {
     HandleInputSrcPadCreated(common::uri::Url::file, src_pad, 0);
   }
@@ -43,14 +43,16 @@ elements::Element* PlaylistEncodingStreamBuilder::BuildInputSrc() {
   return appsrc;
 }
 
-void PlaylistEncodingStreamBuilder::HandleAppSrcCreated(elements::sources::ElementAppSrc* src) {
+void PlaylistEncodingStreamBuilder::HandleAppSrcCreated(
+    elements::sources::ElementAppSrc *src) {
   if (observer_) {
-    PlaylistEncodingStream* pobs = static_cast<PlaylistEncodingStream*>(observer_);
+    PlaylistEncodingStream *pobs =
+        static_cast<PlaylistEncodingStream *>(observer_);
     pobs->OnAppSrcCreatedCreated(src);
   }
 }
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

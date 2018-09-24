@@ -25,23 +25,23 @@ namespace server {
 namespace stats {
 
 class IStat {
- public:
-  virtual bool SetKey(const std::string& key, const std::string& value) = 0;
-  virtual bool GetKey(const std::string& key, std::string* value) = 0;
+public:
+  virtual bool SetKey(const std::string &key, const std::string &value) = 0;
+  virtual bool GetKey(const std::string &key, std::string *value) = 0;
 
-  StatCredentialsBase* GetCreds() const;
+  StatCredentialsBase *GetCreds() const;
 
   virtual ~IStat();
 
-  static IStat* CreateStat(StatCredentialsBase* creds);
+  static IStat *CreateStat(StatCredentialsBase *creds);
 
- protected:
-  IStat(StatCredentialsBase* creds);
+protected:
+  IStat(StatCredentialsBase *creds);
 
- private:
+private:
   const std::unique_ptr<StatCredentialsBase> creds_;
 };
 
-}  // namespace stats
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace stats
+} // namespace server
+} // namespace iptv_cloud

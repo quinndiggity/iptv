@@ -19,18 +19,17 @@ namespace stream {
 namespace elements {
 namespace sources {
 
-void ElementRTMPSrc::SetTimeOut(gint secs) {
-  SetProperty("timeout", secs);
-}
+void ElementRTMPSrc::SetTimeOut(gint secs) { SetProperty("timeout", secs); }
 
-ElementRTMPSrc* make_rtmp_src(const std::string& location, gint timeout_secs, element_id_t input_id) {
-  ElementRTMPSrc* rtmp_src = make_sources<ElementRTMPSrc>(input_id);
+ElementRTMPSrc *make_rtmp_src(const std::string &location, gint timeout_secs,
+                              element_id_t input_id) {
+  ElementRTMPSrc *rtmp_src = make_sources<ElementRTMPSrc>(input_id);
   rtmp_src->SetLocation(location);
   rtmp_src->SetTimeOut(timeout_secs);
   return rtmp_src;
 }
 
-}  // namespace sources
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sources
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

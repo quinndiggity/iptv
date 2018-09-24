@@ -26,12 +26,14 @@ class Pad;
 }
 
 class IBaseBuilderObserver {
- public:
-  virtual void OnInpudSrcPadCreated(common::uri::Url::scheme scheme, pad::Pad* src_pad, element_id_t id) = 0;
-  virtual void OnOutputSinkPadCreated(common::uri::Url::scheme scheme, pad::Pad* sink_pad, element_id_t id) = 0;
+public:
+  virtual void OnInpudSrcPadCreated(common::uri::Url::scheme scheme,
+                                    pad::Pad *src_pad, element_id_t id) = 0;
+  virtual void OnOutputSinkPadCreated(common::uri::Url::scheme scheme,
+                                      pad::Pad *sink_pad, element_id_t id) = 0;
 
   virtual ~IBaseBuilderObserver();
 };
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

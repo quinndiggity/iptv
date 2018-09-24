@@ -25,12 +25,16 @@
 #define MACHINE_ID_BUFF_SIZE 32
 
 namespace {
-void native_cpuid(unsigned int* eax, unsigned int* ebx, unsigned int* ecx, unsigned int* edx) {
+void native_cpuid(unsigned int *eax, unsigned int *ebx, unsigned int *ecx,
+                  unsigned int *edx) {
   /* ecx is often an input as well as an output. */
-  asm volatile("cpuid" : "=a"(*eax), "=b"(*ebx), "=c"(*ecx), "=d"(*edx) : "0"(*eax), "2"(*ecx) : "memory");
+  asm volatile("cpuid"
+               : "=a"(*eax), "=b"(*ebx), "=c"(*ecx), "=d"(*edx)
+               : "0"(*eax), "2"(*ecx)
+               : "memory");
 }
 
-}  // namespace
+} // namespace
 
 namespace iptv_cloud {
 namespace server {
@@ -42,7 +46,7 @@ std::string GetNativeCpuID() {
   return common::MemSPrintf("%08X %08X %08X %08X", eax, ebx, ecx, edx);
 }
 
-bool GetHddID(std::string* serial) {
+bool GetHddID(std::string *serial) {
   if (!serial) {
     return false;
   }
@@ -54,13 +58,14 @@ bool GetHddID(std::string* serial) {
   }
 
   /* Create the udev object */
-  struct udev* udev = udev_new();
+  struct udev *udev = udev_new();
   if (!udev) {
     return false;
   }
 
   /* Create a list of the devices in the 'hidraw' subsystem. */
-  struct udev_device* device = udev_device_new_from_devnum(udev, 'b', stats.st_dev);
+  struct udev_device *device =
+      udev_device_new_from_devnum(udev, 'b', stats.st_dev);
   if (!device) {
     udev_unref(udev);
     return false;
@@ -75,7 +80,8 @@ bool GetHddID(std::string* serial) {
   }
 #endif
 
-  const char* serial_id = udev_device_get_property_value(device, "ID_SERIAL_SHORT");
+  const char *serial_id =
+      udev_device_get_property_value(device, "ID_SERIAL_SHORT");
   if (!serial_id) {
     serial_id = udev_device_get_property_value(device, "ID_FS_UUID");
   }
@@ -89,12 +95,12 @@ bool GetHddID(std::string* serial) {
   return serial_id != NULL;
 }
 
-bool GetMachineID(std::string* serial) {
+bool GetMachineID(std::string *serial) {
   if (!serial) {
     return false;
   }
 
-  FILE* machine_id_file = fopen("/etc/machine-id", "r");
+  FILE *machine_id_file = fopen("/etc/machine-id", "r");
   if (machine_id_file == NULL) {
     machine_id_file = fopen("/var/lib/dbus/machine-id", "r");
     if (machine_id_file == NULL) {
@@ -102,7 +108,7 @@ bool GetMachineID(std::string* serial) {
     }
   }
 
-  char* ptr = static_cast<char*>(calloc(MACHINE_ID_BUFF_SIZE, sizeof(char)));
+  char *ptr = static_cast<char *>(calloc(MACHINE_ID_BUFF_SIZE, sizeof(char)));
   ssize_t res = fread(ptr, sizeof(char), MACHINE_ID_BUFF_SIZE, machine_id_file);
   if (res == -1) {
     free(ptr);
@@ -115,6 +121,6 @@ bool GetMachineID(std::string* serial) {
   return true;
 }
 
-}  // namespace utils
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace utils
+} // namespace server
+} // namespace iptv_cloud

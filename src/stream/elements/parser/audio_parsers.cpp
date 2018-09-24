@@ -14,26 +14,26 @@
 
 #include "stream/elements/parser/audio_parsers.h"
 
-#include "gst_constants.h"  // for AAC_PARSE, AC3_PARSE, MPEG_AUDIO_PARSE
+#include "gst_constants.h" // for AAC_PARSE, AC3_PARSE, MPEG_AUDIO_PARSE
 
 namespace iptv_cloud {
 namespace stream {
 namespace elements {
 namespace parser {
 
-ElementAACParse* make_aac_parser(element_id_t parser_id) {
+ElementAACParse *make_aac_parser(element_id_t parser_id) {
   return make_audio_parser<ElementAACParse>(parser_id);
 }
 
-ElementMPEGAudioParse* make_mpeg_parser(element_id_t parser_id) {
+ElementMPEGAudioParse *make_mpeg_parser(element_id_t parser_id) {
   return make_audio_parser<ElementMPEGAudioParse>(parser_id);
 }
 
-ElementAC3Parse* make_ac3_parser(element_id_t parser_id) {
+ElementAC3Parse *make_ac3_parser(element_id_t parser_id) {
   return make_audio_parser<ElementAC3Parse>(parser_id);
 }
 
-Element* make_audio_parser(const std::string& parser, const std::string& name) {
+Element *make_audio_parser(const std::string &parser, const std::string &name) {
   if (parser == ElementAACParse::GetPluginName()) {
     return new ElementAACParse(name);
   } else if (parser == ElementAC3Parse::GetPluginName()) {
@@ -46,7 +46,7 @@ Element* make_audio_parser(const std::string& parser, const std::string& name) {
   return nullptr;
 }
 
-}  // namespace parser
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace parser
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

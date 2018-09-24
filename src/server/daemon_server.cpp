@@ -19,14 +19,16 @@
 namespace iptv_cloud {
 namespace server {
 
-DaemonServer::DaemonServer(const common::net::HostAndPort& host, common::libev::IoLoopObserver* observer)
+DaemonServer::DaemonServer(const common::net::HostAndPort &host,
+                           common::libev::IoLoopObserver *observer)
     : base_class(host, true, observer) {}
 
 DaemonServer::~DaemonServer() {}
 
-common::libev::tcp::TcpClient* DaemonServer::CreateClient(const common::net::socket_info& info) {
+common::libev::tcp::TcpClient *
+DaemonServer::CreateClient(const common::net::socket_info &info) {
   return new DaemonClient(this, info);
 }
 
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace server
+} // namespace iptv_cloud

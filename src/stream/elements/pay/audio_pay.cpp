@@ -19,19 +19,19 @@ namespace stream {
 namespace elements {
 namespace pay {
 
-ElementRtpAACPay* make_aac_pay(guint pt, element_id_t pay_id) {
-  ElementRtpAACPay* aac_pay = make_audio_pay<ElementRtpAACPay>(pay_id);
+ElementRtpAACPay *make_aac_pay(guint pt, element_id_t pay_id) {
+  ElementRtpAACPay *aac_pay = make_audio_pay<ElementRtpAACPay>(pay_id);
   aac_pay->SetPt(pt);
   return aac_pay;
 }
 
-ElementRtpAC3Pay* make_ac3_pay(guint pt, element_id_t pay_id) {
-  ElementRtpAC3Pay* aac_pay = make_audio_pay<ElementRtpAC3Pay>(pay_id);
+ElementRtpAC3Pay *make_ac3_pay(guint pt, element_id_t pay_id) {
+  ElementRtpAC3Pay *aac_pay = make_audio_pay<ElementRtpAC3Pay>(pay_id);
   aac_pay->SetPt(pt);
   return aac_pay;
 }
 
-Element* make_audio_pay(const std::string& pay, const std::string& name) {
+Element *make_audio_pay(const std::string &pay, const std::string &name) {
   if (pay == ElementRtpAACPay::GetPluginName()) {
     return new ElementRtpAACPay(name);
   } else if (pay == ElementRtpAC3Pay::GetPluginName()) {
@@ -42,7 +42,7 @@ Element* make_audio_pay(const std::string& pay, const std::string& name) {
   return nullptr;
 }
 
-}  // namespace pay
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace pay
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

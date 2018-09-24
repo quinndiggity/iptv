@@ -19,5 +19,5 @@ namespace stream {
 
 IBaseBuilderObserver::~IBaseBuilderObserver() {}
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

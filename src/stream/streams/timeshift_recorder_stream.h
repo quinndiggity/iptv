@@ -24,7 +24,7 @@ namespace elements {
 namespace sink {
 class ElementSplitMuxSink;
 }
-}  // namespace elements
+} // namespace elements
 namespace streams {
 
 namespace builders {
@@ -34,41 +34,45 @@ class TimeShiftRecorderStreamBuilder;
 class TimeShiftRecorderStream : public ITimeShiftRecorderStream {
   friend class builders::TimeShiftRecorderStreamBuilder;
 
- public:
+public:
   typedef ITimeShiftRecorderStream base_class;
-  TimeShiftRecorderStream(TimeshiftConfig* config,
-                          const TimeShiftInfo& info,
-                          IStreamClient* client,
-                          StreamStruct* stats);
-  virtual const char* ClassName() const override;
+  TimeShiftRecorderStream(TimeshiftConfig *config, const TimeShiftInfo &info,
+                          IStreamClient *client, StreamStruct *stats);
+  virtual const char *ClassName() const override;
   virtual ~TimeShiftRecorderStream();
 
- protected:
-  virtual void OnSplitmuxsinkCreated(Connector conn, elements::sink::ElementSplitMuxSink* sink);
-  virtual chunk_index_t GetNextChunkStrategy(chunk_index_t last_index, time_t last_index_created_time) const override;
+protected:
+  virtual void OnSplitmuxsinkCreated(Connector conn,
+                                     elements::sink::ElementSplitMuxSink *sink);
+  virtual chunk_index_t
+  GetNextChunkStrategy(chunk_index_t last_index,
+                       time_t last_index_created_time) const override;
 
-  virtual IBaseBuilder* CreateBuilder() override;
+  virtual IBaseBuilder *CreateBuilder() override;
 
-  virtual void HandleDecodeBinElementAdded(GstBin* bin, GstElement* element) override;
+  virtual void HandleDecodeBinElementAdded(GstBin *bin,
+                                           GstElement *element) override;
 
   virtual gboolean HandleMainTimerTick() override;
   virtual void OnOutputDataFailed() override;
-  virtual gchararray OnPathSet(GstElement* splitmux, guint fragment_id, GstSample* sample);
+  virtual gchararray OnPathSet(GstElement *splitmux, guint fragment_id,
+                               GstSample *sample);
 
   chunk_index_t CalcNextIndex() const;
   utils::ChunkInfo chunk_;
 
- private:
-  static gchararray path_setter_callback(GstElement* splitmux, guint fragment_id, gpointer user_data);
-  static gchararray path_setter_full_callback(GstElement* splitmux,
+private:
+  static gchararray path_setter_callback(GstElement *splitmux,
+                                         guint fragment_id, gpointer user_data);
+  static gchararray path_setter_full_callback(GstElement *splitmux,
                                               guint fragment_id,
-                                              GstSample* sample,
+                                              GstSample *sample,
                                               gpointer user_data);
 
-  pad::Pad* audio_pad_;
-  pad::Pad* video_pad_;
+  pad::Pad *audio_pad_;
+  pad::Pad *video_pad_;
 };
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

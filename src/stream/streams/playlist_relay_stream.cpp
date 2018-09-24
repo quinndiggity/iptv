@@ -14,7 +14,7 @@
 
 #include "stream/streams/playlist_relay_stream.h"
 
-#include <gst/app/gstappsrc.h>  // for GST_APP_SRC
+#include <gst/app/gstappsrc.h> // for GST_APP_SRC
 
 #include "stream/elements/sources/appsrc.h"
 #include "stream/pad/pad.h"
@@ -27,8 +27,11 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-PlaylistRelayStream::PlaylistRelayStream(PlaylistRelayConfig* config, IStreamClient* client, StreamStruct* stats)
-    : RelayStream(config, client, stats), app_src_(nullptr), current_file_(NULL), curent_pos_(0) {}
+PlaylistRelayStream::PlaylistRelayStream(PlaylistRelayConfig *config,
+                                         IStreamClient *client,
+                                         StreamStruct *stats)
+    : RelayStream(config, client, stats), app_src_(nullptr),
+      current_file_(NULL), curent_pos_(0) {}
 
 PlaylistRelayStream::~PlaylistRelayStream() {
   if (current_file_) {
@@ -37,18 +40,20 @@ PlaylistRelayStream::~PlaylistRelayStream() {
   }
 }
 
-const char* PlaylistRelayStream::ClassName() const {
+const char *PlaylistRelayStream::ClassName() const {
   return "PlaylistRelayStream";
 }
 
-void PlaylistRelayStream::OnAppSrcCreatedCreated(elements::sources::ElementAppSrc* src) {
+void PlaylistRelayStream::OnAppSrcCreatedCreated(
+    elements::sources::ElementAppSrc *src) {
   app_src_ = src;
-  gboolean res = src->RegisterNeedDataCallback(PlaylistRelayStream::need_data_callback, this);
+  gboolean res = src->RegisterNeedDataCallback(
+      PlaylistRelayStream::need_data_callback, this);
   DCHECK(res);
 }
 
-IBaseBuilder* PlaylistRelayStream::CreateBuilder() {
-  PlaylistRelayConfig* rconf = static_cast<PlaylistRelayConfig*>(GetApi());
+IBaseBuilder *PlaylistRelayStream::CreateBuilder() {
+  PlaylistRelayConfig *rconf = static_cast<PlaylistRelayConfig *>(GetApi());
   return new builders::PlaylistRelayStreamBuilder(rconf, this);
 }
 
@@ -58,23 +63,23 @@ void PlaylistRelayStream::PostLoop(ExitStatus status) {
   RelayStream::PostLoop(status);
 }
 
-void PlaylistRelayStream::HandleNeedData(GstElement* pipeline, guint rsize) {
+void PlaylistRelayStream::HandleNeedData(GstElement *pipeline, guint rsize) {
   UNUSED(pipeline);
   UNUSED(rsize);
 
   size_t size = 0;
-  char* ptr = NULL;
+  char *ptr = NULL;
   while (size == 0) {
     if (!current_file_) {
       current_file_ = OpenNextFile();
     }
 
     if (!current_file_) {
-      app_src_->SendEOS();  // send  eos
+      app_src_->SendEOS(); // send  eos
       return;
     }
 
-    ptr = static_cast<char*>(calloc(BUFFER_SIZE, sizeof(char)));
+    ptr = static_cast<char *>(calloc(BUFFER_SIZE, sizeof(char)));
     size = fread(ptr, sizeof(char), BUFFER_SIZE, current_file_);
     if (size == 0) {
       fclose(current_file_);
@@ -83,26 +88,29 @@ void PlaylistRelayStream::HandleNeedData(GstElement* pipeline, guint rsize) {
     }
   }
 
-  GstBuffer* buffer = gst_buffer_new_wrapped(ptr, size);
+  GstBuffer *buffer = gst_buffer_new_wrapped(ptr, size);
   GstFlowReturn ret = app_src_->PushBuffer(buffer);
   if (ret != GST_FLOW_OK) {
-    WARNING_LOG() << GetID() << " gst_app_src_push_buffer failed: " << gst_flow_get_name(ret);
+    WARNING_LOG() << GetID() << " gst_app_src_push_buffer failed: "
+                  << gst_flow_get_name(ret);
     Quit(EXIT_INNER);
   }
 }
 
-void PlaylistRelayStream::need_data_callback(GstElement* pipeline, guint size, gpointer user_data) {
-  PlaylistRelayStream* stream = reinterpret_cast<PlaylistRelayStream*>(user_data);
+void PlaylistRelayStream::need_data_callback(GstElement *pipeline, guint size,
+                                             gpointer user_data) {
+  PlaylistRelayStream *stream =
+      reinterpret_cast<PlaylistRelayStream *>(user_data);
   return stream->HandleNeedData(pipeline, size);
 }
 
-FILE* PlaylistRelayStream::OpenNextFile() {
-  PlaylistRelayConfig* rconf = static_cast<PlaylistRelayConfig*>(GetApi());
+FILE *PlaylistRelayStream::OpenNextFile() {
+  PlaylistRelayConfig *rconf = static_cast<PlaylistRelayConfig *>(GetApi());
   if (!rconf->GetLoop()) {
     input_t input = rconf->GetInput();
     if (curent_pos_ >= input.size()) {
       INFO_LOG() << GetID() << " No more files for playing";
-      return NULL;  // EOS
+      return NULL; // EOS
     }
   }
 
@@ -115,18 +123,19 @@ FILE* PlaylistRelayStream::OpenNextFile() {
   common::uri::Url uri = iuri.GetInput();
   common::uri::Upath path = uri.GetPath();
   std::string cur_path = path.GetPath();
-  FILE* file = fopen(cur_path.c_str(), "rb");
+  FILE *file = fopen(cur_path.c_str(), "rb");
   if (file) {
     INFO_LOG() << GetID() << " File " << cur_path << " open for playing";
     if (client_) {
       client_->OnInputChanged(iuri);
     }
   } else {
-    WARNING_LOG() << GetID() << " File " << cur_path << "can't open for playing";
+    WARNING_LOG() << GetID() << " File " << cur_path
+                  << "can't open for playing";
   }
   return file;
 }
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

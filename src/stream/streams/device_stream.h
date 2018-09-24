@@ -20,15 +20,17 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-class DeviceStream : public EncodingStream {  // only videotestsrc and audiotestsrc
- public:
-  DeviceStream(EncodingConfig* config, IStreamClient* client, StreamStruct* stats);
-  virtual const char* ClassName() const override;
+class DeviceStream
+    : public EncodingStream { // only videotestsrc and audiotestsrc
+public:
+  DeviceStream(EncodingConfig *config, IStreamClient *client,
+               StreamStruct *stats);
+  virtual const char *ClassName() const override;
 
- protected:
-  virtual IBaseBuilder* CreateBuilder() override;
+protected:
+  virtual IBaseBuilder *CreateBuilder() override;
 };
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

@@ -19,20 +19,23 @@ namespace stream {
 namespace streams {
 namespace builders {
 
-EncodingOnlyAudioStreamBuilder::EncodingOnlyAudioStreamBuilder(EncodingConfig* api, SrcDecodeBinStream* observer)
+EncodingOnlyAudioStreamBuilder::EncodingOnlyAudioStreamBuilder(
+    EncodingConfig *api, SrcDecodeBinStream *observer)
     : EncodingStreamBuilder(api, observer) {}
 
-elements_line_t EncodingOnlyAudioStreamBuilder::BuildVideoPostProc(element_id_t video_id) {
+elements_line_t
+EncodingOnlyAudioStreamBuilder::BuildVideoPostProc(element_id_t video_id) {
   UNUSED(video_id);
   return {nullptr, nullptr};
 }
 
-elements_line_t EncodingOnlyAudioStreamBuilder::BuildVideoConverter(element_id_t video_id) {
+elements_line_t
+EncodingOnlyAudioStreamBuilder::BuildVideoConverter(element_id_t video_id) {
   UNUSED(video_id);
   return {nullptr, nullptr};
 }
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

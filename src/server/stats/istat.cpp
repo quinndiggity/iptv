@@ -23,26 +23,24 @@ namespace iptv_cloud {
 namespace server {
 namespace stats {
 
-StatCredentialsBase* IStat::GetCreds() const {
-  return creds_.get();
-}
+StatCredentialsBase *IStat::GetCreds() const { return creds_.get(); }
 
-IStat::IStat(StatCredentialsBase* creds) : creds_(creds) {}
+IStat::IStat(StatCredentialsBase *creds) : creds_(creds) {}
 
 IStat::~IStat() {}
 
-IStat* IStat::CreateStat(StatCredentialsBase* creds) {
+IStat *IStat::CreateStat(StatCredentialsBase *creds) {
   if (!creds) {
     return nullptr;
   }
 #ifdef HAVE_REDIS
   if (creds->GetType() == STAT_REDIS) {
-    return new redis::Stat(static_cast<redis::StatCredentials*>(creds));
+    return new redis::Stat(static_cast<redis::StatCredentials *>(creds));
   }
 #endif
-  return new fake::Stat(static_cast<fake::StatCredentials*>(creds));
+  return new fake::Stat(static_cast<fake::StatCredentials *>(creds));
 }
 
-}  // namespace stats
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace stats
+} // namespace server
+} // namespace iptv_cloud

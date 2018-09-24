@@ -16,9 +16,9 @@
 
 #include <common/utils.h>
 
-#include <string>  // for string
+#include <string> // for string
 
-#include <gst/gstpad.h>  // for GstPad, GstPadProbeInfo, GstPadProbeReturn
+#include <gst/gstpad.h> // for GstPad, GstPadProbeInfo, GstPadProbeReturn
 
 #include "stypes.h"
 
@@ -46,40 +46,44 @@ struct Consistency {
  * Defines some supporting variables for probes
  */
 class Probe {
- public:
-  Probe(const std::string& name, element_id_t id, IBaseStream* stream);
+public:
+  Probe(const std::string &name, element_id_t id, IBaseStream *stream);
   ~Probe();
 
-  const std::string& GetName() const;
+  const std::string &GetName() const;
   bool IsBroken() const;
   void SetBroken(bool broked);
 
-  void LinkPads(GstPad* pad);
+  void LinkPads(GstPad *pad);
   element_id_t GetID() const;
 
-  GstPad* GetPad() const;
+  GstPad *GetPad() const;
   Consistency GetConsistency() const;
 
- private:
+private:
   DISALLOW_COPY_AND_ASSIGN(Probe);
-  static GstPadProbeReturn sink_callback_probe_buffer(GstPad* pad, GstPadProbeInfo* info, gpointer user_data);
-  static GstPadProbeReturn source_callback_probe_buffer(GstPad* pad, GstPadProbeInfo* info, gpointer user_data);
+  static GstPadProbeReturn sink_callback_probe_buffer(GstPad *pad,
+                                                      GstPadProbeInfo *info,
+                                                      gpointer user_data);
+  static GstPadProbeReturn source_callback_probe_buffer(GstPad *pad,
+                                                        GstPadProbeInfo *info,
+                                                        gpointer user_data);
   static void destroy_callback_probe(gpointer user_data);
 
-  void Link(GstPad* pad);
+  void Link(GstPad *pad);
   void Clear();
   void ClearInner();
 
-  IBaseStream* const stream_;
+  IBaseStream *const stream_;
 
   //! name of a probe
   const std::string name_;
   const element_id_t id_;
   gulong id_buffer_;
-  GstPad* pad_;
+  GstPad *pad_;
   Consistency consistency_;
   bool is_broken_;
 };
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

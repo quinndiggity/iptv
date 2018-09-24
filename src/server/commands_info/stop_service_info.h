@@ -21,20 +21,21 @@ namespace iptv_cloud {
 namespace server {
 
 class StopServiceInfo : public LicenseInfo {
- public:
+public:
   typedef LicenseInfo base_class;
   StopServiceInfo();
-  explicit StopServiceInfo(const std::string& license, common::time64_t delay = 0);
+  explicit StopServiceInfo(const std::string &license,
+                           common::time64_t delay = 0);
 
   common::time64_t GetDelay() const;
 
- protected:
-  virtual common::Error DoDeSerialize(json_object* serialized) override;
-  virtual common::Error SerializeFields(json_object* obj) const override;
+protected:
+  virtual common::Error DoDeSerialize(json_object *serialized) override;
+  virtual common::Error SerializeFields(json_object *obj) const override;
 
- private:
+private:
   common::time64_t delay_;
 };
 
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace server
+} // namespace iptv_cloud

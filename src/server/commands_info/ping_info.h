@@ -27,33 +27,35 @@ namespace server {
 
 typedef common::time64_t timestamp_t;
 
-class ServerPingInfo : public common::serializer::JsonSerializer<ServerPingInfo> {
- public:
+class ServerPingInfo
+    : public common::serializer::JsonSerializer<ServerPingInfo> {
+public:
   ServerPingInfo();
 
   timestamp_t GetTimeStamp() const;
 
- protected:
-  virtual common::Error DoDeSerialize(json_object* serialized) override;
-  virtual common::Error SerializeFields(json_object* obj) const override;
+protected:
+  virtual common::Error DoDeSerialize(json_object *serialized) override;
+  virtual common::Error SerializeFields(json_object *obj) const override;
 
- private:
-  timestamp_t timestamp_;  // utc time
+private:
+  timestamp_t timestamp_; // utc time
 };
 
-class ClientPingInfo : public common::serializer::JsonSerializer<ClientPingInfo> {
- public:
+class ClientPingInfo
+    : public common::serializer::JsonSerializer<ClientPingInfo> {
+public:
   ClientPingInfo();
 
   timestamp_t GetTimeStamp() const;
 
- protected:
-  virtual common::Error DoDeSerialize(json_object* serialized) override;
-  virtual common::Error SerializeFields(json_object* obj) const override;
+protected:
+  virtual common::Error DoDeSerialize(json_object *serialized) override;
+  virtual common::Error SerializeFields(json_object *obj) const override;
 
- private:
-  timestamp_t timestamp_;  // utc time
+private:
+  timestamp_t timestamp_; // utc time
 };
 
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace server
+} // namespace iptv_cloud

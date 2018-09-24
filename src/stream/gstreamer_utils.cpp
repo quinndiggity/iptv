@@ -14,15 +14,16 @@
 
 #include "gstreamer_utils.h"
 
-#include <gst/gstutils.h>  // for gst_pad_query_caps
+#include <gst/gstutils.h> // for gst_pad_query_caps
 
 #include <common/macros.h>
 
 namespace iptv_cloud {
 namespace stream {
 
-GstElement* make_element_safe(const std::string& type, const std::string& name) {
-  GstElement* elem = gst_element_factory_make(type.c_str(), name.c_str());
+GstElement *make_element_safe(const std::string &type,
+                              const std::string &name) {
+  GstElement *elem = gst_element_factory_make(type.c_str(), name.c_str());
   if (!elem) {
     CRITICAL_LOG() << "Cannot create '" << type << "' named: " << name;
   }
@@ -30,26 +31,25 @@ GstElement* make_element_safe(const std::string& type, const std::string& name) 
   return elem;
 }
 
-const gchar* pad_get_type(GstPad* pad) {
-  GstCaps* caps = gst_pad_query_caps(pad, NULL);
+const gchar *pad_get_type(GstPad *pad) {
+  GstCaps *caps = gst_pad_query_caps(pad, NULL);
   if (!caps) {
     return NULL;
   }
 
-  GstStructure* pad_struct = gst_caps_get_structure(caps, 0);
+  GstStructure *pad_struct = gst_caps_get_structure(caps, 0);
   if (!pad_struct) {
     gst_caps_unref(caps);
     return NULL;
   }
 
-  const gchar* name = gst_structure_get_name(pad_struct);
+  const gchar *name = gst_structure_get_name(pad_struct);
   gst_caps_unref(caps);
 
   return name;
 }
 
-template <>
-GValue make_gvalue(gint64 t) {
+template <> GValue make_gvalue(gint64 t) {
   GValue value = G_VALUE_INIT;
 
   g_value_init(&value, G_TYPE_INT64);
@@ -57,8 +57,7 @@ GValue make_gvalue(gint64 t) {
   return value;
 }
 
-template <>
-GValue make_gvalue(gint t) {
+template <> GValue make_gvalue(gint t) {
   GValue value = G_VALUE_INIT;
 
   g_value_init(&value, G_TYPE_INT);
@@ -66,8 +65,7 @@ GValue make_gvalue(gint t) {
   return value;
 }
 
-template <>
-GValue make_gvalue(const char* t) {
+template <> GValue make_gvalue(const char *t) {
   GValue value = G_VALUE_INIT;
 
   g_value_init(&value, G_TYPE_STRING);
@@ -75,8 +73,7 @@ GValue make_gvalue(const char* t) {
   return value;
 }
 
-template <>
-GValue make_gvalue(gpointer t) {
+template <> GValue make_gvalue(gpointer t) {
   GValue value = G_VALUE_INIT;
 
   g_value_init(&value, G_TYPE_OBJECT);
@@ -84,44 +81,41 @@ GValue make_gvalue(gpointer t) {
   return value;
 }
 
-template <>
-gint64 gvalue_cast(const GValue* value) {
+template <> gint64 gvalue_cast(const GValue *value) {
   G_VALUE_HOLDS_INT64(value);
   return g_value_get_int64(value);
 }
 
-template <>
-gint gvalue_cast(const GValue* value) {
+template <> gint gvalue_cast(const GValue *value) {
   G_VALUE_HOLDS_INT(value);
   return g_value_get_int(value);
 }
 
-template <>
-const char* gvalue_cast(const GValue* value) {
+template <> const char *gvalue_cast(const GValue *value) {
   G_VALUE_HOLDS_STRING(value);
   return g_value_get_string(value);
 }
 
-template <>
-gpointer gvalue_cast(const GValue* value) {
+template <> gpointer gvalue_cast(const GValue *value) {
   G_VALUE_HOLDS_OBJECT(value);
   return g_value_get_object(value);
 }
 
-bool get_type_from_caps(GstCaps* caps, std::string* type_title, std::string* type_full) {
+bool get_type_from_caps(GstCaps *caps, std::string *type_title,
+                        std::string *type_full) {
   if (!caps || !type_title || !type_full) {
     DNOTREACHED();
     return false;
   }
 
-  gchar* t = gst_caps_to_string(caps);
+  gchar *t = gst_caps_to_string(caps);
   if (!t) {
     DNOTREACHED();
     return false;
   }
 
   *type_full = t;
-  gchar* ptr_t = t;
+  gchar *ptr_t = t;
   while (*ptr_t) {
     char c = *ptr_t;
     if (c == ',') {
@@ -134,5 +128,5 @@ bool get_type_from_caps(GstCaps* caps, std::string* type_title, std::string* typ
   return true;
 }
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

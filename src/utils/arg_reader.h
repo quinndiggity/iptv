@@ -23,8 +23,9 @@ namespace utils {
 typedef std::pair<std::string, std::string> arg_t;
 typedef std::vector<arg_t> ArgsMap;
 
-std::pair<std::string, std::string> GetKeyValue(const std::string& line, char separator);
-ArgsMap ParseCmd(int argc, char** argv);
+std::pair<std::string, std::string> GetKeyValue(const std::string &line,
+                                                char separator);
+ArgsMap ParseCmd(int argc, char **argv);
 
-}  // namespace utils
-}  // namespace iptv_cloud
+} // namespace utils
+} // namespace iptv_cloud

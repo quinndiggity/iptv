@@ -17,32 +17,22 @@
 namespace iptv_cloud {
 namespace stream {
 
-Config::Config(StreamType type, const input_t& input, const output_t& output)
+Config::Config(StreamType type, const input_t &input, const output_t &output)
     : type_(type), input_(input), output_(output) {}
 
-StreamType Config::GetType() const {
-  return type_;
-}
+StreamType Config::GetType() const { return type_; }
 
-bool Config::Equals(const Config& api) const {
+bool Config::Equals(const Config &api) const {
   return type_ == api.type_ && input_ == api.input_ && output_ == api.output_;
 }
 
-input_t Config::GetInput() const {
-  return input_;
-}
+input_t Config::GetInput() const { return input_; }
 
-void Config::SetInput(const input_t& input) {
-  input_ = input;
-}
+void Config::SetInput(const input_t &input) { input_ = input; }
 
-output_t Config::GetOutput() const {
-  return output_;
-}
+output_t Config::GetOutput() const { return output_; }
 
-void Config::SetOutput(const output_t& output) {
-  output_ = output;
-}
+void Config::SetOutput(const output_t &output) { output_ = output; }
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

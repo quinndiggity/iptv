@@ -18,8 +18,8 @@
 
 #include "stream/stypes.h"
 
-#include "stream/elements/element.h"  // for Element (ptr only), SupportedElements:...
-#include "stream/elements/pay/pay.h"  // for ElementRtpPay
+#include "stream/elements/element.h" // for Element (ptr only), SupportedElements:...
+#include "stream/elements/pay/pay.h" // for ElementRtpPay
 
 namespace iptv_cloud {
 namespace stream {
@@ -27,28 +27,27 @@ namespace elements {
 namespace pay {
 
 class ElementRtpAACPay : public ElementRtpPay<ELEMENT_RTP_AAC_PAY> {
- public:
+public:
   typedef ElementRtpPay<ELEMENT_RTP_AAC_PAY> base_class;
   using base_class::base_class;
 };
 
 class ElementRtpAC3Pay : public ElementRtpPay<ELEMENT_RTP_AC3_PAY> {
- public:
+public:
   typedef ElementRtpPay<ELEMENT_RTP_AC3_PAY> base_class;
   using base_class::base_class;
 };
 
-template <typename T>
-T* make_audio_pay(element_id_t pay_id) {
+template <typename T> T *make_audio_pay(element_id_t pay_id) {
   return make_element<T>(common::MemSPrintf(AUDIO_PAY_NAME_1U, pay_id));
 }
 
-ElementRtpAACPay* make_aac_pay(guint pt, element_id_t pay_id);
-ElementRtpAC3Pay* make_ac3_pay(guint pt, element_id_t pay_id);
+ElementRtpAACPay *make_aac_pay(guint pt, element_id_t pay_id);
+ElementRtpAC3Pay *make_ac3_pay(guint pt, element_id_t pay_id);
 
-Element* make_audio_pay(const std::string& pay, const std::string& name);
+Element *make_audio_pay(const std::string &pay, const std::string &name);
 
-}  // namespace pay
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace pay
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

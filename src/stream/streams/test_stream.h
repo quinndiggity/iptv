@@ -21,14 +21,15 @@ namespace stream {
 namespace streams {
 
 class TestStream : public EncodingStream {
- public:
-  TestStream(EncodingConfig* config, IStreamClient* client, StreamStruct* stats);
-  virtual const char* ClassName() const override;
+public:
+  TestStream(EncodingConfig *config, IStreamClient *client,
+             StreamStruct *stats);
+  virtual const char *ClassName() const override;
 
- protected:
-  virtual IBaseBuilder* CreateBuilder() override;
+protected:
+  virtual IBaseBuilder *CreateBuilder() override;
 };
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "stream/streams/relay_stream.h"  // for RelayStream
+#include "stream/streams/relay_stream.h" // for RelayStream
 
 #include "stream/timeshift.h"
 
@@ -23,22 +23,25 @@ namespace stream {
 namespace streams {
 
 class ITimeShiftRecorderStream : public RelayStream {
- public:
+public:
   typedef RelayStream base_class;
-  ITimeShiftRecorderStream(RelayConfig* config, const TimeShiftInfo& info, IStreamClient* client, StreamStruct* stats);
-  virtual const char* ClassName() const override;
+  ITimeShiftRecorderStream(RelayConfig *config, const TimeShiftInfo &info,
+                           IStreamClient *client, StreamStruct *stats);
+  virtual const char *ClassName() const override;
 
   TimeShiftInfo GetTimeshiftInfo() const;
 
- protected:
-  virtual chunk_index_t GetNextChunkStrategy(chunk_index_t last_index, time_t last_index_created_time) const = 0;
+protected:
+  virtual chunk_index_t
+  GetNextChunkStrategy(chunk_index_t last_index,
+                       time_t last_index_created_time) const = 0;
 
-  virtual IBaseBuilder* CreateBuilder() override = 0;
+  virtual IBaseBuilder *CreateBuilder() override = 0;
 
- private:
+private:
   TimeShiftInfo timeshift_info_;
 };
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

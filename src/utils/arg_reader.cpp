@@ -17,7 +17,8 @@
 namespace iptv_cloud {
 namespace utils {
 
-std::pair<std::string, std::string> GetKeyValue(const std::string& line, char separator) {
+std::pair<std::string, std::string> GetKeyValue(const std::string &line,
+                                                char separator) {
   const size_t pos = line.find(separator);
   if (pos != std::string::npos) {
     std::string key = line.substr(0, pos);
@@ -28,7 +29,7 @@ std::pair<std::string, std::string> GetKeyValue(const std::string& line, char se
   return std::make_pair(line, std::string());
 }
 
-ArgsMap ParseCmd(int argc, char** argv) {
+ArgsMap ParseCmd(int argc, char **argv) {
   if (argc == 1) {
     return ArgsMap();
   }
@@ -41,5 +42,5 @@ ArgsMap ParseCmd(int argc, char** argv) {
   }
   return args;
 }
-}  // namespace utils
-}  // namespace iptv_cloud
+} // namespace utils
+} // namespace iptv_cloud

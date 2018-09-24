@@ -20,20 +20,21 @@
 
 namespace iptv_cloud {
 
-class StreamStatsInfo : public common::serializer::JsonSerializer<StreamStatsInfo> {
- public:
+class StreamStatsInfo
+    : public common::serializer::JsonSerializer<StreamStatsInfo> {
+public:
   typedef JsonSerializer<StreamStatsInfo> base_class;
   StreamStatsInfo();
-  explicit StreamStatsInfo(const StreamStats& stats);
+  explicit StreamStatsInfo(const StreamStats &stats);
 
   StreamStats GetStats() const;
 
- protected:
-  virtual common::Error DoDeSerialize(json_object* serialized) override;
-  virtual common::Error SerializeFields(json_object* out) const override;
+protected:
+  virtual common::Error DoDeSerialize(json_object *serialized) override;
+  virtual common::Error SerializeFields(json_object *out) const override;
 
- private:
+private:
   StreamStats stats_;
 };
 
-}  // namespace iptv_cloud
+} // namespace iptv_cloud

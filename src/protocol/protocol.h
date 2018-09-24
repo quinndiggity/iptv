@@ -21,34 +21,39 @@
 namespace iptv_cloud {
 namespace protocol {
 
-typedef uint32_t protocoled_size_t;  // sizeof 4 byte
+typedef uint32_t protocoled_size_t; // sizeof 4 byte
 enum { MAX_COMMAND_SIZE = 1024 * 8 };
 
 namespace detail {
-common::Error WriteRequest(common::libev::IoClient* client, const request_t& request) WARN_UNUSED_RESULT;
-common::Error WriteResponce(common::libev::IoClient* client, const responce_t& responce) WARN_UNUSED_RESULT;
-common::Error ReadCommand(common::libev::IoClient* client, std::string* out) WARN_UNUSED_RESULT;
-}  // namespace detail
+common::ErrnoError WriteRequest(common::libev::IoClient *client,
+                                const request_t &request) WARN_UNUSED_RESULT;
+common::ErrnoError WriteResponce(common::libev::IoClient *client,
+                                 const responce_t &responce) WARN_UNUSED_RESULT;
+common::ErrnoError ReadCommand(common::libev::IoClient *client,
+                               std::string *out) WARN_UNUSED_RESULT;
+} // namespace detail
 
-template <typename Client>
-class ProtocolClient : public Client {
- public:
-  common::Error WriteRequest(const request_t& request) WARN_UNUSED_RESULT {
+template <typename Client> class ProtocolClient : public Client {
+public:
+  common::ErrnoError WriteRequest(const request_t &request) WARN_UNUSED_RESULT {
     return detail::WriteRequest(this, request);
   }
 
-  common::Error WriteResponce(const responce_t& responce) WARN_UNUSED_RESULT {
+  common::ErrnoError
+  WriteResponce(const responce_t &responce) WARN_UNUSED_RESULT {
     return detail::WriteResponce(this, responce);
   }
 
-  common::Error ReadCommand(std::string* out) WARN_UNUSED_RESULT { return detail::ReadCommand(this, out); }
+  common::ErrnoError ReadCommand(std::string *out) WARN_UNUSED_RESULT {
+    return detail::ReadCommand(this, out);
+  }
 
- private:
+private:
   using Client::Read;
   using Client::Write;
 };
 
 typedef protocol::ProtocolClient<common::libev::IoClient> protocol_client_t;
 
-}  // namespace protocol
-}  // namespace iptv_cloud
+} // namespace protocol
+} // namespace iptv_cloud

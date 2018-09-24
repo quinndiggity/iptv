@@ -27,19 +27,21 @@ enum StatType {
 };
 
 class StatCredentialsBase {
- public:
-  static StatCredentialsBase* CreateCreadentialsFromString(const std::string& json_data) WARN_UNUSED_RESULT;
-  static bool IsValidCredentials(const std::string& json_data,
-                                 StatCredentialsBase** creds = nullptr) WARN_UNUSED_RESULT;
+public:
+  static StatCredentialsBase *
+  CreateCreadentialsFromString(const std::string &json_data) WARN_UNUSED_RESULT;
+  static bool
+  IsValidCredentials(const std::string &json_data,
+                     StatCredentialsBase **creds = nullptr) WARN_UNUSED_RESULT;
   StatType GetType() const;
 
- protected:
+protected:
   StatCredentialsBase(StatType type);
 
- private:
+private:
   const StatType type_;
 };
 
-}  // namespace stats
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace stats
+} // namespace server
+} // namespace iptv_cloud

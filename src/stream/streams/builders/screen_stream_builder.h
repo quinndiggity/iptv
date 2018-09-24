@@ -24,8 +24,8 @@ namespace streams {
 namespace builders {
 
 class ScreenStreamBuilder : public GstBaseBuilder {
- public:
-  ScreenStreamBuilder(AudioVideoConfig* api, IBaseBuilderObserver* observer);
+public:
+  ScreenStreamBuilder(AudioVideoConfig *api, IBaseBuilderObserver *observer);
 
   virtual Connector BuildInput() override;
   virtual Connector BuildUdbConnections(Connector conn) override;
@@ -34,7 +34,7 @@ class ScreenStreamBuilder : public GstBaseBuilder {
   virtual Connector BuildOutput(Connector conn) override;
 };
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

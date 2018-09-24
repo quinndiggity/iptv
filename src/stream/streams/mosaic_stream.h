@@ -38,7 +38,7 @@ namespace elements {
 namespace video {
 class ElementCairoOverlay;
 }
-}  // namespace elements
+} // namespace elements
 
 namespace streams {
 
@@ -49,52 +49,64 @@ class MosaicStreamBuilder;
 class MosaicStream : public IBaseStream {
   friend class builders::MosaicStreamBuilder;
 
- public:
-  MosaicStream(EncodingConfig* config, IStreamClient* client, StreamStruct* stats);
-  virtual const char* ClassName() const override;
+public:
+  MosaicStream(EncodingConfig *config, IStreamClient *client,
+               StreamStruct *stats);
+  virtual const char *ClassName() const override;
 
- protected:
-  virtual void OnInpudSrcPadCreated(common::uri::Url::scheme scheme, pad::Pad* src_pad, element_id_t id) override;
-  virtual void OnOutputSinkPadCreated(common::uri::Url::scheme scheme, pad::Pad* sink_pad, element_id_t id) override;
+protected:
+  virtual void OnInpudSrcPadCreated(common::uri::Url::scheme scheme,
+                                    pad::Pad *src_pad,
+                                    element_id_t id) override;
+  virtual void OnOutputSinkPadCreated(common::uri::Url::scheme scheme,
+                                      pad::Pad *sink_pad,
+                                      element_id_t id) override;
 
-  virtual void OnDecodebinCreated(elements::ElementDecodebin* decodebin);
-  virtual void OnCairoCreated(elements::video::ElementCairoOverlay* cairo, const MosaicImageOptions& options);
+  virtual void OnDecodebinCreated(elements::ElementDecodebin *decodebin);
+  virtual void OnCairoCreated(elements::video::ElementCairoOverlay *cairo,
+                              const MosaicImageOptions &options);
 
-  virtual IBaseBuilder* CreateBuilder() override;
+  virtual IBaseBuilder *CreateBuilder() override;
 
   virtual void PreLoop() override;
   virtual void PostLoop(ExitStatus status) override;
 
-  virtual void ConnectDecodebinSignals(elements::ElementDecodebin* decodebin);
-  virtual void ConnectCairoSignals(elements::video::ElementCairoOverlay* cairo, const MosaicImageOptions& options);
+  virtual void ConnectDecodebinSignals(elements::ElementDecodebin *decodebin);
+  virtual void ConnectCairoSignals(elements::video::ElementCairoOverlay *cairo,
+                                   const MosaicImageOptions &options);
 
-  virtual gboolean HandleAsyncBusMessageReceived(GstBus* bus, GstMessage* message) override;
-  virtual gboolean HandleDecodeBinAutoplugger(GstElement* elem, GstPad* pad, GstCaps* caps);
-  virtual void HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad);
-  virtual GValueArray* HandleAutoplugSort(GstElement* bin, GstPad* pad, GstCaps* caps, GValueArray* factories);
-  virtual void HandleElementAdded(GstBin* bin, GstElement* element);
+  virtual gboolean HandleAsyncBusMessageReceived(GstBus *bus,
+                                                 GstMessage *message) override;
+  virtual gboolean HandleDecodeBinAutoplugger(GstElement *elem, GstPad *pad,
+                                              GstCaps *caps);
+  virtual void HandleDecodeBinPadAdded(GstElement *src, GstPad *new_pad);
+  virtual GValueArray *HandleAutoplugSort(GstElement *bin, GstPad *pad,
+                                          GstCaps *caps,
+                                          GValueArray *factories);
+  virtual void HandleElementAdded(GstBin *bin, GstElement *element);
 
-  virtual void HandleCairoDraw(GstElement* overlay, cairo_t* cr, guint64 timestamp, guint64 duration);
+  virtual void HandleCairoDraw(GstElement *overlay, cairo_t *cr,
+                               guint64 timestamp, guint64 duration);
 
- private:
-  static void decodebin_pad_added_callback(GstElement* src, GstPad* new_pad, gpointer user_data);
-  static gboolean decodebin_autoplugger_callback(GstElement* elem, GstPad* pad, GstCaps* caps, gpointer user_data);
-  static GValueArray* decodebin_autoplug_sort_callback(GstElement* bin,
-                                                       GstPad* pad,
-                                                       GstCaps* caps,
-                                                       GValueArray* factories,
-                                                       gpointer user_data);
-  static void decodebin_element_added_callback(GstBin* bin, GstElement* element, gpointer user_data);
+private:
+  static void decodebin_pad_added_callback(GstElement *src, GstPad *new_pad,
+                                           gpointer user_data);
+  static gboolean decodebin_autoplugger_callback(GstElement *elem, GstPad *pad,
+                                                 GstCaps *caps,
+                                                 gpointer user_data);
+  static GValueArray *
+  decodebin_autoplug_sort_callback(GstElement *bin, GstPad *pad, GstCaps *caps,
+                                   GValueArray *factories, gpointer user_data);
+  static void decodebin_element_added_callback(GstBin *bin, GstElement *element,
+                                               gpointer user_data);
 
-  static void cairo_draw_callback(GstElement* overlay,
-                                  cairo_t* cr,
-                                  guint64 timestamp,
-                                  guint64 duration,
+  static void cairo_draw_callback(GstElement *overlay, cairo_t *cr,
+                                  guint64 timestamp, guint64 duration,
                                   gpointer user_data);
 
   MosaicImageOptions options_;
 };
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

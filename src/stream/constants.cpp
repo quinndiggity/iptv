@@ -14,4 +14,5 @@
 
 #include "stream/constants.h"
 
-const common::media::Rational unknown_aspect_ratio = {DEFAULT_ASPECT_RATIO_NUM, DEFAULT_ASPECT_RATIO_DEN};
+const common::media::Rational unknown_aspect_ratio = {DEFAULT_ASPECT_RATIO_NUM,
+                                                      DEFAULT_ASPECT_RATIO_DEN};

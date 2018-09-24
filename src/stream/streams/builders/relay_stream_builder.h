@@ -24,11 +24,11 @@ namespace streams {
 namespace builders {
 
 class RelayStreamBuilder : public SrcDecodeStreamBuilder {
- public:
-  RelayStreamBuilder(RelayConfig* config, SrcDecodeBinStream* observer);
+public:
+  RelayStreamBuilder(RelayConfig *config, SrcDecodeBinStream *observer);
 
-  virtual elements::Element* BuildVideoUdbConnection() override;
-  virtual elements::Element* BuildAudioUdbConnection() override;
+  virtual elements::Element *BuildVideoUdbConnection() override;
+  virtual elements::Element *BuildAudioUdbConnection() override;
 
   virtual SupportedVideoCodecs GetVideoCodecType() const override;
   virtual SupportedAudioCodecs GetAudioCodecType() const override;
@@ -37,7 +37,7 @@ class RelayStreamBuilder : public SrcDecodeStreamBuilder {
   virtual Connector BuildConverter(Connector conn) override;
 };
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

@@ -20,14 +20,16 @@ namespace iptv_cloud {
 namespace server {
 
 class DaemonServer : public common::libev::tcp::TcpServer {
- public:
+public:
   typedef common::libev::tcp::TcpServer base_class;
-  explicit DaemonServer(const common::net::HostAndPort& host, common::libev::IoLoopObserver* observer = nullptr);
+  explicit DaemonServer(const common::net::HostAndPort &host,
+                        common::libev::IoLoopObserver *observer = nullptr);
   virtual ~DaemonServer();
 
- private:
-  virtual common::libev::tcp::TcpClient* CreateClient(const common::net::socket_info& info) override;
+private:
+  virtual common::libev::tcp::TcpClient *
+  CreateClient(const common::net::socket_info &info) override;
 };
 
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace server
+} // namespace iptv_cloud

@@ -30,8 +30,9 @@ namespace iptv_cloud {
 namespace server {
 namespace stats {
 
-StatCredentialsBase* StatCredentialsBase::CreateCreadentialsFromString(const std::string& json_data) {
-  StatCredentialsBase* result = nullptr;
+StatCredentialsBase *StatCredentialsBase::CreateCreadentialsFromString(
+    const std::string &json_data) {
+  StatCredentialsBase *result = nullptr;
   if (!IsValidCredentials(json_data, &result)) {
     return nullptr;
   }
@@ -39,25 +40,27 @@ StatCredentialsBase* StatCredentialsBase::CreateCreadentialsFromString(const std
   return result;
 }
 
-bool StatCredentialsBase::IsValidCredentials(const std::string& json_data, StatCredentialsBase** creds) {
+bool StatCredentialsBase::IsValidCredentials(const std::string &json_data,
+                                             StatCredentialsBase **creds) {
   if (json_data.empty()) {
     return false;
   }
 
-  json_object* obj = json_tokener_parse(json_data.c_str());
+  json_object *obj = json_tokener_parse(json_data.c_str());
   if (!obj) {
     return false;
   }
 
-  json_object* jtype = NULL;
+  json_object *jtype = NULL;
   json_bool jtype_exists = json_object_object_get_ex(obj, FIELD_TYPE, &jtype);
   if (!jtype_exists) {
     json_object_put(obj);
     return false;
   }
 
-  json_object* jcreds = NULL;
-  json_bool jcreds_exists = json_object_object_get_ex(obj, FIELD_CREDS, &jcreds);
+  json_object *jcreds = NULL;
+  json_bool jcreds_exists =
+      json_object_object_get_ex(obj, FIELD_CREDS, &jcreds);
   if (!jcreds_exists) {
     json_object_put(obj);
     return false;
@@ -90,12 +93,10 @@ bool StatCredentialsBase::IsValidCredentials(const std::string& json_data, StatC
   return false;
 }
 
-StatType StatCredentialsBase::GetType() const {
-  return type_;
-}
+StatType StatCredentialsBase::GetType() const { return type_; }
 
 StatCredentialsBase::StatCredentialsBase(StatType type) : type_(type) {}
 
-}  // namespace stats
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace stats
+} // namespace server
+} // namespace iptv_cloud

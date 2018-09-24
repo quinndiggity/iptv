@@ -19,15 +19,15 @@ namespace server {
 namespace gpu_stats {
 
 class IPerfMonitor {
- public:
+public:
   virtual ~IPerfMonitor();
 
   virtual bool Exec() = 0;
   virtual void Stop() = 0;
 };
 
-IPerfMonitor* CreatePerfMonitor(int* load);
+IPerfMonitor *CreatePerfMonitor(int *load);
 
-}  // namespace gpu_stats
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace gpu_stats
+} // namespace server
+} // namespace iptv_cloud

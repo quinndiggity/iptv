@@ -16,7 +16,7 @@
 
 // for element_id_t
 
-#include "stream/elements/element.h"  // for ElementEx, SupportedElements::ELEMENT_...
+#include "stream/elements/element.h" // for ElementEx, SupportedElements::ELEMENT_...
 #include "stream/elements/sources/sources.h"
 
 namespace iptv_cloud {
@@ -25,16 +25,17 @@ namespace elements {
 namespace sources {
 
 class ElementV4L2Src : public ElementEx<ELEMENT_V4L2_SRC> {
- public:
+public:
   typedef ElementEx<ELEMENT_V4L2_SRC> base_class;
   using base_class::base_class;
 
-  void SetDevice(const std::string& device = "/dev/video0");  // Default value: "/dev/video0"
+  void SetDevice(const std::string &device =
+                     "/dev/video0"); // Default value: "/dev/video0"
 };
 
-ElementV4L2Src* make_v4l2_src(const std::string& device, element_id_t input_id);
+ElementV4L2Src *make_v4l2_src(const std::string &device, element_id_t input_id);
 
-}  // namespace sources
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sources
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

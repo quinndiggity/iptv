@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "server/stats/istat.h"  // for IStat
+#include "server/stats/istat.h" // for IStat
 
 namespace iptv_cloud {
 namespace server {
@@ -22,23 +22,24 @@ namespace stats {
 namespace fake {
 
 class StatCredentials : public StatCredentialsBase {
- public:
+public:
   StatCredentials();
 };
 
 class Stat : public IStat {
- public:
-  Stat(StatCredentials* creds);  // take ownership
+public:
+  Stat(StatCredentials *creds); // take ownership
 
-  virtual bool SetKey(const std::string& key, const std::string& value) override;
-  virtual bool GetKey(const std::string& key, std::string* value) override;
+  virtual bool SetKey(const std::string &key,
+                      const std::string &value) override;
+  virtual bool GetKey(const std::string &key, std::string *value) override;
 
- private:
+private:
   DISALLOW_COPY_AND_ASSIGN(Stat);
   const std::unique_ptr<StatCredentials> creds_;
 };
 
-}  // namespace fake
-}  // namespace stats
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace fake
+} // namespace stats
+} // namespace server
+} // namespace iptv_cloud

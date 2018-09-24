@@ -18,7 +18,7 @@
 
 // for element_id_t
 
-#include "stream/elements/element.h"  // for ElementEx, SupportedElements::ELEMENT_...
+#include "stream/elements/element.h" // for ElementEx, SupportedElements::ELEMENT_...
 #include "stream/elements/sources/sources.h"
 
 namespace iptv_cloud {
@@ -27,18 +27,21 @@ namespace elements {
 namespace sources {
 
 class ElementUDPSrc : public ElementEx<ELEMENT_UDP_SRC> {
- public:
+public:
   typedef ElementEx<ELEMENT_UDP_SRC> base_class;
   using base_class::base_class;
 
-  void SetAddress(const std::string& host);
+  void SetAddress(const std::string &host);
   void SetPort(uint16_t port);
-  void SetUri(const std::string& uri = "udp://0.0.0.0:5004");  // String. Default: "udp://0.0.0.0:5004"
+  void
+  SetUri(const std::string &uri =
+             "udp://0.0.0.0:5004"); // String. Default: "udp://0.0.0.0:5004"
 };
 
-ElementUDPSrc* make_udp_src(const common::net::HostAndPort& host, element_id_t input_id);
+ElementUDPSrc *make_udp_src(const common::net::HostAndPort &host,
+                            element_id_t input_id);
 
-}  // namespace sources
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sources
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

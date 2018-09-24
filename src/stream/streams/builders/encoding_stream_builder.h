@@ -27,15 +27,15 @@ namespace streams {
 namespace builders {
 
 class EncodingStreamBuilder : public SrcDecodeStreamBuilder {
- public:
-  EncodingStreamBuilder(EncodingConfig* api, SrcDecodeBinStream* observer);
+public:
+  EncodingStreamBuilder(EncodingConfig *api, SrcDecodeBinStream *observer);
   virtual Connector BuildPostProc(Connector conn) override;
   virtual Connector BuildConverter(Connector conn) override;
 
   virtual SupportedVideoCodecs GetVideoCodecType() const override;
   virtual SupportedAudioCodecs GetAudioCodecType() const override;
 
- protected:
+protected:
   virtual elements_line_t BuildVideoPostProc(element_id_t video_id);
   virtual elements_line_t BuildAudioPostProc(element_id_t audio_id);
 
@@ -43,7 +43,7 @@ class EncodingStreamBuilder : public SrcDecodeStreamBuilder {
   virtual elements_line_t BuildAudioConverter(element_id_t audio_id);
 };
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

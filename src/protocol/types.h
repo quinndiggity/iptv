@@ -24,5 +24,5 @@ typedef common::protocols::three_way_handshake::cmd_request_t request_t;
 typedef common::protocols::three_way_handshake::cmd_seq_t sequance_id_t;
 typedef std::string serializet_t;
 
-}  // namespace protocol
-}  // namespace iptv_cloud
+} // namespace protocol
+} // namespace iptv_cloud

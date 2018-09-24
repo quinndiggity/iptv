@@ -30,24 +30,25 @@ namespace elements {
 namespace video {
 class ElementCairoOverlay;
 }
-}  // namespace elements
+} // namespace elements
 
 namespace streams {
 class MosaicStream;
 namespace builders {
 class MosaicStreamBuilder : public IBaseBuilder {
- public:
-  MosaicStreamBuilder(EncodingConfig* config, MosaicStream* observer);
+public:
+  MosaicStreamBuilder(EncodingConfig *config, MosaicStream *observer);
 
- protected:
-  void HandleDecodebinCreated(elements::ElementDecodebin* decodebin);
-  void HandleCairoCreated(elements::video::ElementCairoOverlay* cairo, const MosaicImageOptions& options);
+protected:
+  void HandleDecodebinCreated(elements::ElementDecodebin *decodebin);
+  void HandleCairoCreated(elements::video::ElementCairoOverlay *cairo,
+                          const MosaicImageOptions &options);
 
   virtual bool InitPipeline() override;
-  virtual void BuildOutput(elements::Element* video, elements::Element* audio);
+  virtual void BuildOutput(elements::Element *video, elements::Element *audio);
 };
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

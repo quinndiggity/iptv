@@ -33,11 +33,12 @@ namespace stream {
 namespace streams {
 namespace builders {
 
-EncodingStreamBuilder::EncodingStreamBuilder(EncodingConfig* api, SrcDecodeBinStream* observer)
+EncodingStreamBuilder::EncodingStreamBuilder(EncodingConfig *api,
+                                             SrcDecodeBinStream *observer)
     : SrcDecodeStreamBuilder(api, observer) {}
 
 Connector EncodingStreamBuilder::BuildPostProc(Connector conn) {
-  EncodingConfig* conf = static_cast<EncodingConfig*>(api_);
+  EncodingConfig *conf = static_cast<EncodingConfig *>(api_);
 
   if (conf->HaveVideo()) {
     elements_line_t video_post_line = BuildVideoPostProc(0);
@@ -59,7 +60,7 @@ Connector EncodingStreamBuilder::BuildPostProc(Connector conn) {
 }
 
 SupportedVideoCodecs EncodingStreamBuilder::GetVideoCodecType() const {
-  EncodingConfig* conf = static_cast<EncodingConfig*>(api_);
+  EncodingConfig *conf = static_cast<EncodingConfig *>(api_);
   const std::string vcodec = conf->GetVideoEncoder();
   if (elements::encoders::IsH264Encoder(vcodec)) {
     return VIDEO_H264_CODEC;
@@ -74,7 +75,7 @@ SupportedVideoCodecs EncodingStreamBuilder::GetVideoCodecType() const {
 }
 
 SupportedAudioCodecs EncodingStreamBuilder::GetAudioCodecType() const {
-  EncodingConfig* conf = static_cast<EncodingConfig*>(api_);
+  EncodingConfig *conf = static_cast<EncodingConfig *>(api_);
   const std::string acodec = conf->GetAudioEncoder();
   if (elements::encoders::IsAACEncoder(acodec)) {
     return AUDIO_AAC_CODEC;
@@ -87,7 +88,7 @@ SupportedAudioCodecs EncodingStreamBuilder::GetAudioCodecType() const {
 }
 
 Connector EncodingStreamBuilder::BuildConverter(Connector conn) {
-  EncodingConfig* conf = static_cast<EncodingConfig*>(api_);
+  EncodingConfig *conf = static_cast<EncodingConfig *>(api_);
   if (conf->HaveVideo()) {
     elements_line_t video_encoder = BuildVideoConverter(0);
     if (!video_encoder.empty()) {
@@ -97,13 +98,15 @@ Connector EncodingStreamBuilder::BuildConverter(Connector conn) {
 
     const std::string vcodec = conf->GetVideoEncoder();
     if (elements::encoders::IsH264Encoder(vcodec)) {
-      elements::parser::ElementH264Parse* premux_parser = elements::parser::make_h264_parser(0);
+      elements::parser::ElementH264Parse *premux_parser =
+          elements::parser::make_h264_parser(0);
       ElementAdd(premux_parser);
       ElementLink(conn.video, premux_parser);
       conn.video = premux_parser;
     }
 
-    elements::ElementTee* tee = new elements::ElementTee(common::MemSPrintf(VIDEO_TEE_NAME_1U, 0));
+    elements::ElementTee *tee =
+        new elements::ElementTee(common::MemSPrintf(VIDEO_TEE_NAME_1U, 0));
     ElementAdd(tee);
     ElementLink(conn.video, tee);
     conn.video = tee;
@@ -118,13 +121,15 @@ Connector EncodingStreamBuilder::BuildConverter(Connector conn) {
 
     const std::string acodec = conf->GetAudioEncoder();
     if (elements::encoders::IsAACEncoder(acodec)) {
-      elements::parser::ElementAACParse* premux_parser = elements::parser::make_aac_parser(0);
+      elements::parser::ElementAACParse *premux_parser =
+          elements::parser::make_aac_parser(0);
       ElementAdd(premux_parser);
       ElementLink(conn.audio, premux_parser);
       conn.audio = premux_parser;
     }
 
-    elements::ElementTee* tee = new elements::ElementTee(common::MemSPrintf(AUDIO_TEE_NAME_1U, 0));
+    elements::ElementTee *tee =
+        new elements::ElementTee(common::MemSPrintf(AUDIO_TEE_NAME_1U, 0));
     ElementAdd(tee);
     ElementLink(conn.audio, tee);
     conn.audio = tee;
@@ -132,17 +137,19 @@ Connector EncodingStreamBuilder::BuildConverter(Connector conn) {
   return conn;
 }
 
-elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id) {
-  EncodingConfig* conf = static_cast<EncodingConfig*>(api_);
-  elements::Element* first = nullptr;
-  elements::Element* last = nullptr;
+elements_line_t
+EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id) {
+  EncodingConfig *conf = static_cast<EncodingConfig *>(api_);
+  elements::Element *first = nullptr;
+  elements::Element *last = nullptr;
 
   const int width = conf->GetWidth();
   const int height = conf->GetHeight();
   const int framerate = conf->GetFramerate();
   if (conf->IsGpu()) {
     if (conf->IsMfxGpu()) {
-      elements::ElementMFXVpp* post = new elements::ElementMFXVpp(common::MemSPrintf(POST_PROC_NAME_1U, video_id));
+      elements::ElementMFXVpp *post = new elements::ElementMFXVpp(
+          common::MemSPrintf(POST_PROC_NAME_1U, video_id));
       post->SetForceAspectRatio(false);
       if (width != DEFAULT_VIDEO_WIDTH && height != DEFAULT_VIDEO_HEIGHT) {
         post->SetWidth(width);
@@ -156,30 +163,33 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
       }
       first = post;
     } else {
-      elements::ElementVaapiPostProc* post =
-          new elements::ElementVaapiPostProc(common::MemSPrintf(POST_PROC_NAME_1U, video_id));
+      elements::ElementVaapiPostProc *post = new elements::ElementVaapiPostProc(
+          common::MemSPrintf(POST_PROC_NAME_1U, video_id));
       if (!conf->GetDeinterlace()) {
-        post->SetDinterlaceMode(2);  // (2): disabled - Never deinterlace
+        post->SetDinterlaceMode(2); // (2): disabled - Never deinterlace
       }
-      post->SetFormat(2);  // GST_VIDEO_FORMAT_I420
+      post->SetFormat(2); // GST_VIDEO_FORMAT_I420
       post->SetForceAspectRatio(false);
       first = post;
     }
 
     ElementAdd(first);
   } else {
-    elements_line_t first_last = elements::encoders::build_video_convert(conf->GetDeinterlace(), this, video_id);
+    elements_line_t first_last = elements::encoders::build_video_convert(
+        conf->GetDeinterlace(), this, video_id);
     first = first_last.front();
     last = first_last.back();
 
     if (width != DEFAULT_VIDEO_WIDTH && height != DEFAULT_VIDEO_HEIGHT) {
-      last = elements::encoders::build_video_scale(width, height, this, last, video_id);
+      last = elements::encoders::build_video_scale(width, height, this, last,
+                                                   video_id);
     }
 
     common::media::Rational rat = conf->GetAspectRatio();
     if (rat != unknown_aspect_ratio) {
-      elements::video::ElementAspectRatio* aspect_ratio =
-          new elements::video::ElementAspectRatio(common::MemSPrintf(ASPECT_RATIO_NAME_1U, video_id));
+      elements::video::ElementAspectRatio *aspect_ratio =
+          new elements::video::ElementAspectRatio(
+              common::MemSPrintf(ASPECT_RATIO_NAME_1U, video_id));
       aspect_ratio->SetAspectRatio(rat.num, rat.den);
       ElementAdd(aspect_ratio);
       ElementLink(last, aspect_ratio);
@@ -187,7 +197,8 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
     }
 
     if (framerate != DEFAULT_FRAME_RATE) {
-      last = elements::encoders::build_video_framerate(framerate, this, last, video_id);
+      last = elements::encoders::build_video_framerate(framerate, this, last,
+                                                       video_id);
     }
   }
 
@@ -195,8 +206,9 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
   common::draw::Point logo_point = conf->GetLogoPos();
   alpha_t alpha = conf->GetLogoAlpha();
   if (logo_uri.IsValid()) {
-    elements::video::ElementGDKPixBufOverlay* videologo =
-        new elements::video::ElementGDKPixBufOverlay(common::MemSPrintf(VIDEO_LOGO_NAME_1U, video_id));
+    elements::video::ElementGDKPixBufOverlay *videologo =
+        new elements::video::ElementGDKPixBufOverlay(
+            common::MemSPrintf(VIDEO_LOGO_NAME_1U, video_id));
     common::uri::Url::scheme scheme = logo_uri.GetScheme();
     if (scheme == common::uri::Url::file) {
       common::uri::Upath upath = logo_uri.GetPath();
@@ -216,40 +228,47 @@ elements_line_t EncodingStreamBuilder::BuildVideoPostProc(element_id_t video_id)
   return {first, last};
 }
 
-elements_line_t EncodingStreamBuilder::BuildAudioPostProc(element_id_t audio_id) {
-  EncodingConfig* conf = static_cast<EncodingConfig*>(api_);
+elements_line_t
+EncodingStreamBuilder::BuildAudioPostProc(element_id_t audio_id) {
+  EncodingConfig *conf = static_cast<EncodingConfig *>(api_);
 
   const volume_t volume = conf->GetVolume();
   audio_channel_count_t achannels = conf->GetAudioChannels();
-  elements_line_t first_last = elements::encoders::build_audio_converters(volume, achannels, this, audio_id);
+  elements_line_t first_last = elements::encoders::build_audio_converters(
+      volume, achannels, this, audio_id);
   return first_last;
 }
 
-elements_line_t EncodingStreamBuilder::BuildVideoConverter(element_id_t video_id) {
-  EncodingConfig* conf = static_cast<EncodingConfig*>(api_);
+elements_line_t
+EncodingStreamBuilder::BuildVideoConverter(element_id_t video_id) {
+  EncodingConfig *conf = static_cast<EncodingConfig *>(api_);
 
   int video_bitrate = conf->GetVideoBitrate();
-  elements_line_t video_encoder =
-      elements::encoders::build_video_encoder(conf->GetVideoEncoder(), video_bitrate, conf->GetVideoEncoderArgs(),
-                                              conf->GetVideoEncoderStrArgs(), this, video_id);
+  elements_line_t video_encoder = elements::encoders::build_video_encoder(
+      conf->GetVideoEncoder(), video_bitrate, conf->GetVideoEncoderArgs(),
+      conf->GetVideoEncoderStrArgs(), this, video_id);
   return video_encoder;
 }
 
-elements_line_t EncodingStreamBuilder::BuildAudioConverter(element_id_t audio_id) {
-  EncodingConfig* conf = static_cast<EncodingConfig*>(api_);
+elements_line_t
+EncodingStreamBuilder::BuildAudioConverter(element_id_t audio_id) {
+  EncodingConfig *conf = static_cast<EncodingConfig *>(api_);
 
   const std::string audio_encoder_str = conf->GetAudioEncoder();
   int audiorate = conf->GetAudioBitrate();
   std::string name_codec = common::MemSPrintf(AUDIO_CODEC_NAME_1U, audio_id);
-  elements::Element* enc = elements::encoders::make_audio_encoder(audio_encoder_str, name_codec, audiorate);
+  elements::Element *enc = elements::encoders::make_audio_encoder(
+      audio_encoder_str, name_codec, audiorate);
   ElementAdd(enc);
-  elements::Element* first = enc;
-  elements::Element* last = enc;
+  elements::Element *first = enc;
+  elements::Element *last = enc;
   if (audio_encoder_str == elements::encoders::ElementMP3Enc::GetPluginName()) {
-    elements::audio::ElementAudioResample* audioresample =
-        new elements::audio::ElementAudioResample(common::MemSPrintf(AUDIO_RESAMPLE_NAME_1U, audio_id));
-    elements::parser::ElementMPEGAudioParse* mpegaudioparse =
-        new elements::parser::ElementMPEGAudioParse(common::MemSPrintf(MPEG_AUDIO_PARSE_NAME_1U, audio_id));
+    elements::audio::ElementAudioResample *audioresample =
+        new elements::audio::ElementAudioResample(
+            common::MemSPrintf(AUDIO_RESAMPLE_NAME_1U, audio_id));
+    elements::parser::ElementMPEGAudioParse *mpegaudioparse =
+        new elements::parser::ElementMPEGAudioParse(
+            common::MemSPrintf(MPEG_AUDIO_PARSE_NAME_1U, audio_id));
 
     ElementAdd(audioresample);
     ElementAdd(mpegaudioparse);
@@ -263,7 +282,7 @@ elements_line_t EncodingStreamBuilder::BuildAudioConverter(element_id_t audio_id
   return {first, last};
 }
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

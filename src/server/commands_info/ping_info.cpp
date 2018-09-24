@@ -24,16 +24,19 @@
 namespace iptv_cloud {
 namespace server {
 
-ServerPingInfo::ServerPingInfo() : timestamp_(common::time::current_utc_mstime()) {}
+ServerPingInfo::ServerPingInfo()
+    : timestamp_(common::time::current_utc_mstime()) {}
 
-common::Error ServerPingInfo::SerializeFields(json_object* obj) const {
-  json_object_object_add(obj, SERVER_INFO_TIMESTAMP_FIELD, json_object_new_int64(timestamp_));
+common::Error ServerPingInfo::SerializeFields(json_object *obj) const {
+  json_object_object_add(obj, SERVER_INFO_TIMESTAMP_FIELD,
+                         json_object_new_int64(timestamp_));
   return common::Error();
 }
 
-common::Error ServerPingInfo::DoDeSerialize(json_object* serialized) {
-  json_object* jtimestamp = NULL;
-  json_bool jtimestamp_exists = json_object_object_get_ex(serialized, SERVER_INFO_TIMESTAMP_FIELD, &jtimestamp);
+common::Error ServerPingInfo::DoDeSerialize(json_object *serialized) {
+  json_object *jtimestamp = NULL;
+  json_bool jtimestamp_exists = json_object_object_get_ex(
+      serialized, SERVER_INFO_TIMESTAMP_FIELD, &jtimestamp);
   ServerPingInfo inf;
   if (jtimestamp_exists) {
     inf.timestamp_ = json_object_get_int64(jtimestamp);
@@ -43,20 +46,21 @@ common::Error ServerPingInfo::DoDeSerialize(json_object* serialized) {
   return common::Error();
 }
 
-timestamp_t ServerPingInfo::GetTimeStamp() const {
-  return timestamp_;
-}
+timestamp_t ServerPingInfo::GetTimeStamp() const { return timestamp_; }
 
-ClientPingInfo::ClientPingInfo() : timestamp_(common::time::current_utc_mstime()) {}
+ClientPingInfo::ClientPingInfo()
+    : timestamp_(common::time::current_utc_mstime()) {}
 
-common::Error ClientPingInfo::SerializeFields(json_object* obj) const {
-  json_object_object_add(obj, CLIENT_INFO_TIMESTAMP_FIELD, json_object_new_int64(timestamp_));
+common::Error ClientPingInfo::SerializeFields(json_object *obj) const {
+  json_object_object_add(obj, CLIENT_INFO_TIMESTAMP_FIELD,
+                         json_object_new_int64(timestamp_));
   return common::Error();
 }
 
-common::Error ClientPingInfo::DoDeSerialize(json_object* serialized) {
-  json_object* jtimestamp = NULL;
-  json_bool jtimestamp_exists = json_object_object_get_ex(serialized, CLIENT_INFO_TIMESTAMP_FIELD, &jtimestamp);
+common::Error ClientPingInfo::DoDeSerialize(json_object *serialized) {
+  json_object *jtimestamp = NULL;
+  json_bool jtimestamp_exists = json_object_object_get_ex(
+      serialized, CLIENT_INFO_TIMESTAMP_FIELD, &jtimestamp);
   ClientPingInfo inf;
   if (jtimestamp_exists) {
     inf.timestamp_ = json_object_get_int64(jtimestamp);
@@ -66,9 +70,7 @@ common::Error ClientPingInfo::DoDeSerialize(json_object* serialized) {
   return common::Error();
 }
 
-timestamp_t ClientPingInfo::GetTimeStamp() const {
-  return timestamp_;
-}
+timestamp_t ClientPingInfo::GetTimeStamp() const { return timestamp_; }
 
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace server
+} // namespace iptv_cloud

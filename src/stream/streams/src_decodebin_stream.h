@@ -31,55 +31,67 @@ class SrcDecodeStreamBuilder;
 class SrcDecodeBinStream : public IBaseStream {
   friend class builders::SrcDecodeStreamBuilder;
 
- public:
-  SrcDecodeBinStream(Config* config, IStreamClient* client, StreamStruct* stats);
+public:
+  SrcDecodeBinStream(Config *config, IStreamClient *client,
+                     StreamStruct *stats);
   virtual ~SrcDecodeBinStream();
 
-  virtual const char* ClassName() const override;
+  virtual const char *ClassName() const override;
 
- protected:
-  virtual void OnInpudSrcPadCreated(common::uri::Url::scheme scheme, pad::Pad* src_pad, element_id_t id) override;
-  virtual void OnOutputSinkPadCreated(common::uri::Url::scheme scheme, pad::Pad* sink_pad, element_id_t id) override;
-  virtual void OnDecodebinCreated(elements::ElementDecodebin* decodebin);
+protected:
+  virtual void OnInpudSrcPadCreated(common::uri::Url::scheme scheme,
+                                    pad::Pad *src_pad,
+                                    element_id_t id) override;
+  virtual void OnOutputSinkPadCreated(common::uri::Url::scheme scheme,
+                                      pad::Pad *sink_pad,
+                                      element_id_t id) override;
+  virtual void OnDecodebinCreated(elements::ElementDecodebin *decodebin);
 
-  virtual IBaseBuilder* CreateBuilder() override = 0;
+  virtual IBaseBuilder *CreateBuilder() override = 0;
 
   virtual void PreLoop() override;
   virtual void PostLoop(ExitStatus status) override;
 
-  virtual void ConnectDecodebinSignals(elements::ElementDecodebin* decodebin);
+  virtual void ConnectDecodebinSignals(elements::ElementDecodebin *decodebin);
 
-  virtual gboolean HandleDecodeBinAutoplugger(GstElement* elem, GstPad* pad, GstCaps* caps) = 0;
-  virtual void HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad) = 0;
-  virtual GValueArray* HandleAutoplugSort(GstElement* bin, GstPad* pad, GstCaps* caps, GValueArray* factories) = 0;
-  virtual GstAutoplugSelectResult HandleAutoplugSelect(GstElement* bin,
-                                                       GstPad* pad,
-                                                       GstCaps* caps,
-                                                       GstElementFactory* factory) = 0;
+  virtual gboolean HandleDecodeBinAutoplugger(GstElement *elem, GstPad *pad,
+                                              GstCaps *caps) = 0;
+  virtual void HandleDecodeBinPadAdded(GstElement *src, GstPad *new_pad) = 0;
+  virtual GValueArray *HandleAutoplugSort(GstElement *bin, GstPad *pad,
+                                          GstCaps *caps,
+                                          GValueArray *factories) = 0;
+  virtual GstAutoplugSelectResult
+  HandleAutoplugSelect(GstElement *bin, GstPad *pad, GstCaps *caps,
+                       GstElementFactory *factory) = 0;
 
-  virtual void HandleDecodeBinElementAdded(GstBin* bin, GstElement* element) = 0;
-  virtual void HandleDecodeBinElementRemoved(GstBin* bin, GstElement* element) = 0;
+  virtual void HandleDecodeBinElementAdded(GstBin *bin,
+                                           GstElement *element) = 0;
+  virtual void HandleDecodeBinElementRemoved(GstBin *bin,
+                                             GstElement *element) = 0;
 
- private:
-  static void decodebin_pad_added_callback(GstElement* src, GstPad* new_pad, gpointer user_data);
-  static gboolean decodebin_autoplugger_callback(GstElement* elem, GstPad* pad, GstCaps* caps, gpointer user_data);
+private:
+  static void decodebin_pad_added_callback(GstElement *src, GstPad *new_pad,
+                                           gpointer user_data);
+  static gboolean decodebin_autoplugger_callback(GstElement *elem, GstPad *pad,
+                                                 GstCaps *caps,
+                                                 gpointer user_data);
 
-  static GstAutoplugSelectResult decodebin_autoplug_select_callback(GstElement* bin,
-                                                                    GstPad* pad,
-                                                                    GstCaps* caps,
-                                                                    GstElementFactory* factory,
-                                                                    gpointer user_data);
+  static GstAutoplugSelectResult
+  decodebin_autoplug_select_callback(GstElement *bin, GstPad *pad,
+                                     GstCaps *caps, GstElementFactory *factory,
+                                     gpointer user_data);
 
-  static GValueArray* decodebin_autoplug_sort_callback(GstElement* bin,
-                                                       GstPad* pad,
-                                                       GstCaps* caps,
-                                                       GValueArray* factories,
-                                                       gpointer user_data);
+  static GValueArray *
+  decodebin_autoplug_sort_callback(GstElement *bin, GstPad *pad, GstCaps *caps,
+                                   GValueArray *factories, gpointer user_data);
 
-  static void decodebin_element_added_callback(GstBin* bin, GstElement* element, gpointer user_data);
-  static void decodebin_element_removed_callback(GstBin* bin, GstElement* element, gpointer user_data);
+  static void decodebin_element_added_callback(GstBin *bin, GstElement *element,
+                                               gpointer user_data);
+  static void decodebin_element_removed_callback(GstBin *bin,
+                                                 GstElement *element,
+                                                 gpointer user_data);
 };
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

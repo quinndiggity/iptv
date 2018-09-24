@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include "stream/elements/element.h"          // for SupportedElements::ELEMENT_FIL...
-#include "stream/elements/sources/sources.h"  // for ElementLocation
+#include "stream/elements/element.h" // for SupportedElements::ELEMENT_FIL...
+#include "stream/elements/sources/sources.h" // for ElementLocation
 
 // for element_id_t
 
@@ -25,14 +25,15 @@ namespace elements {
 namespace sources {
 
 class ElementFileSrc : public ElementLocation<ELEMENT_FILE_SRC> {
- public:
+public:
   typedef ElementLocation<ELEMENT_FILE_SRC> base_class;
   using base_class::base_class;
 };
 
-ElementFileSrc* make_file_src(const std::string& location, element_id_t input_id);
+ElementFileSrc *make_file_src(const std::string &location,
+                              element_id_t input_id);
 
-}  // namespace sources
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sources
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

@@ -14,12 +14,12 @@
 
 #pragma once
 
-#include <cairo.h>  // for cairo_t
-#include <string>   // for string
+#include <cairo.h> // for cairo_t
+#include <string>  // for string
 
 #include "stream/stypes.h"
 
-#include "stream/elements/element.h"  // for ElementEx, Element (ptr only), GstElement
+#include "stream/elements/element.h" // for ElementEx, Element (ptr only), GstElement
 
 namespace iptv_cloud {
 namespace stream {
@@ -31,25 +31,26 @@ typedef ElementEx<ELEMENT_INTERLACE> ElementInterlace;
 typedef ElementEx<ELEMENT_AV_DEINTERLACE> ElementAvDeinterlace;
 
 class ElementGDKPixBufOverlay : public ElementEx<ELEMENT_GDK_PIXBUF_OVERLAY> {
- public:
+public:
   typedef ElementEx<ELEMENT_GDK_PIXBUF_OVERLAY> base_class;
   using base_class::base_class;
 
-  void SetOffsetX(gint x = 0);                    // Range: -2147483648 - 2147483647 Default: 0
-  void SetOffsetY(gint y = 0);                    // Range: -2147483648 - 2147483647 Default: 0
-  void SetLocation(const std::string& location);  // Default: null
-  void SetAlpha(alpha_t alpha = 1);               // Range: 0 - 1 Default: 1
+  void SetOffsetX(gint x = 0); // Range: -2147483648 - 2147483647 Default: 0
+  void SetOffsetY(gint y = 0); // Range: -2147483648 - 2147483647 Default: 0
+  void SetLocation(const std::string &location); // Default: null
+  void SetAlpha(alpha_t alpha = 1);              // Range: 0 - 1 Default: 1
 };
 
 class ElementDeinterlace : public ElementEx<ELEMENT_DEINTERLACE> {
- public:
+public:
   typedef ElementEx<ELEMENT_DEINTERLACE> base_class;
   using base_class::base_class;
 
-  void SetMethod(int method = 4);  // Default: Linear (4)
+  void SetMethod(int method = 4); // Default: Linear (4)
 };
 
-Element* make_video_deinterlace(const std::string& deinterlace, const std::string& name);
+Element *make_video_deinterlace(const std::string &deinterlace,
+                                const std::string &name);
 
 typedef ElementEx<ELEMENT_AUTO_VIDEO_CONVERT> ElementAutoVideoConvert;
 typedef ElementEx<ELEMENT_VIDEO_CONVERT> ElementVideoConvert;
@@ -57,7 +58,7 @@ typedef ElementEx<ELEMENT_VIDEO_SCALE> ElementVideoScale;
 typedef ElementEx<ELEMENT_VIDEO_RATE> ElementVideoRate;
 
 class ElementAspectRatio : public ElementEx<ELEMENT_ASPECT_RATIO> {
- public:
+public:
   typedef ElementEx<ELEMENT_ASPECT_RATIO> base_class;
   using base_class::base_class;
 
@@ -70,17 +71,19 @@ typedef ElementEx<ELEMENT_VIDEO_MIXER> ElementVideoMixer;
 typedef ElementEx<ELEMENT_VIDEO_CROP> ElementVideoCrop;
 
 class ElementCairoOverlay : public ElementEx<ELEMENT_CAIRO_OVERLAY> {
- public:
+public:
   typedef ElementEx<ELEMENT_CAIRO_OVERLAY> base_class;
   using base_class::base_class;
 
-  typedef void (
-      *draw_callback_t)(GstElement* overlay, cairo_t* cr, guint64 timestamp, guint64 duration, gpointer user_data);
+  typedef void (*draw_callback_t)(GstElement *overlay, cairo_t *cr,
+                                  guint64 timestamp, guint64 duration,
+                                  gpointer user_data);
 
-  gboolean RegisterDrawCallback(draw_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT;
+  gboolean RegisterDrawCallback(draw_callback_t cb,
+                                gpointer user_data) WARN_UNUSED_RESULT;
 };
 
-}  // namespace video
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace video
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

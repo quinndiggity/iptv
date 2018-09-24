@@ -19,13 +19,13 @@ namespace stream {
 namespace elements {
 namespace sink {
 
-ElementFakeSink* make_fake_sink(element_id_t sink_id) {
-  ElementFakeSink* fake_sink = make_sink<ElementFakeSink>(sink_id);
+ElementFakeSink *make_fake_sink(element_id_t sink_id) {
+  ElementFakeSink *fake_sink = make_sink<ElementFakeSink>(sink_id);
   fake_sink->SetSync(true);
   return fake_sink;
 }
 
-}  // namespace sink
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sink
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

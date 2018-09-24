@@ -19,21 +19,21 @@ namespace stream {
 namespace elements {
 namespace muxer {
 
-ElementFLVMux* make_flvmux(bool streamable, element_id_t muxer_id) {
-  ElementFLVMux* flvmux = make_muxer<ElementFLVMux>(muxer_id);
+ElementFLVMux *make_flvmux(bool streamable, element_id_t muxer_id) {
+  ElementFLVMux *flvmux = make_muxer<ElementFLVMux>(muxer_id);
   flvmux->SetStreamable(streamable);
   return flvmux;
 }
 
-ElementMPEGTSMux* make_mpegtsmux(element_id_t muxer_id) {
+ElementMPEGTSMux *make_mpegtsmux(element_id_t muxer_id) {
   return make_muxer<ElementMPEGTSMux>(muxer_id);
 }
 
-ElementRTPMux* make_rtpmux(element_id_t muxer_id) {
+ElementRTPMux *make_rtpmux(element_id_t muxer_id) {
   return make_muxer<ElementRTPMux>(muxer_id);
 }
 
-Element* make_muxer(common::uri::Url::scheme scheme, element_id_t muxer_id) {
+Element *make_muxer(common::uri::Url::scheme scheme, element_id_t muxer_id) {
   if (scheme == common::uri::Url::rtmp) {
     return make_flvmux(true, muxer_id);
   } else if (scheme == common::uri::Url::udp) {
@@ -52,7 +52,7 @@ void ElementFLVMux::SetStreamable(bool streamable) {
   SetProperty("streamable", streamable);
 }
 
-}  // namespace muxer
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace muxer
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

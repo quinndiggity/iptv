@@ -14,7 +14,7 @@
 
 #include "stream/streams_factory.h"
 
-#include "stream/constants.h"  // for TYPE_FIELD, INPUT_FIELD, TIMESHIFT_DIR_FIELD
+#include "stream/constants.h" // for TYPE_FIELD, INPUT_FIELD, TIMESHIFT_DIR_FIELD
 
 #include "stream/streams/catchup_stream.h"
 #include "stream/streams/device_stream.h"
@@ -35,17 +35,20 @@ namespace iptv_cloud {
 namespace stream {
 
 namespace {
-TimeShiftInfo make_timeshift_info(const utils::ArgsMap& args) {
+TimeShiftInfo make_timeshift_info(const utils::ArgsMap &args) {
   TimeShiftInfo tinfo;
 
   std::string timeshift_dir;
   if (!utils::ArgsGetValue(args, TIMESHIFT_DIR_FIELD, &timeshift_dir)) {
-    CRITICAL_LOG() << "Define " TIMESHIFT_DIR_FIELD " variable and make it valid.";
+    CRITICAL_LOG() << "Define " TIMESHIFT_DIR_FIELD
+                      " variable and make it valid.";
   }
-  tinfo.timshift_dir = common::file_system::ascii_directory_string_path(timeshift_dir);
+  tinfo.timshift_dir =
+      common::file_system::ascii_directory_string_path(timeshift_dir);
 
   tinfo.chunk_max_life_time_hours = 0;
-  if (!utils::ArgsGetValue(args, TIMESHIFT_CHUNK_MAX_LIFE_TIME_FIELD, &tinfo.chunk_max_life_time_hours)) {
+  if (!utils::ArgsGetValue(args, TIMESHIFT_CHUNK_MAX_LIFE_TIME_FIELD,
+                           &tinfo.chunk_max_life_time_hours)) {
     tinfo.chunk_max_life_time_hours = 12;
   }
 
@@ -56,20 +59,22 @@ TimeShiftInfo make_timeshift_info(const utils::ArgsMap& args) {
   return tinfo;
 }
 
-}  // namespace
+} // namespace
 
-IBaseStream* StreamsFactory::CreateStream(const utils::ArgsMap& args,
-                                          IBaseStream::IStreamClient* client,
-                                          StreamStruct* stats,
+IBaseStream *StreamsFactory::CreateStream(const utils::ArgsMap &args,
+                                          IBaseStream::IStreamClient *client,
+                                          StreamStruct *stats,
                                           chunk_index_t start_chunk_index) {
-  Config* config = make_config(args);
+  Config *config = make_config(args);
   input_t input = config->GetInput();
   if (config->GetType() == RELAY) {
-    streams::RelayConfig* rconfig = static_cast<streams::RelayConfig*>(config);
+    streams::RelayConfig *rconfig = static_cast<streams::RelayConfig *>(config);
     InputUri iuri = input[0];
     common::uri::Url input_uri = iuri.GetInput();
-    if (input_uri.GetScheme() == common::uri::Url::file) {  // multi input or playlist
-      streams::PlaylistRelayConfig* prconfig = static_cast<streams::PlaylistRelayConfig*>(config);
+    if (input_uri.GetScheme() ==
+        common::uri::Url::file) { // multi input or playlist
+      streams::PlaylistRelayConfig *prconfig =
+          static_cast<streams::PlaylistRelayConfig *>(config);
       return new streams::PlaylistRelayStream(prconfig, client, stats);
     }
 
@@ -79,10 +84,12 @@ IBaseStream* StreamsFactory::CreateStream(const utils::ArgsMap& args,
 
     return new streams::RelayStream(rconfig, client, stats);
   } else if (config->GetType() == ENCODING) {
-    streams::EncodingConfig* econfig = static_cast<streams::EncodingConfig*>(config);
+    streams::EncodingConfig *econfig =
+        static_cast<streams::EncodingConfig *>(config);
     InputUri iuri = input[0];
     common::uri::Url input_uri = iuri.GetInput();
-    if (input_uri.GetScheme() == common::uri::Url::file) {  // multi input or playlist
+    if (input_uri.GetScheme() ==
+        common::uri::Url::file) { // multi input or playlist
       return new streams::PlaylistEncodingStream(econfig, client, stats);
     }
 
@@ -106,15 +113,18 @@ IBaseStream* StreamsFactory::CreateStream(const utils::ArgsMap& args,
 
     return new streams::EncodingStream(econfig, client, stats);
   } else if (config->GetType() == TIMESHIFT_PLAYER) {
-    streams::RelayConfig* tconfig = static_cast<streams::RelayConfig*>(config);
+    streams::RelayConfig *tconfig = static_cast<streams::RelayConfig *>(config);
     TimeShiftInfo tinfo = make_timeshift_info(args);
-    return new streams::TimeShiftPlayerStream(tconfig, tinfo, client, stats, start_chunk_index);
+    return new streams::TimeShiftPlayerStream(tconfig, tinfo, client, stats,
+                                              start_chunk_index);
   } else if (config->GetType() == TIMESHIFT_RECORDER) {
-    streams::TimeshiftConfig* tconfig = static_cast<streams::TimeshiftConfig*>(config);
+    streams::TimeshiftConfig *tconfig =
+        static_cast<streams::TimeshiftConfig *>(config);
     TimeShiftInfo tinfo = make_timeshift_info(args);
     return new streams::TimeShiftRecorderStream(tconfig, tinfo, client, stats);
   } else if (config->GetType() == CATCHUP) {
-    streams::TimeshiftConfig* tconfig = static_cast<streams::TimeshiftConfig*>(config);
+    streams::TimeshiftConfig *tconfig =
+        static_cast<streams::TimeshiftConfig *>(config);
     TimeShiftInfo tinfo = make_timeshift_info(args);
     return new streams::CatchupStream(tconfig, tinfo, client, stats);
   }
@@ -123,7 +133,7 @@ IBaseStream* StreamsFactory::CreateStream(const utils::ArgsMap& args,
   return nullptr;
 }
 
-bool IsTimeshiftPlayer(const utils::ArgsMap& args, TimeShiftInfo* tinfo) {
+bool IsTimeshiftPlayer(const utils::ArgsMap &args, TimeShiftInfo *tinfo) {
   if (!tinfo) {
     return false;
   }
@@ -151,5 +161,5 @@ bool IsTimeshiftPlayer(const utils::ArgsMap& args, TimeShiftInfo* tinfo) {
   return true;
 }
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

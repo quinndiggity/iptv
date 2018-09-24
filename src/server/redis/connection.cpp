@@ -22,7 +22,7 @@ namespace redis {
 
 namespace {
 
-struct redisContext* redis_connect(const redis_configuration_t& config) {
+struct redisContext *redis_connect(const redis_configuration_t &config) {
   const common::net::HostAndPort redis_host = config.redis_host;
   const std::string unix_path = config.redis_unix_socket;
 
@@ -30,7 +30,7 @@ struct redisContext* redis_connect(const redis_configuration_t& config) {
     return NULL;
   }
 
-  struct redisContext* redis = NULL;
+  struct redisContext *redis = NULL;
   std::string host_str = redis_host.GetHost();
   if (unix_path.empty()) {
     redis = redisConnect(host_str.c_str(), redis_host.GetPort());
@@ -38,7 +38,8 @@ struct redisContext* redis_connect(const redis_configuration_t& config) {
     redis = redisConnectUnix(unix_path.c_str());
     if (!redis || redis->err) {
       if (redis) {
-        ERROR_LOG() << "Redis UNIX connection error: " << redis->errstr << ", path: " << unix_path;
+        ERROR_LOG() << "Redis UNIX connection error: " << redis->errstr
+                    << ", path: " << unix_path;
         redisFree(redis);
         redis = NULL;
       }
@@ -53,7 +54,8 @@ struct redisContext* redis_connect(const redis_configuration_t& config) {
       return NULL;
     }
 
-    ERROR_LOG() << "Failed connect to redis host: " << common::ConvertToString(redis_host)
+    ERROR_LOG() << "Failed connect to redis host: "
+                << common::ConvertToString(redis_host)
                 << " unix path: " << unix_path;
     return NULL;
   }
@@ -61,23 +63,20 @@ struct redisContext* redis_connect(const redis_configuration_t& config) {
   return redis;
 }
 
-}  // namespace
+} // namespace
 
 RedisConnection::RedisConnection() : connection_(NULL) {}
 
-redis_configuration_t RedisConnection::GetConfig() const {
-  return config_;
-}
+redis_configuration_t RedisConnection::GetConfig() const { return config_; }
 
-void RedisConnection::SetConfig(const redis_configuration_t& config) {
+void RedisConnection::SetConfig(const redis_configuration_t &config) {
   config_ = config;
 }
 
-RedisConnection::~RedisConnection() {
-  DisConnect();
-}
+RedisConnection::~RedisConnection() { DisConnect(); }
 
-bool RedisConnection::Set(const std::string& key, const std::string& value) const {
+bool RedisConnection::Set(const std::string &key,
+                          const std::string &value) const {
   if (key.empty() || value.empty()) {
     return false;
   }
@@ -86,7 +85,8 @@ bool RedisConnection::Set(const std::string& key, const std::string& value) cons
     return false;
   }
 
-  void* reply = redisCommand(connection_, "SET %s %s", key.c_str(), value.c_str());
+  void *reply =
+      redisCommand(connection_, "SET %s %s", key.c_str(), value.c_str());
   if (!reply) {
     ERROR_LOG() << "REDIS SET CONNECTION ERROR: " << connection_->errstr;
     return false;
@@ -96,7 +96,7 @@ bool RedisConnection::Set(const std::string& key, const std::string& value) cons
   return true;
 }
 
-bool RedisConnection::Get(const std::string& key, std::string* value) const {
+bool RedisConnection::Get(const std::string &key, std::string *value) const {
   if (key.empty() || !value) {
     return false;
   }
@@ -105,19 +105,20 @@ bool RedisConnection::Get(const std::string& key, std::string* value) const {
     return false;
   }
 
-  void* reply = redisCommand(connection_, "GET %s", key.c_str());
+  void *reply = redisCommand(connection_, "GET %s", key.c_str());
   if (!reply) {
     ERROR_LOG() << "REDIS GET CONNECTION ERROR: " << connection_->errstr;
     return false;
   }
 
-  redisReply* rreply = static_cast<redisReply*>(reply);
+  redisReply *rreply = static_cast<redisReply *>(reply);
   *value = std::string(rreply->str, rreply->len);
   freeReplyObject(reply);
   return true;
 }
 
-bool RedisConnection::Publish(const std::string& channel, const std::string& msg) {
+bool RedisConnection::Publish(const std::string &channel,
+                              const std::string &msg) {
   if (channel.empty() || msg.empty()) {
     return false;
   }
@@ -126,7 +127,8 @@ bool RedisConnection::Publish(const std::string& channel, const std::string& msg
     return false;
   }
 
-  void* rreply = redisCommand(connection_, "PUBLISH %s %s", channel.c_str(), msg.c_str());
+  void *rreply =
+      redisCommand(connection_, "PUBLISH %s %s", channel.c_str(), msg.c_str());
   if (!rreply) {
     ERROR_LOG() << "REDIS PUB CONNECTION ERROR: " << connection_->errstr;
     return false;
@@ -159,6 +161,6 @@ bool RedisConnection::IsConnected() const {
   return connection_ != NULL && !connection_->err;
 }
 
-}  // namespace redis
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace redis
+} // namespace server
+} // namespace iptv_cloud

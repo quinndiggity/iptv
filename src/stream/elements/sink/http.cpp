@@ -23,9 +23,10 @@ namespace stream {
 namespace elements {
 namespace sink {
 
-HlsOutput MakeHlsOutput(const common::uri::Url& uri,
-                        const common::file_system::ascii_directory_string_path& http_root,
-                        const std::string& filename) {
+HlsOutput
+MakeHlsOutput(const common::uri::Url &uri,
+              const common::file_system::ascii_directory_string_path &http_root,
+              const std::string &filename) {
   elements::sink::HlsOutput hout;
   const std::string http_root_str = http_root.GetPath();
   time_t t = common::time::current_mstime() / 1000;
@@ -35,11 +36,11 @@ HlsOutput MakeHlsOutput(const common::uri::Url& uri,
   return hout;
 }
 
-void ElementHLSSink::SetLocation(const std::string& location) {
+void ElementHLSSink::SetLocation(const std::string &location) {
   SetProperty("location", location);
 }
 
-void ElementHLSSink::SetPlayLocation(const std::string& play_location) {
+void ElementHLSSink::SetPlayLocation(const std::string &play_location) {
   SetProperty("playlist-location", play_location);
 }
 
@@ -47,7 +48,7 @@ void ElementHLSSink::SetTargetDuration(guint duration) {
   SetProperty("target-duration", duration);
 }
 
-void ElementHLSSink::SetPlayListRoot(const std::string& play_root) {
+void ElementHLSSink::SetPlayListRoot(const std::string &play_root) {
   SetProperty("playlist-root", play_root);
 }
 
@@ -55,18 +56,19 @@ void ElementHLSSink::SetPlaylistLenght(guint duration) {
   SetProperty("playlist-length", duration);
 }
 
-void ElementSoupHttpSink::SetLocation(const std::string& location) {
+void ElementSoupHttpSink::SetLocation(const std::string &location) {
   SetProperty("location", location);
 }
 
-ElementSoupHttpSink* make_http_soup_sink(element_id_t sink_id, const std::string& location) {
-  ElementSoupHttpSink* hls_out = make_sink<ElementSoupHttpSink>(sink_id);
+ElementSoupHttpSink *make_http_soup_sink(element_id_t sink_id,
+                                         const std::string &location) {
+  ElementSoupHttpSink *hls_out = make_sink<ElementSoupHttpSink>(sink_id);
   hls_out->SetLocation(location);
   return hls_out;
 }
 
-ElementHLSSink* make_http_sink(element_id_t sink_id, const HlsOutput& output) {
-  ElementHLSSink* hls_out = make_sink<ElementHLSSink>(sink_id);
+ElementHLSSink *make_http_sink(element_id_t sink_id, const HlsOutput &output) {
+  ElementHLSSink *hls_out = make_sink<ElementHLSSink>(sink_id);
   hls_out->SetLocation(output.location);
   hls_out->SetPlayLocation(output.play_locataion);
   hls_out->SetTargetDuration(TS_DURATION);
@@ -74,7 +76,7 @@ ElementHLSSink* make_http_sink(element_id_t sink_id, const HlsOutput& output) {
   return hls_out;
 }
 
-}  // namespace sink
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sink
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

@@ -23,27 +23,31 @@ void ElementVideoDeckSink::SetMode(decklink_video_mode_t mode) {
   SetProperty("mode", mode);
 }
 
-ElementVideoScreenSink* make_video_screen_sink(element_id_t sink_id) {
-  ElementVideoScreenSink* video_sink = make_video_sink<ElementVideoScreenSink>(sink_id);
+ElementVideoScreenSink *make_video_screen_sink(element_id_t sink_id) {
+  ElementVideoScreenSink *video_sink =
+      make_video_sink<ElementVideoScreenSink>(sink_id);
   return video_sink;
 }
 
-ElementAudioScreenSink* make_audio_screen_sink(element_id_t sink_id) {
-  ElementAudioScreenSink* audio_sink = make_audio_sink<ElementAudioScreenSink>(sink_id);
+ElementAudioScreenSink *make_audio_screen_sink(element_id_t sink_id) {
+  ElementAudioScreenSink *audio_sink =
+      make_audio_sink<ElementAudioScreenSink>(sink_id);
   return audio_sink;
 }
 
-ElementVideoDeckSink* make_video_deck_sink(element_id_t sink_id) {
-  ElementVideoDeckSink* video_sink = make_video_sink<ElementVideoDeckSink>(sink_id);
+ElementVideoDeckSink *make_video_deck_sink(element_id_t sink_id) {
+  ElementVideoDeckSink *video_sink =
+      make_video_sink<ElementVideoDeckSink>(sink_id);
   return video_sink;
 }
 
-ElementAudioDeckSink* make_audio_deck_sink(element_id_t sink_id) {
-  ElementAudioDeckSink* audio_sink = make_audio_sink<ElementAudioDeckSink>(sink_id);
+ElementAudioDeckSink *make_audio_deck_sink(element_id_t sink_id) {
+  ElementAudioDeckSink *audio_sink =
+      make_audio_sink<ElementAudioDeckSink>(sink_id);
   return audio_sink;
 }
 
-Element* make_video_device_sink(SinkDeviceType dev, element_id_t sink_id) {
+Element *make_video_device_sink(SinkDeviceType dev, element_id_t sink_id) {
   if (dev == SCREEN_OUTPUT) {
     return make_video_screen_sink(sink_id);
   } else if (dev == DECKLINK_OUTPUT) {
@@ -54,7 +58,7 @@ Element* make_video_device_sink(SinkDeviceType dev, element_id_t sink_id) {
   return nullptr;
 }
 
-Element* make_audio_device_sink(SinkDeviceType dev, element_id_t sink_id) {
+Element *make_audio_device_sink(SinkDeviceType dev, element_id_t sink_id) {
   if (dev == SCREEN_OUTPUT) {
     return make_audio_screen_sink(sink_id);
   } else if (dev == DECKLINK_OUTPUT) {
@@ -65,7 +69,7 @@ Element* make_audio_device_sink(SinkDeviceType dev, element_id_t sink_id) {
   return nullptr;
 }
 
-}  // namespace sink
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sink
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

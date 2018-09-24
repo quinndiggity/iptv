@@ -27,16 +27,17 @@ namespace stream {
 
 namespace {
 template <typename T>
-void CheckAndSetValue(const utils::ArgsMap& args, const std::string& name, std::map<std::string, T>& map) {
+void CheckAndSetValue(const utils::ArgsMap &args, const std::string &name,
+                      std::map<std::string, T> &map) {
   T result = T();
   if (utils::ArgsGetValue(args, name, &result)) {
     map[name] = result;
   }
 }
 
-bool InitVideoEncodersWithArgs(const utils::ArgsMap& config,
-                               video_encoders_args_t* video_encoder_args,
-                               video_encoders_str_args_t* video_encoder_str_args) {
+bool InitVideoEncodersWithArgs(
+    const utils::ArgsMap &config, video_encoders_args_t *video_encoder_args,
+    video_encoders_str_args_t *video_encoder_str_args) {
   if (!video_encoder_args || !video_encoder_str_args) {
     return false;
   }
@@ -71,12 +72,14 @@ bool InitVideoEncodersWithArgs(const utils::ArgsMap& config,
   CheckAndSetValue(config, X264_ENC_OPTION_STRING, video_encoder_str_args_);
 
   bool x264_enc_inter = false;
-  if (utils::ArgsGetValue(config, X264_ENC_INTERLACED, &x264_enc_inter) && x264_enc_inter) {
+  if (utils::ArgsGetValue(config, X264_ENC_INTERLACED, &x264_enc_inter) &&
+      x264_enc_inter) {
     video_encoder_args_[X264_ENC_INTERLACED] = 1;
   }
 
   bool x264_enc_dct = false;
-  if (utils::ArgsGetValue(config, X264_ENC_DCT8X8, &x264_enc_dct) && x264_enc_dct) {
+  if (utils::ArgsGetValue(config, X264_ENC_DCT8X8, &x264_enc_dct) &&
+      x264_enc_dct) {
     video_encoder_args_[X264_ENC_DCT8X8] = 1;
   }
 
@@ -118,7 +121,8 @@ bool InitVideoEncodersWithArgs(const utils::ArgsMap& config,
   CheckAndSetValue(config, EAVC_ENC_INITIAL_DELAY, video_encoder_args_);
   CheckAndSetValue(config, EAVC_ENC_FIELD_ORDER, video_encoder_args_);
   bool eabc_enc_gop = false;
-  if (utils::ArgsGetValue(config, EAVC_ENC_GOP_ADAPTIVE, &eabc_enc_gop) && eabc_enc_gop) {
+  if (utils::ArgsGetValue(config, EAVC_ENC_GOP_ADAPTIVE, &eabc_enc_gop) &&
+      eabc_enc_gop) {
     video_encoder_args_[EAVC_ENC_GOP_ADAPTIVE] = 1;
   }
 
@@ -127,9 +131,9 @@ bool InitVideoEncodersWithArgs(const utils::ArgsMap& config,
   return true;
 }
 
-}  // namespace
+} // namespace
 
-Config* make_config(const utils::ArgsMap& config) {
+Config *make_config(const utils::ArgsMap &config) {
   StreamType stream_type = SCREEN;
   if (!utils::ArgsGetValue(config, TYPE_FIELD, &stream_type)) {
     WARNING_LOG() << "Define " TYPE_FIELD " variable and make it valid.";
@@ -144,7 +148,8 @@ Config* make_config(const utils::ArgsMap& config) {
 
   bool is_multi_input = input_urls.size() > 1;
   bool is_timeshift_and_rec =
-      (stream_type == TIMESHIFT_RECORDER && !is_multi_input) || (stream_type == CATCHUP && !is_multi_input);
+      (stream_type == TIMESHIFT_RECORDER && !is_multi_input) ||
+      (stream_type == CATCHUP && !is_multi_input);
 
   output_t output_urls;
   if (!is_timeshift_and_rec) {
@@ -176,7 +181,8 @@ Config* make_config(const utils::ArgsMap& config) {
     return new streams::AudioVideoConfig(aconf);
   } else if (stream_type == RELAY || stream_type == TIMESHIFT_PLAYER) {
     streams::RelayConfig rel(aconf);
-    streams::PlaylistRelayConfig* rconfig = new streams::PlaylistRelayConfig(rel);
+    streams::PlaylistRelayConfig *rconfig =
+        new streams::PlaylistRelayConfig(rel);
 
     std::string video_parser;
     if (utils::ArgsGetValue(config, VIDEO_PARSER_FIELD, &video_parser)) {
@@ -195,7 +201,8 @@ Config* make_config(const utils::ArgsMap& config) {
     return rconfig;
   } else if (stream_type == ENCODING) {
     streams::EncodingConfig econf(aconf);
-    streams::PlaylistEncodingConfig* econfig = new streams::PlaylistEncodingConfig(econf);
+    streams::PlaylistEncodingConfig *econfig =
+        new streams::PlaylistEncodingConfig(econf);
     bool deinterlace = false;
     if (utils::ArgsGetValue(config, DEINTERLACE_FIELD, &deinterlace)) {
       econfig->SetDeinterlace(deinterlace);
@@ -275,7 +282,8 @@ Config* make_config(const utils::ArgsMap& config) {
     }
     video_encoders_args_t video_encoder_args;
     video_encoders_str_args_t video_encoder_str_args;
-    if (InitVideoEncodersWithArgs(config, &video_encoder_args, &video_encoder_str_args)) {
+    if (InitVideoEncodersWithArgs(config, &video_encoder_args,
+                                  &video_encoder_str_args)) {
       econfig->SetVideoEncoderArgs(video_encoder_args);
       econfig->SetVideoEncoderStrArgs(video_encoder_str_args);
     }
@@ -293,10 +301,11 @@ Config* make_config(const utils::ArgsMap& config) {
       rel.SetAudioParser(audio_parser);
     }
 
-    streams::TimeshiftConfig* tconf = new streams::TimeshiftConfig(rel);
+    streams::TimeshiftConfig *tconf = new streams::TimeshiftConfig(rel);
     if (stream_type == TIMESHIFT_RECORDER || stream_type == CATCHUP) {
       time_t timeshift_chunk_duration;
-      if (utils::ArgsGetValue(config, TIMESHIFT_CHUNK_DURATION_FIELD, &timeshift_chunk_duration)) {
+      if (utils::ArgsGetValue(config, TIMESHIFT_CHUNK_DURATION_FIELD,
+                              &timeshift_chunk_duration)) {
         tconf->SetTimeShiftChunkDuration(timeshift_chunk_duration);
       }
       CHECK(tconf->GetTimeShiftChunkDuration()) << "Avoid division by zero";
@@ -309,5 +318,5 @@ Config* make_config(const utils::ArgsMap& config) {
   return nullptr;
 }
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

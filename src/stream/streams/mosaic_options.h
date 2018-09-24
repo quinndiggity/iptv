@@ -57,6 +57,6 @@ struct MosaicImageOptions {
   std::vector<StreamInfo> sreams;
 };
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

@@ -18,22 +18,23 @@
 namespace iptv_cloud {
 namespace server {
 
-class StartStreamInfo : public common::serializer::JsonSerializer<StartStreamInfo> {
- public:
+class StartStreamInfo
+    : public common::serializer::JsonSerializer<StartStreamInfo> {
+public:
   typedef common::serializer::JsonSerializer<StartStreamInfo> base_class;
   StartStreamInfo();
 
   std::string GetConfig() const;
   std::string GetCmd() const;
 
- protected:
-  virtual common::Error DoDeSerialize(json_object* serialized) override;
-  virtual common::Error SerializeFields(json_object* out) const override;
+protected:
+  virtual common::Error DoDeSerialize(json_object *serialized) override;
+  virtual common::Error SerializeFields(json_object *out) const override;
 
- private:
+private:
   std::string config_;
   std::string cmd_;
 };
 
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace server
+} // namespace iptv_cloud

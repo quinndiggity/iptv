@@ -23,15 +23,11 @@ namespace stream {
 namespace elements {
 namespace video {
 
-void ElementGDKPixBufOverlay::SetOffsetX(gint x) {
-  SetProperty("offset-x", x);
-}
+void ElementGDKPixBufOverlay::SetOffsetX(gint x) { SetProperty("offset-x", x); }
 
-void ElementGDKPixBufOverlay::SetOffsetY(gint y) {
-  SetProperty("offset-y", y);
-}
+void ElementGDKPixBufOverlay::SetOffsetY(gint y) { SetProperty("offset-y", y); }
 
-void ElementGDKPixBufOverlay::SetLocation(const std::string& location) {
+void ElementGDKPixBufOverlay::SetLocation(const std::string &location) {
   SetProperty("location", location);
 }
 
@@ -47,11 +43,12 @@ void ElementAspectRatio::SetAspectRatio(int num, int den) {
   SetFractionProperty("aspect-ratio", num, den);
 }
 
-Element* make_video_deinterlace(const std::string& deinterlace, const std::string& name) {
+Element *make_video_deinterlace(const std::string &deinterlace,
+                                const std::string &name) {
   if (deinterlace == ElementAvDeinterlace::GetPluginName()) {
     return new ElementAvDeinterlace(name);
   } else if (deinterlace == ElementDeinterlace::GetPluginName()) {
-    ElementDeinterlace* deint = new ElementDeinterlace(name);
+    ElementDeinterlace *deint = new ElementDeinterlace(name);
     deint->SetMethod(DEINTERLACE_METHOD);
     return deint;
   }
@@ -60,11 +57,12 @@ Element* make_video_deinterlace(const std::string& deinterlace, const std::strin
   return nullptr;
 }
 
-gboolean ElementCairoOverlay::RegisterDrawCallback(draw_callback_t cb, gpointer user_data) {
+gboolean ElementCairoOverlay::RegisterDrawCallback(draw_callback_t cb,
+                                                   gpointer user_data) {
   return RegisterCallback("draw", G_CALLBACK(cb), user_data);
 }
 
-}  // namespace video
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace video
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

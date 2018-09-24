@@ -16,10 +16,10 @@
 
 #include <common/media/types.h>
 
-#include "input_uri.h"   // for InputUri
-#include "output_uri.h"  // for OutputUri
+#include "input_uri.h"  // for InputUri
+#include "output_uri.h" // for OutputUri
 
-#include "utils/arg_reader.h"  // for ArgsMap
+#include "utils/arg_reader.h" // for ArgsMap
 
 #define FIELD_OUTPUT_URLS "urls"
 #define FIELD_INPUT_URLS "urls"
@@ -29,15 +29,16 @@ namespace iptv_cloud {
 typedef std::vector<InputUri> input_t;
 typedef std::vector<OutputUri> output_t;
 
-bool read_input(const utils::ArgsMap& config, input_t* input);
-bool read_output(const utils::ArgsMap& config, output_t* output);
+bool read_input(const utils::ArgsMap &config, input_t *input);
+bool read_output(const utils::ArgsMap &config, output_t *output);
 
-}  // namespace iptv_cloud
+} // namespace iptv_cloud
 
 namespace common {
-std::string ConvertToString(const iptv_cloud::output_t& value);  // json
-bool ConvertFromString(const std::string& output_urls, iptv_cloud::output_t* out);
+std::string ConvertToString(const iptv_cloud::output_t &value); // json
+bool ConvertFromString(const std::string &output_urls,
+                       iptv_cloud::output_t *out);
 
-std::string ConvertToString(const iptv_cloud::input_t& value);  // json
-bool ConvertFromString(const std::string& input_urls, iptv_cloud::input_t* out);
-}  // namespace common
+std::string ConvertToString(const iptv_cloud::input_t &value); // json
+bool ConvertFromString(const std::string &input_urls, iptv_cloud::input_t *out);
+} // namespace common

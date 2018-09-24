@@ -31,21 +31,20 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-IBaseBuilder* EncodingStream::CreateBuilder() {
-  EncodingConfig* econf = static_cast<EncodingConfig*>(GetApi());
+IBaseBuilder *EncodingStream::CreateBuilder() {
+  EncodingConfig *econf = static_cast<EncodingConfig *>(GetApi());
   return new builders::EncodingStreamBuilder(econf, this);
 }
 
-EncodingStream::EncodingStream(EncodingConfig* config, IStreamClient* client, StreamStruct* stats)
+EncodingStream::EncodingStream(EncodingConfig *config, IStreamClient *client,
+                               StreamStruct *stats)
     : base_class(config, client, stats) {}
 
 EncodingStream::~EncodingStream() {}
 
-const char* EncodingStream::ClassName() const {
-  return "EncodingStream";
-}
+const char *EncodingStream::ClassName() const { return "EncodingStream"; }
 
-void EncodingStream::HandleBufferingMessage(GstMessage* message) {
+void EncodingStream::HandleBufferingMessage(GstMessage *message) {
   if (IsLive()) {
     return;
   }
@@ -60,7 +59,9 @@ void EncodingStream::HandleBufferingMessage(GstMessage* message) {
   SrcDecodeBinStream::HandleBufferingMessage(message);
 }
 
-GValueArray* EncodingStream::HandleAutoplugSort(GstElement* bin, GstPad* pad, GstCaps* caps, GValueArray* factories) {
+GValueArray *EncodingStream::HandleAutoplugSort(GstElement *bin, GstPad *pad,
+                                                GstCaps *caps,
+                                                GValueArray *factories) {
   UNUSED(bin);
   UNUSED(pad);
 
@@ -70,28 +71,31 @@ GValueArray* EncodingStream::HandleAutoplugSort(GstElement* bin, GstPad* pad, Gs
     return NULL;
   }
 
-  EncodingConfig* econf = static_cast<EncodingConfig*>(GetApi());
+  EncodingConfig *econf = static_cast<EncodingConfig *>(GetApi());
   // SupportedAudioCodecs saudio;
   SupportedVideoCodecs svideo;
   // bool is_audio = IsAudioCodecFromType(type, &saudio);
   bool is_video = IsVideoCodecFromType(type_title, &svideo);
-  if (is_video) {  // if not want vaapi decoder skip it
+  if (is_video) { // if not want vaapi decoder skip it
     bool is_gpu = econf->IsGpu();
-    GValueArray* result = g_value_array_new(factories->n_values);
+    GValueArray *result = g_value_array_new(factories->n_values);
     for (guint i = 0; i < factories->n_values; ++i) {
-      GValue* val = g_value_array_get_nth(factories, i);
+      GValue *val = g_value_array_get_nth(factories, i);
       gpointer factory = gvalue_cast<gpointer>(val);
-      const std::string factoryName = gst_plugin_feature_get_name(GST_PLUGIN_FEATURE(factory));
-      if (factoryName == elements::ElementVaapiDecodebin::GetPluginName()) {  // VAAPI_DECODEBIN
-                                                                              // not worked
+      const std::string factoryName =
+          gst_plugin_feature_get_name(GST_PLUGIN_FEATURE(factory));
+      if (factoryName ==
+          elements::ElementVaapiDecodebin::GetPluginName()) { // VAAPI_DECODEBIN
+                                                              // not worked
         DEBUG_LOG() << "skip: " << factoryName;
       } else if (factoryName == elements::ElementAvdecH264::GetPluginName() &&
-                 (is_gpu && !econf->IsMfxGpu())) {  // skip cpu decoder for vaapi
+                 (is_gpu && !econf->IsMfxGpu())) { // skip cpu decoder for vaapi
         DEBUG_LOG() << "skip: " << factoryName;
-      } else if (factoryName == elements::ElementMFXH264Decode::GetPluginName() &&
-                 (!is_gpu || !econf->IsMfxGpu())) {  // skip mfx
-                                                     // decoder if
-                                                     // not vaapi
+      } else if (factoryName ==
+                     elements::ElementMFXH264Decode::GetPluginName() &&
+                 (!is_gpu || !econf->IsMfxGpu())) { // skip mfx
+                                                    // decoder if
+                                                    // not vaapi
         DEBUG_LOG() << "skip: " << factoryName;
       } else {
         DEBUG_LOG() << "not skip: " << factoryName;
@@ -106,10 +110,8 @@ GValueArray* EncodingStream::HandleAutoplugSort(GstElement* bin, GstPad* pad, Gs
   return NULL;
 }
 
-GstAutoplugSelectResult EncodingStream::HandleAutoplugSelect(GstElement* bin,
-                                                             GstPad* pad,
-                                                             GstCaps* caps,
-                                                             GstElementFactory* factory) {
+GstAutoplugSelectResult EncodingStream::HandleAutoplugSelect(
+    GstElement *bin, GstPad *pad, GstCaps *caps, GstElementFactory *factory) {
   UNUSED(bin);
   UNUSED(pad);
   UNUSED(factory);
@@ -123,7 +125,9 @@ GstAutoplugSelectResult EncodingStream::HandleAutoplugSelect(GstElement* bin,
   return GST_AUTOPLUG_SELECT_TRY;
 }
 
-gboolean EncodingStream::HandleDecodeBinAutoplugger(GstElement* elem, GstPad* pad, GstCaps* caps) {
+gboolean EncodingStream::HandleDecodeBinAutoplugger(GstElement *elem,
+                                                    GstPad *pad,
+                                                    GstCaps *caps) {
   UNUSED(elem);
   UNUSED(pad);
 
@@ -133,7 +137,8 @@ gboolean EncodingStream::HandleDecodeBinAutoplugger(GstElement* elem, GstPad* pa
     return TRUE;
   }
 
-  INFO_LOG() << GetID() << " caps notified: " << type_title << "(" << type_full << ")";
+  INFO_LOG() << GetID() << " caps notified: " << type_title << "(" << type_full
+             << ")";
   SupportedAudioCodecs saudio;
   SupportedVideoCodecs svideo;
   SupportedDemuxers sdemuxer;
@@ -149,7 +154,7 @@ gboolean EncodingStream::HandleDecodeBinAutoplugger(GstElement* elem, GstPad* pa
     DNOTREACHED();
   } else if (is_video) {
     if (svideo == VIDEO_H264_CODEC) {
-      GstStructure* pad_struct = gst_caps_get_structure(caps, 0);
+      GstStructure *pad_struct = gst_caps_get_structure(caps, 0);
       gint width = 0;
       gint height = 0;
       if (pad_struct && gst_structure_get_int(pad_struct, "width", &width) &&
@@ -166,7 +171,7 @@ gboolean EncodingStream::HandleDecodeBinAutoplugger(GstElement* elem, GstPad* pa
     DNOTREACHED();
   } else if (is_audio) {
     if (saudio == AUDIO_MPEG_CODEC) {
-      GstStructure* pad_struct = gst_caps_get_structure(caps, 0);
+      GstStructure *pad_struct = gst_caps_get_structure(caps, 0);
       gint rate = 0;
       if (pad_struct && gst_structure_get_int(pad_struct, "rate", &rate)) {
         RegisterAudioCaps(saudio, caps, 0);
@@ -174,7 +179,7 @@ gboolean EncodingStream::HandleDecodeBinAutoplugger(GstElement* elem, GstPad* pa
       }
       return TRUE;
     } else if (saudio == AUDIO_AC3_CODEC) {
-      GstStructure* pad_struct = gst_caps_get_structure(caps, 0);
+      GstStructure *pad_struct = gst_caps_get_structure(caps, 0);
       gint rate = 0;
       if (pad_struct && gst_structure_get_int(pad_struct, "rate", &rate)) {
         RegisterAudioCaps(saudio, caps, 0);
@@ -187,20 +192,22 @@ gboolean EncodingStream::HandleDecodeBinAutoplugger(GstElement* elem, GstPad* pa
 
   SupportedRawStreams sraw;
   SupportedOtherType otype;
-  DCHECK(IsRawStreamFromType(type_title, &sraw) || IsOtherFromType(type_title, &otype)) << "type_title: " << type_title;
+  DCHECK(IsRawStreamFromType(type_title, &sraw) ||
+         IsOtherFromType(type_title, &otype))
+      << "type_title: " << type_title;
   return TRUE;
 }
 
-void EncodingStream::HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad) {
-  const gchar* new_pad_type = pad_get_type(new_pad);
+void EncodingStream::HandleDecodeBinPadAdded(GstElement *src, GstPad *new_pad) {
+  const gchar *new_pad_type = pad_get_type(new_pad);
   if (!new_pad_type) {
     NOTREACHED();
     return;
   }
 
-  EncodingConfig* econf = static_cast<EncodingConfig*>(GetApi());
+  EncodingConfig *econf = static_cast<EncodingConfig *>(GetApi());
   INFO_LOG() << GetID() << " pad added: " << new_pad_type;
-  elements::Element* dest = nullptr;
+  elements::Element *dest = nullptr;
   bool is_video = strncmp(new_pad_type, "video", 5) == 0;
   bool is_audio = strncmp(new_pad_type, "audio", 5) == 0;
   if (is_video) {
@@ -209,11 +216,12 @@ void EncodingStream::HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad) {
     }
   } else if (is_audio) {
     if (econf->HaveAudio() && !IsAudioInited()) {
-      const char* gst_pad_name = GST_PAD_NAME(new_pad);
+      const char *gst_pad_name = GST_PAD_NAME(new_pad);
       int audio_select = econf->GetAudioSelect();
       int current_audio_track = 0;
       if (audio_select == DEFAULT_AUDIO_SELECT ||
-          (GetPadId(gst_pad_name, &current_audio_track) && audio_select == current_audio_track)) {
+          (GetPadId(gst_pad_name, &current_audio_track) &&
+           audio_select == current_audio_track)) {
         dest = GetElementByName(common::MemSPrintf(UDB_AUDIO_NAME_1U, 0));
       }
     }
@@ -225,7 +233,7 @@ void EncodingStream::HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad) {
     return;
   }
 
-  pad::Pad* sink_pad = dest->StaticPad("sink");
+  pad::Pad *sink_pad = dest->StaticPad("sink");
   if (!sink_pad->IsValid()) {
     return;
   }
@@ -234,8 +242,8 @@ void EncodingStream::HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad) {
     GstPadLinkReturn ret = gst_pad_link(new_pad, sink_pad->GetGstPad());
     if (GST_PAD_LINK_FAILED(ret)) {
     } else {
-      DEBUG_LOG() << GetID() << " pad emitted: " << GST_ELEMENT_NAME(src) << " " << GST_PAD_NAME(new_pad) << " "
-                  << new_pad_type;
+      DEBUG_LOG() << GetID() << " pad emitted: " << GST_ELEMENT_NAME(src) << " "
+                  << GST_PAD_NAME(new_pad) << " " << new_pad_type;
     }
   } else {
     DEBUG_LOG() << "pad-emitter: pad is linked";
@@ -249,19 +257,23 @@ void EncodingStream::HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad) {
   delete sink_pad;
 }
 
-void EncodingStream::HandleDecodeBinElementAdded(GstBin* bin, GstElement* element) {
+void EncodingStream::HandleDecodeBinElementAdded(GstBin *bin,
+                                                 GstElement *element) {
   UNUSED(bin);
 
-  const std::string element_plugin_name = elements::Element::GetPluginName(element);
+  const std::string element_plugin_name =
+      elements::Element::GetPluginName(element);
   DEBUG_LOG() << "decodebin added element: " << element_plugin_name;
 }
 
-void EncodingStream::HandleDecodeBinElementRemoved(GstBin* bin, GstElement* element) {
+void EncodingStream::HandleDecodeBinElementRemoved(GstBin *bin,
+                                                   GstElement *element) {
   UNUSED(bin);
-  const std::string element_plugin_name = elements::Element::GetPluginName(element);
+  const std::string element_plugin_name =
+      elements::Element::GetPluginName(element);
   DEBUG_LOG() << "decodebin removed element: " << element_plugin_name;
 }
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

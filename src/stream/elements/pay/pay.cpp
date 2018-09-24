@@ -17,7 +17,7 @@
 namespace iptv_cloud {
 namespace stream {
 namespace elements {
-namespace pay {}  // namespace pay
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+namespace pay {} // namespace pay
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

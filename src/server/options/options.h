@@ -22,19 +22,19 @@ namespace options {
 
 enum Validity { VALID, INVALID, FATAL };
 
-typedef Validity (*validate_callback_t)(const std::string&);
+typedef Validity (*validate_callback_t)(const std::string &);
 
 typedef std::pair<std::string, validate_callback_t> option_t;
 
-utils::ArgsMap ValidateConfig(const std::string& config);
+utils::ArgsMap ValidateConfig(const std::string &config);
 
-utils::ArgsMap ValidateCmdArgs(const std::vector<std::string>& cmd_args);
-utils::ArgsMap ValidateCmdArgs(int argc, char** argv);
+utils::ArgsMap ValidateCmdArgs(const std::vector<std::string> &cmd_args);
+utils::ArgsMap ValidateCmdArgs(int argc, char **argv);
 
-bool FindOption(const std::string& key, option_t* opt);
+bool FindOption(const std::string &key, option_t *opt);
 
-bool FindCmdOption(const std::string& key, option_t* opt);
+bool FindCmdOption(const std::string &key, option_t *opt);
 
-}  // namespace options
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace options
+} // namespace server
+} // namespace iptv_cloud

@@ -29,28 +29,28 @@
 namespace iptv_cloud {
 namespace utils {
 
-void RemoveOldFilesByTime(const common::file_system::ascii_directory_string_path& dir,
-                          time_t max_life_secs,
-                          const char* ext) {
+void RemoveOldFilesByTime(
+    const common::file_system::ascii_directory_string_path &dir,
+    time_t max_life_secs, const char *ext) {
   if (!dir.IsValid()) {
     return;
   }
 
   const std::string path = dir.GetPath();
 
-  DIR* dirp = opendir(path.c_str());
+  DIR *dirp = opendir(path.c_str());
   if (!dirp) {
     return;
   }
 
   DEBUG_LOG() << "Started clean up hls folder: " << path;
-  struct dirent* dent;
+  struct dirent *dent;
   while ((dent = readdir(dirp)) != NULL) {
     if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, "..")) {
       continue;
     }
 
-    char* pch = strstr(dent->d_name, ext);
+    char *pch = strstr(dent->d_name, ext);
     if (pch) {
       std::string file_path = common::MemSPrintf("%s%s", path, dent->d_name);
       time_t mtime;
@@ -58,7 +58,8 @@ void RemoveOldFilesByTime(const common::file_system::ascii_directory_string_path
       if (mtime < max_life_secs) {
         common::ErrnoError err = common::file_system::remove_file(file_path);
         if (err) {
-          WARNING_LOG() << "Can't remove file: " << file_path << ", error: " << err->GetDescription();
+          WARNING_LOG() << "Can't remove file: " << file_path
+                        << ", error: " << err->GetDescription();
         } else {
           DEBUG_LOG() << "File path: " << file_path << " removed.";
         }
@@ -70,16 +71,19 @@ void RemoveOldFilesByTime(const common::file_system::ascii_directory_string_path
 }
 
 CpuShot::CpuShot()
-    : user(0), nice(0), system(0), idle(0), iowait(0), irq(0), softirq(0), steal(0), guest(0), guest_nice(0) {}
+    : user(0), nice(0), system(0), idle(0), iowait(0), irq(0), softirq(0),
+      steal(0), guest(0), guest_nice(0) {}
 
-long double GetCpuMachineLoad(const CpuShot& prev, const CpuShot& next) {
+long double GetCpuMachineLoad(const CpuShot &prev, const CpuShot &next) {
   // http://stackoverflow.com/questions/23367857/accurate-calculation-of-cpu-usage-given-in-percentage-in-linux
 
   uint64_t PrevIdle = prev.idle + prev.iowait;
   uint64_t Idle = next.idle + next.iowait;
 
-  uint64_t PrevNonIdle = prev.user + prev.nice + prev.system + prev.irq + prev.softirq + prev.steal;
-  uint64_t NonIdle = next.user + next.nice + next.system + next.irq + next.softirq + next.steal;
+  uint64_t PrevNonIdle = prev.user + prev.nice + prev.system + prev.irq +
+                         prev.softirq + prev.steal;
+  uint64_t NonIdle = next.user + next.nice + next.system + next.irq +
+                     next.softirq + next.steal;
 
   uint64_t PrevTotal = PrevIdle + PrevNonIdle;
   uint64_t Total = Idle + NonIdle;
@@ -92,7 +96,7 @@ long double GetCpuMachineLoad(const CpuShot& prev, const CpuShot& next) {
 }
 
 CpuShot GetMachineCpuShot() {
-  FILE* fp = fopen("/proc/stat", "r");
+  FILE *fp = fopen("/proc/stat", "r");
   if (!fp) {
     return CpuShot();
   }
@@ -115,7 +119,8 @@ CpuShot GetMachineCpuShot() {
   sscanf(buffer,
          "cpu  %16llu %16llu %16llu %16llu %16llu %16llu %16llu %16llu %16llu "
          "%16llu",
-         &usertime, &nicetime, &systemtime, &idletime, &ioWait, &irq, &softIrq, &steal, &guest, &guestnice);
+         &usertime, &nicetime, &systemtime, &idletime, &ioWait, &irq, &softIrq,
+         &steal, &guest, &guestnice);
 
   // Guest time is already accounted in usertime
   usertime = usertime - guest;
@@ -145,11 +150,12 @@ CpuShot GetMachineCpuShot() {
 MemoryShot::MemoryShot() : total_ram(0), free_ram(0), avail_ram(0) {}
 
 long double MemoryShot::GetAvailable() const {
-  return static_cast<long double>(avail_ram) / static_cast<long double>(total_ram);
+  return static_cast<long double>(avail_ram) /
+         static_cast<long double>(total_ram);
 }
 
 MemoryShot GetMachineMemoryShot() {
-  FILE* meminfo = fopen("/proc/meminfo", "r");
+  FILE *meminfo = fopen("/proc/meminfo", "r");
   if (meminfo == NULL) {
     return MemoryShot();
   }
@@ -185,7 +191,7 @@ HddShot GetMachineHddShot() {
 NetShot::NetShot() : bytes_recv(0), bytes_send(0) {}
 
 NetShot GetMachineNetShot() {
-  FILE* netinfo = fopen("/proc/net/dev", "r");
+  FILE *netinfo = fopen("/proc/net/dev", "r");
   if (netinfo == NULL) {
     return NetShot();
   }
@@ -198,14 +204,17 @@ NetShot GetMachineNetShot() {
     // face |bytes    packets errs drop fifo frame compressed multicast|
     // bytes    packets errs drop fifo colls carrier compressed
     if (pos > 1) {
-      unsigned long long int r_bytes, r_packets, r_errs, r_drop, r_fifo, r_frame, r_compressed, r_multicast;
-      unsigned long long int s_bytes, s_packets, s_errs, s_drop, s_fifo, s_colls, s_carrier, s_compressed;
+      unsigned long long int r_bytes, r_packets, r_errs, r_drop, r_fifo,
+          r_frame, r_compressed, r_multicast;
+      unsigned long long int s_bytes, s_packets, s_errs, s_drop, s_fifo,
+          s_colls, s_carrier, s_compressed;
       sscanf(line,
              "%s %16llu %16llu %16llu %16llu %16llu %16llu %16llu %16llu "
              "%16llu %16llu %16llu "
              "%16llu %16llu %16llu %16llu %16llu",
-             interf, &r_bytes, &r_packets, &r_errs, &r_drop, &r_fifo, &r_frame, &r_compressed, &r_multicast, &s_bytes,
-             &s_packets, &s_errs, &s_drop, &s_fifo, &s_colls, &s_carrier, &s_compressed);
+             interf, &r_bytes, &r_packets, &r_errs, &r_drop, &r_fifo, &r_frame,
+             &r_compressed, &r_multicast, &s_bytes, &s_packets, &s_errs,
+             &s_drop, &s_fifo, &s_colls, &s_carrier, &s_compressed);
       if (strncmp(interf, "lo", 2) != 0) {
         shot.bytes_recv += r_bytes;
         shot.bytes_send += s_bytes;
@@ -229,10 +238,11 @@ SysinfoShot GetMachineSysinfoShot() {
   }
 
   SysinfoShot inf;
-  memcpy(&inf.loads, &info.loads, sizeof(unsigned long) * SIZEOFMASS(info.loads));
+  memcpy(&inf.loads, &info.loads,
+         sizeof(unsigned long) * SIZEOFMASS(info.loads));
   inf.uptime = info.uptime;
   return inf;
 }
 
-}  // namespace utils
-}  // namespace iptv_cloud
+} // namespace utils
+} // namespace iptv_cloud

@@ -14,14 +14,15 @@
 
 #include "gst_constants.h"
 
-const std::array<const char*, SUPPORTED_AUDIO_ENCODERS_COUNT> supported_video_parsers = {
-    {TS_PARSE, H264_PARSE, H265_PARSE}};
+const std::array<const char *, SUPPORTED_AUDIO_ENCODERS_COUNT>
+    supported_video_parsers = {{TS_PARSE, H264_PARSE, H265_PARSE}};
 
-const std::array<const char*, SUPPORTED_AUDIO_ENCODERS_COUNT> supported_audio_parsers = {
-    {MPEG_AUDIO_PARSE, AAC_PARSE, AC3_PARSE}};
+const std::array<const char *, SUPPORTED_AUDIO_ENCODERS_COUNT>
+    supported_audio_parsers = {{MPEG_AUDIO_PARSE, AAC_PARSE, AC3_PARSE}};
 
-const std::array<const char*, SUPPORTED_VIDEO_ENCODERS_COUNT> supported_video_encoders = {
-    {EAVC_ENC, OPEN_H264_ENC, X264_ENC, NV_H264_ENC, VAAPI_H264_ENC, VAAPI_MPEG2_ENC, MFX_H264_ENC, X265_ENC,
-     MSDK_H264_ENC}};
-const std::array<const char*, SUPPORTED_AUDIO_ENCODERS_COUNT> supported_audio_encoders = {
-    {LAME_MP3_ENC, FAAC, VOAAC_ENC}};
+const std::array<const char *, SUPPORTED_VIDEO_ENCODERS_COUNT>
+    supported_video_encoders = {{EAVC_ENC, OPEN_H264_ENC, X264_ENC, NV_H264_ENC,
+                                 VAAPI_H264_ENC, VAAPI_MPEG2_ENC, MFX_H264_ENC,
+                                 X265_ENC, MSDK_H264_ENC}};
+const std::array<const char *, SUPPORTED_AUDIO_ENCODERS_COUNT>
+    supported_audio_encoders = {{LAME_MP3_ENC, FAAC, VOAAC_ENC}};

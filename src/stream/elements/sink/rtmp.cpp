@@ -19,17 +19,18 @@ namespace stream {
 namespace elements {
 namespace sink {
 
-void ElementRtmpSink::SetLocation(const std::string& location) {
+void ElementRtmpSink::SetLocation(const std::string &location) {
   SetProperty("location", location);
 }
 
-ElementRtmpSink* make_rtmp_sink(element_id_t sink_id, const std::string& output) {
-  ElementRtmpSink* rtmp_out = make_sink<ElementRtmpSink>(sink_id);
+ElementRtmpSink *make_rtmp_sink(element_id_t sink_id,
+                                const std::string &output) {
+  ElementRtmpSink *rtmp_out = make_sink<ElementRtmpSink>(sink_id);
   rtmp_out->SetLocation(output);
   return rtmp_out;
 }
 
-}  // namespace sink
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sink
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

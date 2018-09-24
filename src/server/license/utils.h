@@ -21,9 +21,9 @@ namespace server {
 namespace utils {
 
 std::string GetNativeCpuID();
-bool GetHddID(std::string* serial);
-bool GetMachineID(std::string* serial);
+bool GetHddID(std::string *serial);
+bool GetMachineID(std::string *serial);
 
-}  // namespace utils
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace utils
+} // namespace server
+} // namespace iptv_cloud

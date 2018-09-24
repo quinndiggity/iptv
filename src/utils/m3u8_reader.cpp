@@ -33,7 +33,7 @@
 
 namespace {
 
-bool GetNonEmptyLine(FILE* file, std::string* line) {
+bool GetNonEmptyLine(FILE *file, std::string *line) {
   if (!line) {
     return false;
   }
@@ -44,7 +44,8 @@ bool GetNonEmptyLine(FILE* file, std::string* line) {
       return false;
     }
 
-    auto it = std::find_if(std::begin(t), std::end(t), [](char c) { return !std::isspace(c); });
+    auto it = std::find_if(std::begin(t), std::end(t),
+                           [](char c) { return !std::isspace(c); });
     if (it != std::end(t) && *it != 0) {
       *line = t;
       return true;
@@ -52,7 +53,7 @@ bool GetNonEmptyLine(FILE* file, std::string* line) {
   }
 }
 
-void RemoveTrailingSpaces(std::string* str) {
+void RemoveTrailingSpaces(std::string *str) {
   if (!str || str->empty()) {
     return;
   }
@@ -60,29 +61,34 @@ void RemoveTrailingSpaces(std::string* str) {
     str->pop_back();
   }
 }
-}  // namespace
+} // namespace
 
 namespace iptv_cloud {
 namespace utils {
 
-M3u8Reader::M3u8Reader() : version_(-1), allow_cache_(false), media_sequence_(-1), target_duration_(-1), chunks_() {}
+M3u8Reader::M3u8Reader()
+    : version_(-1), allow_cache_(false), media_sequence_(-1),
+      target_duration_(-1), chunks_() {}
 
-bool M3u8Reader::Parse(const std::string& path) {
-  FILE* file = fopen(path.c_str(), "r");
+bool M3u8Reader::Parse(const std::string &path) {
+  FILE *file = fopen(path.c_str(), "r");
   return ParseFile(file);
 }
 
-bool M3u8Reader::Parse(const common::file_system::ascii_file_string_path& path) {
+bool M3u8Reader::Parse(
+    const common::file_system::ascii_file_string_path &path) {
   const std::string filepath = path.GetPath();
-  FILE* file = fopen(filepath.c_str(), "r");
+  FILE *file = fopen(filepath.c_str(), "r");
   return ParseFile(file);
 }
 
-bool M3u8Reader::ParseFile(FILE* file) {
+bool M3u8Reader::ParseFile(FILE *file) {
   static const std::regex m3u8_version("^#EXT-X-VERSION:([0-9]+)$");
   static const std::regex m3u8_allow_cache("^#EXT-X-ALLOW-CACHE:([A-Z]+)$");
-  static const std::regex m3u8_media_sequence("^#EXT-X-MEDIA-SEQUENCE:([0-9]+)$");
-  static const std::regex m3u8_target_duration("^#EXT-X-TARGETDURATION:([0-9]+)$");
+  static const std::regex m3u8_media_sequence(
+      "^#EXT-X-MEDIA-SEQUENCE:([0-9]+)$");
+  static const std::regex m3u8_target_duration(
+      "^#EXT-X-TARGETDURATION:([0-9]+)$");
 
   Clear();
 
@@ -134,7 +140,7 @@ bool M3u8Reader::ParseFile(FILE* file) {
   return false;
 }
 
-bool M3u8Reader::ParseChunks(FILE* file) {
+bool M3u8Reader::ParseChunks(FILE *file) {
   if (!file) {
     return false;
   }
@@ -159,7 +165,8 @@ bool M3u8Reader::ParseChunks(FILE* file) {
     uint64_t index = 0;
 
     static const std::regex m3u8_chunk_header_re("^#EXTINF:([0-9.]+),$");
-    static const std::regex m3u8_chunk_re("^[A-Za-z0-9_]*?([0-9]+)" CHUNK_EXT_RE "$");
+    static const std::regex m3u8_chunk_re("^[A-Za-z0-9_]*?([0-9]+)" CHUNK_EXT_RE
+                                          "$");
 
     std::smatch header_match;
     if (!std::regex_match(header_line, header_match, m3u8_chunk_header_re)) {
@@ -176,30 +183,21 @@ bool M3u8Reader::ParseChunks(FILE* file) {
       return false;
     }
 
-    ChunkInfo chunk(chunk_line, static_cast<uint64_t>(duration * SECOND), index);
+    ChunkInfo chunk(chunk_line, static_cast<uint64_t>(duration * SECOND),
+                    index);
     chunks_.push_back(chunk);
   }
 }
 
-int M3u8Reader::GetVersion() const {
-  return version_;
-}
+int M3u8Reader::GetVersion() const { return version_; }
 
-bool M3u8Reader::IsAllowCache() const {
-  return allow_cache_;
-}
+bool M3u8Reader::IsAllowCache() const { return allow_cache_; }
 
-int M3u8Reader::GetMediaSequence() const {
-  return media_sequence_;
-}
+int M3u8Reader::GetMediaSequence() const { return media_sequence_; }
 
-int M3u8Reader::GetTargetDuration() const {
-  return target_duration_;
-}
+int M3u8Reader::GetTargetDuration() const { return target_duration_; }
 
-std::vector<ChunkInfo> M3u8Reader::GetChunks() const {
-  return chunks_;
-}
+std::vector<ChunkInfo> M3u8Reader::GetChunks() const { return chunks_; }
 
 void M3u8Reader::Clear() {
   version_ = -1;
@@ -210,5 +208,5 @@ void M3u8Reader::Clear() {
   chunks_.clear();
 }
 
-}  // namespace utils
-}  // namespace iptv_cloud
+} // namespace utils
+} // namespace iptv_cloud

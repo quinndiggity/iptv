@@ -19,13 +19,14 @@ namespace stream {
 namespace elements {
 namespace sources {
 
-ElementFileSrc* make_file_src(const std::string& location, element_id_t input_id) {
-  ElementFileSrc* file_src = make_sources<ElementFileSrc>(input_id);
+ElementFileSrc *make_file_src(const std::string &location,
+                              element_id_t input_id) {
+  ElementFileSrc *file_src = make_sources<ElementFileSrc>(input_id);
   file_src->SetLocation(location);
   return file_src;
 }
 
-}  // namespace sources
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sources
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

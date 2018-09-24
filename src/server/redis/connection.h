@@ -23,25 +23,27 @@ namespace server {
 namespace redis {
 
 class RedisConnection {
- public:
+public:
   RedisConnection();
   ~RedisConnection();
 
   redis_configuration_t GetConfig() const;
-  void SetConfig(const redis_configuration_t& config);
+  void SetConfig(const redis_configuration_t &config);
 
-  bool Set(const std::string& key, const std::string& value) const WARN_UNUSED_RESULT;
-  bool Get(const std::string& key, std::string* value) const WARN_UNUSED_RESULT;
-  bool Publish(const std::string& channel, const std::string& msg) WARN_UNUSED_RESULT;
+  bool Set(const std::string &key,
+           const std::string &value) const WARN_UNUSED_RESULT;
+  bool Get(const std::string &key, std::string *value) const WARN_UNUSED_RESULT;
+  bool Publish(const std::string &channel,
+               const std::string &msg) WARN_UNUSED_RESULT;
   bool Connect() WARN_UNUSED_RESULT;
   void DisConnect();
   bool IsConnected() const;
 
- private:
-  struct redisContext* connection_;
+private:
+  struct redisContext *connection_;
   redis_configuration_t config_;
 };
 
-}  // namespace redis
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace redis
+} // namespace server
+} // namespace iptv_cloud

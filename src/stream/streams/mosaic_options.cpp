@@ -20,12 +20,13 @@ namespace streams {
 
 SoundInfo::SoundInfo() : volume(), mute(), channels() {}
 
-MosaicImageOptions::MosaicImageOptions() : screen_size(), right_padding(0), sreams() {}
+MosaicImageOptions::MosaicImageOptions()
+    : screen_size(), right_padding(0), sreams() {}
 
 bool MosaicImageOptions::isValid() const {
   return screen_size.width != 0 && screen_size.height != 0;
 }
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

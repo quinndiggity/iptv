@@ -22,22 +22,26 @@ namespace iptv_cloud {
 namespace stream {
 
 typedef uint64_t chunk_index_t;
-static const chunk_index_t invalid_chunk_index = std::numeric_limits<chunk_index_t>::max();
+static const chunk_index_t invalid_chunk_index =
+    std::numeric_limits<chunk_index_t>::max();
 
 typedef uint32_t chunk_hours_t;
 typedef uint32_t time_shift_delay_t;
 
 struct TimeShiftInfo {
   TimeShiftInfo();
-  explicit TimeShiftInfo(const std::string& path, chunk_hours_t lth, time_shift_delay_t delay);
+  explicit TimeShiftInfo(const std::string &path, chunk_hours_t lth,
+                         time_shift_delay_t delay);
 
-  bool FindLastChunk(chunk_index_t* index, time_t* file_created_time) const WARN_UNUSED_RESULT;
-  bool FindChunkToPlay(time_t chunk_duration, chunk_index_t* index) const WARN_UNUSED_RESULT;
+  bool FindLastChunk(chunk_index_t *index,
+                     time_t *file_created_time) const WARN_UNUSED_RESULT;
+  bool FindChunkToPlay(time_t chunk_duration,
+                       chunk_index_t *index) const WARN_UNUSED_RESULT;
 
   common::file_system::ascii_directory_string_path timshift_dir;
   chunk_hours_t chunk_max_life_time_hours;
-  time_shift_delay_t timeshift_delay;  // in mins
+  time_shift_delay_t timeshift_delay; // in mins
 };
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

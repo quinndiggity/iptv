@@ -21,25 +21,29 @@ namespace iptv_cloud {
 namespace protocol {
 
 namespace {
-common::Error GenerateProtocoledMessage(const std::string& message, char** data, size_t* data_len) {
+common::ErrnoError GenerateProtocoledMessage(const std::string &message,
+                                             char **data, size_t *data_len) {
   if (message.empty() || !data || !data_len) {
-    return common::make_error_inval();
+    return common::make_errno_error_inval();
   }
 
-  const char* data_ptr = message.data();
+  const char *data_ptr = message.data();
   const size_t size = message.size();
 
   const protocoled_size_t data_size = size;
   if (data_size > MAX_COMMAND_SIZE) {
-    return common::make_error(common::MemSPrintf("Reached limit of command size: %u", data_size));
+    return common::make_errno_error(
+        common::MemSPrintf("Reached limit of command size: %u", data_size),
+        EAGAIN);
   }
 
-  const protocoled_size_t message_size = common::HostToNet32(data_size);  // stable
+  const protocoled_size_t message_size =
+      common::HostToNet32(data_size); // stable
   const size_t protocoled_data_len = size + sizeof(protocoled_size_t);
 
-  char* protocoled_data = static_cast<char*>(malloc(protocoled_data_len));
+  char *protocoled_data = static_cast<char *>(malloc(protocoled_data_len));
   if (!protocoled_data) {
-    return common::make_error("Can't allocate memory");
+    return common::make_errno_error("Can't allocate memory", ENOMEM);
   }
 
   memcpy(protocoled_data, &message_size, sizeof(protocoled_size_t));
@@ -47,74 +51,88 @@ common::Error GenerateProtocoledMessage(const std::string& message, char** data,
 
   *data = protocoled_data;
   *data_len = protocoled_data_len;
-  return common::Error();
+  return common::ErrnoError();
 }
-}  // namespace
+} // namespace
 
 namespace detail {
-common::Error ReadDataSize(common::libev::IoClient* client, protocoled_size_t* sz) {
+namespace {
+common::ErrnoError ReadDataSize(common::libev::IoClient *client,
+                                protocoled_size_t *sz) {
   if (!client || !sz) {
-    return common::make_error_inval();
+    return common::make_errno_error_inval();
   }
 
   protocoled_size_t lsz = 0;
   size_t nread = 0;
-  common::Error err = client->Read(reinterpret_cast<char*>(&lsz), sizeof(protocoled_size_t), &nread);
+  common::ErrnoError err = client->Read(reinterpret_cast<char *>(&lsz),
+                                        sizeof(protocoled_size_t), &nread);
   if (err) {
     return err;
   }
 
-  if (nread != sizeof(protocoled_size_t)) {  // connection closed
+  if (nread != sizeof(protocoled_size_t)) { // connection closed
     if (nread == 0) {
-      return common::make_error("Connection closed");
+      return common::make_errno_error("Connection closed", EAGAIN);
     }
-    return common::make_error(common::MemSPrintf("Error when reading needed to read: %lu bytes, but readed: %lu",
-                                                 sizeof(protocoled_size_t), nread));
+    return common::make_errno_error(
+        common::MemSPrintf(
+            "Error when reading needed to read: %lu bytes, but readed: %lu",
+            sizeof(protocoled_size_t), nread),
+        EAGAIN);
   }
 
   *sz = lsz;
-  return common::Error();
+  return common::ErrnoError();
 }
 
-common::Error ReadMessage(common::libev::IoClient* client, char* out, protocoled_size_t size) {
+common::ErrnoError ReadMessage(common::libev::IoClient *client, char *out,
+                               protocoled_size_t size) {
   if (!client || !out || size == 0) {
-    return common::make_error_inval();
+    return common::make_errno_error_inval();
   }
 
   size_t nread;
-  common::Error err = client->Read(out, size, &nread);
+  common::ErrnoError err = client->Read(out, size, &nread);
   if (err) {
     return err;
   }
 
-  if (nread != size) {  // connection closed
+  if (nread != size) { // connection closed
     if (nread == 0) {
-      return common::make_error("Connection closed");
+      return common::make_errno_error("Connection closed", EAGAIN);
     }
-    return common::make_error(
-        common::MemSPrintf("Error when reading needed to read: %lu bytes, but readed: %lu", size, nread));
+    return common::make_errno_error(
+        common::MemSPrintf(
+            "Error when reading needed to read: %lu bytes, but readed: %lu",
+            size, nread),
+        EAGAIN);
   }
 
-  return common::Error();
+  return common::ErrnoError();
 }
+} // namespace
 
-common::Error ReadCommand(common::libev::IoClient* client, std::string* out) {
+common::ErrnoError ReadCommand(common::libev::IoClient *client,
+                               std::string *out) {
   if (!client || !out) {
-    return common::make_error_inval();
+    return common::make_errno_error_inval();
   }
 
   protocoled_size_t message_size;
-  common::Error err = ReadDataSize(client, &message_size);
+  common::ErrnoError err = ReadDataSize(client, &message_size);
   if (err) {
     return err;
   }
 
-  message_size = common::NetToHost32(message_size);  // stable
+  message_size = common::NetToHost32(message_size); // stable
   if (message_size > MAX_COMMAND_SIZE) {
-    return common::make_error(common::MemSPrintf("Reached limit of command size: %u", message_size));
+    return common::make_errno_error(
+        common::MemSPrintf("Reached limit of command size: %u", message_size),
+        EAGAIN);
   }
 
-  char* msg = static_cast<char*>(malloc(message_size));
+  char *msg = static_cast<char *>(malloc(message_size));
   err = ReadMessage(client, msg, message_size);
   if (err) {
     free(msg);
@@ -125,13 +143,15 @@ common::Error ReadCommand(common::libev::IoClient* client, std::string* out) {
   free(msg);
 
   *out = un_compressed;
-  return common::Error();
+  return common::ErrnoError();
 }
 
-common::Error WriteMessage(common::libev::IoClient* client, const std::string& message) {
-  char* protocoled_data = NULL;
+common::ErrnoError WriteMessage(common::libev::IoClient *client,
+                                const std::string &message) {
+  char *protocoled_data = NULL;
   size_t protocoled_data_len = 0;
-  common::Error err = protocol::GenerateProtocoledMessage(message, &protocoled_data, &protocoled_data_len);
+  common::ErrnoError err = protocol::GenerateProtocoledMessage(
+      message, &protocoled_data, &protocoled_data_len);
   if (err) {
     return err;
   }
@@ -139,22 +159,27 @@ common::Error WriteMessage(common::libev::IoClient* client, const std::string& m
   size_t nwrite = 0;
   err = client->Write(protocoled_data, protocoled_data_len, &nwrite);
   free(protocoled_data);
-  if (nwrite != protocoled_data_len) {  // connection closed
-    return common::make_error(
-        common::MemSPrintf("Error when writing needed to write: %lu, but writed: %lu", protocoled_data_len, nwrite));
+  if (nwrite != protocoled_data_len) { // connection closed
+    return common::make_errno_error(
+        common::MemSPrintf(
+            "Error when writing needed to write: %lu, but writed: %lu",
+            protocoled_data_len, nwrite),
+        EAGAIN);
   }
 
   return err;
 }
 
-common::Error WriteRequest(common::libev::IoClient* client, const request_t& request) {
+common::ErrnoError WriteRequest(common::libev::IoClient *client,
+                                const request_t &request) {
   return WriteMessage(client, request.GetCmd());
 }
 
-common::Error WriteResponce(common::libev::IoClient* client, const responce_t& responce) {
+common::ErrnoError WriteResponce(common::libev::IoClient *client,
+                                 const responce_t &responce) {
   return WriteMessage(client, responce.GetCmd());
 }
-}  // namespace detail
+} // namespace detail
 
-}  // namespace protocol
-}  // namespace iptv_cloud
+} // namespace protocol
+} // namespace iptv_cloud

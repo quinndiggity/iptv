@@ -19,18 +19,19 @@ namespace server {
 namespace stats {
 namespace redis {
 
-StatCredentials::StatCredentials(const redis_configuration_t& conf) : StatCredentialsBase(STAT_REDIS), conf_(conf) {}
+StatCredentials::StatCredentials(const redis_configuration_t &conf)
+    : StatCredentialsBase(STAT_REDIS), conf_(conf) {}
 
-const StatCredentials::redis_configuration_t& StatCredentials::GetConf() const {
+const StatCredentials::redis_configuration_t &StatCredentials::GetConf() const {
   return conf_;
 }
 
-Stat::Stat(StatCredentials* creds) : IStat(creds), rc_() {
+Stat::Stat(StatCredentials *creds) : IStat(creds), rc_() {
   CHECK(creds);
   rc_.SetConfig(creds->GetConf());
 }
 
-bool Stat::SetKey(const std::string& key, const std::string& value) {
+bool Stat::SetKey(const std::string &key, const std::string &value) {
   if (rc_.Connect()) {
     return rc_.Set(key, value);
   }
@@ -38,7 +39,7 @@ bool Stat::SetKey(const std::string& key, const std::string& value) {
   return false;
 }
 
-bool Stat::GetKey(const std::string& key, std::string* value) {
+bool Stat::GetKey(const std::string &key, std::string *value) {
   if (rc_.Connect()) {
     return rc_.Get(key, value);
   }
@@ -46,7 +47,7 @@ bool Stat::GetKey(const std::string& key, std::string* value) {
   return false;
 }
 
-}  // namespace redis
-}  // namespace stats
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace redis
+} // namespace stats
+} // namespace server
+} // namespace iptv_cloud

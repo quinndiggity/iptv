@@ -22,13 +22,13 @@ namespace streams {
 namespace builders {
 
 class DeviceStreamBuilder : public EncodingStreamBuilder {
- public:
+public:
   enum { VIDEO_WIDTH = 1920, VIDEO_HEIGHT = 1080 };
-  DeviceStreamBuilder(EncodingConfig* api, SrcDecodeBinStream* observer);
+  DeviceStreamBuilder(EncodingConfig *api, SrcDecodeBinStream *observer);
   virtual Connector BuildInput() override;
 };
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include "stream/elements/element.h"          // for SupportedElements::ELEMENT_MUL...
-#include "stream/elements/sources/sources.h"  // for ElementLocation
+#include "stream/elements/element.h" // for SupportedElements::ELEMENT_MUL...
+#include "stream/elements/sources/sources.h" // for ElementLocation
 
 // for element_id_t
 
@@ -31,17 +31,18 @@ struct MultiFileSrcInfo {
 };
 
 class ElementMultiFileSrc : public ElementLocation<ELEMENT_MULTIFILE_SRC> {
- public:
+public:
   typedef ElementLocation<ELEMENT_MULTIFILE_SRC> base_class;
   using base_class::base_class;
 
-  void SetIndex(int index = 0);     // Range: 0 - 2147483647 Default: 0
-  void SetLoop(bool loop = false);  // Default: false
+  void SetIndex(int index = 0);    // Range: 0 - 2147483647 Default: 0
+  void SetLoop(bool loop = false); // Default: false
 };
 
-ElementMultiFileSrc* make_multifile_src(const MultiFileSrcInfo& info, element_id_t input_id);
+ElementMultiFileSrc *make_multifile_src(const MultiFileSrcInfo &info,
+                                        element_id_t input_id);
 
-}  // namespace sources
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sources
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

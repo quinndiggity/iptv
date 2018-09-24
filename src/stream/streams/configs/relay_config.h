@@ -21,45 +21,45 @@ namespace stream {
 namespace streams {
 
 class RelayConfig : public AudioVideoConfig {
- public:
+public:
   typedef AudioVideoConfig base_class;
-  explicit RelayConfig(const base_class& config);
+  explicit RelayConfig(const base_class &config);
 
-  std::string GetVideoParser() const;  // relay
-  void SetVideoParser(const std::string& parser);
+  std::string GetVideoParser() const; // relay
+  void SetVideoParser(const std::string &parser);
 
-  std::string GetAudioParser() const;  // relay
-  void SetAudioParser(const std::string& parser);
+  std::string GetAudioParser() const; // relay
+  void SetAudioParser(const std::string &parser);
 
- private:
+private:
   std::string video_parser_;
   std::string audio_parser_;
 };
 
 class TimeshiftConfig : public RelayConfig {
- public:
+public:
   typedef RelayConfig base_class;
-  explicit TimeshiftConfig(const base_class& config);
+  explicit TimeshiftConfig(const base_class &config);
 
-  time_t GetTimeShiftChunkDuration() const;  // timeshift_rec, catchup_rec
-  void SetTimeShiftChunkDuration(time_t t);  // timeshift_rec, catchup_rec
+  time_t GetTimeShiftChunkDuration() const; // timeshift_rec, catchup_rec
+  void SetTimeShiftChunkDuration(time_t t); // timeshift_rec, catchup_rec
 
- private:
+private:
   time_t timeshift_chunk_duration_;
 };
 
 class PlaylistRelayConfig : public RelayConfig {
- public:
+public:
   typedef RelayConfig base_class;
-  explicit PlaylistRelayConfig(const base_class& config);
+  explicit PlaylistRelayConfig(const base_class &config);
 
-  bool GetLoop() const;  // enc_playlist relay_playlist
+  bool GetLoop() const; // enc_playlist relay_playlist
   void SetLoop(bool loop);
 
- private:
+private:
   bool loop_;
 };
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

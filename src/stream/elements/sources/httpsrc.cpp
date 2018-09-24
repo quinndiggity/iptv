@@ -19,22 +19,19 @@ namespace stream {
 namespace elements {
 namespace sources {
 
-void ElementSoupHTTPSrc::SetIsLive(bool live) {
-  SetProperty("is-live", live);
-}
+void ElementSoupHTTPSrc::SetIsLive(bool live) { SetProperty("is-live", live); }
 
-void ElementSoupHTTPSrc::SetTimeOut(gint secs) {
-  SetProperty("timeout", secs);
-}
+void ElementSoupHTTPSrc::SetTimeOut(gint secs) { SetProperty("timeout", secs); }
 
-ElementSoupHTTPSrc* make_http_src(const std::string& location, gint timeout_secs, element_id_t input_id) {
-  ElementSoupHTTPSrc* http_src = make_sources<ElementSoupHTTPSrc>(input_id);
+ElementSoupHTTPSrc *make_http_src(const std::string &location,
+                                  gint timeout_secs, element_id_t input_id) {
+  ElementSoupHTTPSrc *http_src = make_sources<ElementSoupHTTPSrc>(input_id);
   http_src->SetLocation(location);
   http_src->SetTimeOut(timeout_secs);
   return http_src;
 }
 
-}  // namespace sources
-}  // namespace elements
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace sources
+} // namespace elements
+} // namespace stream
+} // namespace iptv_cloud

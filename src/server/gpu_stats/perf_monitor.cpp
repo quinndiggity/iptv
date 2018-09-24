@@ -40,7 +40,7 @@ bool IsIntelGpuAvailable() {
   return false;
 #endif
 }
-}  // namespace
+} // namespace
 
 namespace iptv_cloud {
 namespace server {
@@ -48,7 +48,7 @@ namespace gpu_stats {
 
 IPerfMonitor::~IPerfMonitor() {}
 
-IPerfMonitor* CreatePerfMonitor(int* load) {
+IPerfMonitor *CreatePerfMonitor(int *load) {
   if (IsNvidiaGpuAvailable()) {
 #ifdef HAVE_NVML
     return new NvidiaMonitor(load);
@@ -65,6 +65,6 @@ IPerfMonitor* CreatePerfMonitor(int* load) {
   return nullptr;
 }
 
-}  // namespace gpu_stats
-}  // namespace server
-}  // namespace iptv_cloud
+} // namespace gpu_stats
+} // namespace server
+} // namespace iptv_cloud

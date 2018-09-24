@@ -22,7 +22,7 @@ namespace iptv_cloud {
 namespace utils {
 
 template <typename T>
-bool ArgsGetValue(const ArgsMap& args, const std::string& key, T* out) {
+bool ArgsGetValue(const ArgsMap &args, const std::string &key, T *out) {
   if (!out) {
     return false;
   }
@@ -43,5 +43,5 @@ bool ArgsGetValue(const ArgsMap& args, const std::string& key, T* out) {
   return false;
 }
 
-}  // namespace utils
-}  // namespace iptv_cloud
+} // namespace utils
+} // namespace iptv_cloud

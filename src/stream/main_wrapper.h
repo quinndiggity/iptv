@@ -15,12 +15,10 @@
 #pragma once
 
 struct cmd_args {
-  const char* feedback_dir;
+  const char *feedback_dir;
   int log_level;
 };
 
-extern "C" int stream_exec(const char* process_name,
-                           const struct cmd_args* args,
-                           void* config_args,
-                           void* command_client,
-                           void* mem);
+extern "C" int stream_exec(const char *process_name,
+                           const struct cmd_args *args, void *config_args,
+                           void *command_client, void *mem);

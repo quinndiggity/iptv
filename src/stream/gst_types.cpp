@@ -19,7 +19,7 @@
 namespace iptv_cloud {
 namespace stream {
 
-bool GetTypeEncoder(const std::string& encoder, EncoderType* enc) {
+bool GetTypeEncoder(const std::string &encoder, EncoderType *enc) {
   if (encoder.empty() || !enc) {
     return false;
   }
@@ -38,5 +38,5 @@ bool GetTypeEncoder(const std::string& encoder, EncoderType* enc) {
   return true;
 }
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud

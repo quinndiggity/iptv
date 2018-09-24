@@ -16,14 +16,14 @@
 
 #include <string.h>
 
-#include "stream/gstreamer_utils.h"  // for pad_get_type
+#include "stream/gstreamer_utils.h" // for pad_get_type
 
 #include "gst_constants.h"
 #include "stream/constants.h"
 
 #include "stream/elements/parser/video_parsers.h"
 
-#include "stream/pad/pad.h"  // for Pad
+#include "stream/pad/pad.h" // for Pad
 
 #include "stream/streams/builders/relay_stream_builder.h"
 
@@ -31,21 +31,20 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-RelayStream::RelayStream(RelayConfig* config, IStreamClient* client, StreamStruct* stats)
+RelayStream::RelayStream(RelayConfig *config, IStreamClient *client,
+                         StreamStruct *stats)
     : SrcDecodeBinStream(config, client, stats) {}
 
-const char* RelayStream::ClassName() const {
-  return "RelayStream";
-}
+const char *RelayStream::ClassName() const { return "RelayStream"; }
 
-IBaseBuilder* RelayStream::CreateBuilder() {
-  RelayConfig* rconf = static_cast<RelayConfig*>(GetApi());
+IBaseBuilder *RelayStream::CreateBuilder() {
+  RelayConfig *rconf = static_cast<RelayConfig *>(GetApi());
   return new builders::RelayStreamBuilder(rconf, this);
 }
 
-gboolean RelayStream::HandleDecodeBinAutoplugger(GstElement* elem,
-                                                 GstPad* pad,
-                                                 GstCaps* caps) {  // FALSE => stop autoplug
+gboolean RelayStream::HandleDecodeBinAutoplugger(
+    GstElement *elem, GstPad *pad,
+    GstCaps *caps) { // FALSE => stop autoplug
   UNUSED(elem);
   UNUSED(pad);
 
@@ -55,7 +54,8 @@ gboolean RelayStream::HandleDecodeBinAutoplugger(GstElement* elem,
     return TRUE;
   }
 
-  INFO_LOG() << GetID() << " caps notified: " << type_title << "(" << type_full << ")";
+  INFO_LOG() << GetID() << " caps notified: " << type_title << "(" << type_full
+             << ")";
   SupportedAudioCodecs saudio;
   SupportedVideoCodecs svideo;
   SupportedDemuxers sdemuxer;
@@ -71,7 +71,7 @@ gboolean RelayStream::HandleDecodeBinAutoplugger(GstElement* elem,
     DNOTREACHED();
   } else if (is_video) {
     if (svideo == VIDEO_H264_CODEC) {
-      GstStructure* pad_struct = gst_caps_get_structure(caps, 0);
+      GstStructure *pad_struct = gst_caps_get_structure(caps, 0);
       gint width = 0;
       gint height = 0;
       if (pad_struct && gst_structure_get_int(pad_struct, "width", &width) &&
@@ -88,7 +88,7 @@ gboolean RelayStream::HandleDecodeBinAutoplugger(GstElement* elem,
     DNOTREACHED();
   } else if (is_audio) {
     if (saudio == AUDIO_MPEG_CODEC) {
-      GstStructure* pad_struct = gst_caps_get_structure(caps, 0);
+      GstStructure *pad_struct = gst_caps_get_structure(caps, 0);
       gint rate = 0;
       if (pad_struct && gst_structure_get_int(pad_struct, "rate", &rate)) {
         RegisterAudioCaps(saudio, caps, 0);
@@ -96,7 +96,7 @@ gboolean RelayStream::HandleDecodeBinAutoplugger(GstElement* elem,
       }
       return TRUE;
     } else if (saudio == AUDIO_AC3_CODEC) {
-      GstStructure* pad_struct = gst_caps_get_structure(caps, 0);
+      GstStructure *pad_struct = gst_caps_get_structure(caps, 0);
       gint rate = 0;
       if (pad_struct && gst_structure_get_int(pad_struct, "rate", &rate)) {
         RegisterAudioCaps(saudio, caps, 0);
@@ -110,29 +110,30 @@ gboolean RelayStream::HandleDecodeBinAutoplugger(GstElement* elem,
   return TRUE;
 }
 
-void RelayStream::HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad) {
-  const gchar* new_pad_type = pad_get_type(new_pad);
+void RelayStream::HandleDecodeBinPadAdded(GstElement *src, GstPad *new_pad) {
+  const gchar *new_pad_type = pad_get_type(new_pad);
   if (!new_pad_type) {
     DNOTREACHED();
     return;
   }
 
-  RelayConfig* rconf = static_cast<RelayConfig*>(GetApi());
+  RelayConfig *rconf = static_cast<RelayConfig *>(GetApi());
   bool is_video = strncmp(new_pad_type, "video", 5) == 0;
   bool is_audio = strncmp(new_pad_type, "audio", 5) == 0;
   INFO_LOG() << GetID() << " pad added: " << new_pad_type;
-  elements::Element* dest = nullptr;
+  elements::Element *dest = nullptr;
   if (is_video) {
     if (rconf->HaveVideo() && !IsVideoInited()) {
       dest = GetElementByName(common::MemSPrintf(UDB_VIDEO_NAME_1U, 0));
     }
   } else if (is_audio) {
     if (rconf->HaveAudio() && !IsAudioInited()) {
-      const char* gst_pad_name = GST_PAD_NAME(new_pad);
+      const char *gst_pad_name = GST_PAD_NAME(new_pad);
       int audio_select = rconf->GetAudioSelect();
       int current_audio_track = 0;
       if (audio_select == DEFAULT_AUDIO_SELECT ||
-          (GetPadId(gst_pad_name, &current_audio_track) && audio_select == current_audio_track)) {
+          (GetPadId(gst_pad_name, &current_audio_track) &&
+           audio_select == current_audio_track)) {
         dest = GetElementByName(common::MemSPrintf(UDB_AUDIO_NAME_1U, 0));
       }
     }
@@ -144,7 +145,7 @@ void RelayStream::HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad) {
     return;
   }
 
-  pad::Pad* sink_pad = dest->StaticPad("sink");
+  pad::Pad *sink_pad = dest->StaticPad("sink");
   if (!sink_pad->IsValid()) {
     return;
   }
@@ -153,8 +154,8 @@ void RelayStream::HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad) {
     GstPadLinkReturn ret = gst_pad_link(new_pad, sink_pad->GetGstPad());
     if (GST_PAD_LINK_FAILED(ret)) {
     } else {
-      DEBUG_LOG() << GetID() << " pad emitted: " << GST_ELEMENT_NAME(src) << " " << GST_PAD_NAME(new_pad) << " "
-                  << new_pad_type;
+      DEBUG_LOG() << GetID() << " pad emitted: " << GST_ELEMENT_NAME(src) << " "
+                  << GST_PAD_NAME(new_pad) << " " << new_pad_type;
     }
   } else {
     DEBUG_LOG() << "pad-emitter: pad is linked";
@@ -168,7 +169,9 @@ void RelayStream::HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad) {
   delete sink_pad;
 }
 
-GValueArray* RelayStream::HandleAutoplugSort(GstElement* bin, GstPad* pad, GstCaps* caps, GValueArray* factories) {
+GValueArray *RelayStream::HandleAutoplugSort(GstElement *bin, GstPad *pad,
+                                             GstCaps *caps,
+                                             GValueArray *factories) {
   UNUSED(bin);
   UNUSED(pad);
   UNUSED(factories);
@@ -182,10 +185,9 @@ GValueArray* RelayStream::HandleAutoplugSort(GstElement* bin, GstPad* pad, GstCa
   return NULL;
 }
 
-GstAutoplugSelectResult RelayStream::HandleAutoplugSelect(GstElement* bin,
-                                                          GstPad* pad,
-                                                          GstCaps* caps,
-                                                          GstElementFactory* factory) {
+GstAutoplugSelectResult
+RelayStream::HandleAutoplugSelect(GstElement *bin, GstPad *pad, GstCaps *caps,
+                                  GstElementFactory *factory) {
   UNUSED(bin);
   UNUSED(pad);
   UNUSED(factory);
@@ -198,18 +200,22 @@ GstAutoplugSelectResult RelayStream::HandleAutoplugSelect(GstElement* bin,
   return GST_AUTOPLUG_SELECT_TRY;
 }
 
-void RelayStream::HandleDecodeBinElementAdded(GstBin* bin, GstElement* element) {
+void RelayStream::HandleDecodeBinElementAdded(GstBin *bin,
+                                              GstElement *element) {
   UNUSED(bin);
-  const std::string element_plugin_name = elements::Element::GetPluginName(element);
+  const std::string element_plugin_name =
+      elements::Element::GetPluginName(element);
   DEBUG_LOG() << "decodebin added element: " << element_plugin_name;
 }
 
-void RelayStream::HandleDecodeBinElementRemoved(GstBin* bin, GstElement* element) {
+void RelayStream::HandleDecodeBinElementRemoved(GstBin *bin,
+                                                GstElement *element) {
   UNUSED(bin);
-  const std::string element_plugin_name = elements::Element::GetPluginName(element);
+  const std::string element_plugin_name =
+      elements::Element::GetPluginName(element);
   DEBUG_LOG() << "decodebin removed element: " << element_plugin_name;
 }
 
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

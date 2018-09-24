@@ -24,21 +24,19 @@ namespace streams {
 namespace builders {
 
 class TimeShiftPlayerBuilder : public RelayStreamBuilder {
- public:
+public:
   typedef RelayStreamBuilder base_class;
-  TimeShiftPlayerBuilder(TimeShiftInfo tinfo,
-                         chunk_index_t start_chunk_index,
-                         RelayConfig* api,
-                         SrcDecodeBinStream* observer);
+  TimeShiftPlayerBuilder(TimeShiftInfo tinfo, chunk_index_t start_chunk_index,
+                         RelayConfig *api, SrcDecodeBinStream *observer);
 
-  virtual elements::Element* BuildInputSrc() override;
+  virtual elements::Element *BuildInputSrc() override;
 
- private:
+private:
   TimeShiftInfo tinfo_;
   const chunk_index_t start_chunk_index_;
 };
 
-}  // namespace builders
-}  // namespace streams
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace builders
+} // namespace streams
+} // namespace stream
+} // namespace iptv_cloud

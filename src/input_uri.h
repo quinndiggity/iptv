@@ -34,9 +34,9 @@
 namespace iptv_cloud {
 
 class InputUri {
- public:
+public:
   InputUri();
-  explicit InputUri(stream_id_t id, const common::uri::Url& input);
+  explicit InputUri(stream_id_t id, const common::uri::Url &input);
 
   bool GetRelayVideo() const;
   void SetRelayVideo(bool rv);
@@ -48,17 +48,17 @@ class InputUri {
   void SetID(stream_id_t id);
 
   common::uri::Url GetInput() const;
-  void SetInput(const common::uri::Url& uri);
+  void SetInput(const common::uri::Url &uri);
 
   bool GetMute() const;
   void SetMute(bool mute);
 
-  volume_t GetVolume() const;  // 0.0, 10.0
+  volume_t GetVolume() const; // 0.0, 10.0
   void SetVolume(volume_t vol);
 
-  bool Equals(const InputUri& inf) const;
+  bool Equals(const InputUri &inf) const;
 
- private:
+private:
   stream_id_t id_;
   common::uri::Url input_;
 
@@ -69,19 +69,19 @@ class InputUri {
   bool relay_audio_;
 };
 
-inline bool operator==(const InputUri& left, const InputUri& right) {
+inline bool operator==(const InputUri &left, const InputUri &right) {
   return left.Equals(right);
 }
 
-inline bool operator!=(const InputUri& left, const InputUri& right) {
+inline bool operator!=(const InputUri &left, const InputUri &right) {
   return !operator==(left, right);
 }
 
-bool IsTestUrl(const InputUri& url);
+bool IsTestUrl(const InputUri &url);
 
-}  // namespace iptv_cloud
+} // namespace iptv_cloud
 
 namespace common {
-std::string ConvertToString(const iptv_cloud::InputUri& value);  // json
-bool ConvertFromString(const std::string& from, iptv_cloud::InputUri* out);
-}  // namespace common
+std::string ConvertToString(const iptv_cloud::InputUri &value); // json
+bool ConvertFromString(const std::string &from, iptv_cloud::InputUri *out);
+} // namespace common

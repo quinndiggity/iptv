@@ -20,20 +20,20 @@ namespace iptv_cloud {
 namespace stream {
 
 class Config {
- public:
+public:
   enum { report_delay_sec = 10 };
-  Config(StreamType type, const input_t& input, const output_t& output);
+  Config(StreamType type, const input_t &input, const output_t &output);
   StreamType GetType() const;
 
-  bool Equals(const Config& api) const;
+  bool Equals(const Config &api) const;
 
-  input_t GetInput() const;  // all except timeshift_play
-  void SetInput(const input_t& input);
+  input_t GetInput() const; // all except timeshift_play
+  void SetInput(const input_t &input);
 
-  output_t GetOutput() const;  // all except timeshift_rec
-  void SetOutput(const output_t& output);
+  output_t GetOutput() const; // all except timeshift_rec
+  void SetOutput(const output_t &output);
 
- private:
+private:
   StreamType type_;
 
   //! input uri
@@ -42,13 +42,13 @@ class Config {
   output_t output_;
 };
 
-inline bool operator==(const Config& left, const Config& right) {
+inline bool operator==(const Config &left, const Config &right) {
   return left.Equals(right);
 }
 
-inline bool operator!=(const Config& left, const Config& right) {
+inline bool operator!=(const Config &left, const Config &right) {
   return !operator==(left, right);
 }
 
-}  // namespace stream
-}  // namespace iptv_cloud
+} // namespace stream
+} // namespace iptv_cloud
