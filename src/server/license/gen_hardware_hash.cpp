@@ -28,8 +28,10 @@ std::string MakeMd5Hash(const std::string &data) {
   common::hash::MD5_Update(&md5, cdata, data.size());
   unsigned char md5_result[16];
   common::hash::MD5_Final(&md5, md5_result);
+  std::string hexed;
   std::string hs(std::begin(md5_result), std::end(md5_result));
-  return common::utils::hex::encode(hs, true);
+  common::utils::hex::encode(hs, true, &hexed);
+  return hexed;
 }
 } // namespace
 
