@@ -113,7 +113,7 @@ class BuildRequest(object):
                 subprocess.call(['ln', '-sf', '/usr/bin/ninja-build', '/usr/bin/ninja'])
 
     def build_jsonc(self):
-        jsonc_compiler_flags = utils.CompileInfo([], ['--disable-shared', '--enable-static'])
+        jsonc_compiler_flags = utils.CompileInfo([], ['--with-pic', '--disable-shared', '--enable-static'])
 
         pwd = os.getcwd()
         cloned_dir = utils.git_clone('https://github.com/fastogt/json-c.git', pwd)
