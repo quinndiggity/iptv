@@ -465,8 +465,9 @@ protocol::sequance_id_t ProcessWrapper::NextRequestID() {
   const seq_id_t stabled =
       common::NetToHost64(next_id); // for human readable hex
   memcpy(&bytes, &stabled, sizeof(seq_id_t));
-  protocol::sequance_id_t hexed =
-      common::utils::hex::encode(std::string(bytes, sizeof(seq_id_t)), true);
+  protocol::sequance_id_t hexed;
+  common::utils::hex::encode(std::string(bytes, sizeof(seq_id_t)), true,
+                             &hexed);
   return hexed;
 }
 
