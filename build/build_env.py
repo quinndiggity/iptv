@@ -119,12 +119,12 @@ class BuildRequest(object):
         cloned_dir = utils.git_clone('https://github.com/fastogt/json-c.git', pwd)
         os.chdir(cloned_dir)
 
-        autogen_jsonc = ['sh', 'autogen.sh', '--with-pic']
+        autogen_jsonc = ['sh', 'autogen.sh']
         subprocess.call(autogen_jsonc)
 
         utils.build_command_configure(jsonc_compiler_flags, g_script_path, self.prefix_path_)
         os.chdir(pwd)
-        shutil.rmtree(cloned_dir)
+        #shutil.rmtree(cloned_dir)
 
     def build_hiredis(self):
         pwd = os.getcwd()
@@ -134,7 +134,7 @@ class BuildRequest(object):
         make_hiredis = ['make', 'PREFIX={0}'.format(self.prefix_path_), 'install']
         subprocess.call(make_hiredis)
         os.chdir(pwd)
-        shutil.rmtree(cloned_dir)
+        #shutil.rmtree(cloned_dir)
 
     def build_libev(self):
         libev_compiler_flags = utils.CompileInfo([], ['--with-pic', '--disable-shared', '--enable-static'])
@@ -148,7 +148,7 @@ class BuildRequest(object):
 
         utils.build_command_configure(libev_compiler_flags, g_script_path, self.prefix_path_)
         os.chdir(pwd)
-        shutil.rmtree(cloned_dir)
+        #shutil.rmtree(cloned_dir)
 
     def build_common(self):
         pwd = os.getcwd()
