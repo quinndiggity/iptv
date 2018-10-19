@@ -119,7 +119,7 @@ class BuildRequest(object):
         cloned_dir = utils.git_clone('https://github.com/fastogt/json-c.git', pwd)
         os.chdir(cloned_dir)
 
-        autogen_jsonc = ['sh', 'autogen.sh']
+        autogen_jsonc = ['sh', 'autogen.sh', '--with-pic']
         subprocess.call(autogen_jsonc)
 
         utils.build_command_configure(jsonc_compiler_flags, g_script_path, self.prefix_path_)
@@ -174,7 +174,7 @@ class BuildRequest(object):
             subprocess.call(common_cmake_line)
             subprocess.call(['make', 'install'])
             os.chdir(self.build_dir_path_)
-            shutil.rmtree(cloned_dir)
+            #shutil.rmtree(cloned_dir)
         except Exception as ex:
             os.chdir(self.build_dir_path_)
             raise ex
