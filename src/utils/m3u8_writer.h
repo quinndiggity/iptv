@@ -22,22 +22,20 @@ namespace utils {
 struct ChunkInfo;
 
 class M3u8Writer {
-public:
+ public:
   M3u8Writer();
 
-  common::ErrnoError
-  Open(const common::file_system::ascii_file_string_path &file_path,
-       uint32_t flags) WARN_UNUSED_RESULT;
+  common::ErrnoError Open(const common::file_system::ascii_file_string_path& file_path,
+                          uint32_t flags) WARN_UNUSED_RESULT;
 
-  common::ErrnoError WriteHeader(uint64_t first_index,
-                                 size_t target_duration) WARN_UNUSED_RESULT;
-  common::ErrnoError WriteLine(const ChunkInfo &chunks) WARN_UNUSED_RESULT;
+  common::ErrnoError WriteHeader(uint64_t first_index, size_t target_duration) WARN_UNUSED_RESULT;
+  common::ErrnoError WriteLine(const ChunkInfo& chunks) WARN_UNUSED_RESULT;
   common::ErrnoError WriteFooter() WARN_UNUSED_RESULT;
   common::ErrnoError Close() WARN_UNUSED_RESULT;
 
-private:
+ private:
   common::file_system::File file_;
 };
 
-} // namespace utils
-} // namespace iptv_cloud
+}  // namespace utils
+}  // namespace iptv_cloud

@@ -26,9 +26,9 @@ class Element;
 
 namespace sink {
 
-Element *build_output(const OutputUri &output, element_id_t sink_id);
+Element* build_output(const OutputUri& output, element_id_t sink_id);
 
-} // namespace sink
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sink
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

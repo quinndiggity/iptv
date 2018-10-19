@@ -29,8 +29,10 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-CatchupStream::CatchupStream(TimeshiftConfig *config, const TimeShiftInfo &info,
-                             IStreamClient *client, StreamStruct *stats)
+CatchupStream::CatchupStream(TimeshiftConfig* config,
+                             const TimeShiftInfo& info,
+                             IStreamClient* client,
+                             StreamStruct* stats)
     : base_class(config, info, client, stats), chunks_() {
   auto m3u8_path = info.timshift_dir.MakeFileStringPath(PLAYLIST_NAME);
   if (!m3u8_path) {
@@ -42,17 +44,17 @@ CatchupStream::CatchupStream(TimeshiftConfig *config, const TimeShiftInfo &info,
   chunks_ = reader.GetChunks();
 }
 
-const char *CatchupStream::ClassName() const { return "CatchupStream"; }
+const char* CatchupStream::ClassName() const {
+  return "CatchupStream";
+}
 
-chunk_index_t
-CatchupStream::GetNextChunkStrategy(chunk_index_t last_index,
-                                    time_t last_index_created_time) const {
+chunk_index_t CatchupStream::GetNextChunkStrategy(chunk_index_t last_index, time_t last_index_created_time) const {
   UNUSED(last_index_created_time);
   return last_index + 1;
 }
 
-IBaseBuilder *CatchupStream::CreateBuilder() {
-  TimeshiftConfig *tconf = static_cast<TimeshiftConfig *>(GetApi());
+IBaseBuilder* CatchupStream::CreateBuilder() {
+  TimeshiftConfig* tconf = static_cast<TimeshiftConfig*>(GetApi());
   return new builders::CatchupStreamBuilder(tconf, this);
 }
 
@@ -65,13 +67,12 @@ void CatchupStream::WriteM3u8List() {
 
   utils::M3u8Writer fl;
   common::ErrnoError err =
-      fl.Open(*m3u8_path, common::file_system::File::FLAG_CREATE |
-                              common::file_system::File::FLAG_WRITE);
+      fl.Open(*m3u8_path, common::file_system::File::FLAG_CREATE | common::file_system::File::FLAG_WRITE);
   if (err) {
     return;
   }
 
-  TimeshiftConfig *tconf = static_cast<TimeshiftConfig *>(GetApi());
+  TimeshiftConfig* tconf = static_cast<TimeshiftConfig*>(GetApi());
   time_t duration = tconf->GetTimeShiftChunkDuration();
   chunk_index_t first_index = 0;
   if (!chunks_.empty()) {
@@ -79,8 +80,7 @@ void CatchupStream::WriteM3u8List() {
   }
   err = fl.WriteHeader(first_index, duration);
   if (err) {
-    WARNING_LOG() << "Failed to write m3u8 header to " << m3u8_path->GetPath()
-                  << ": " << err->GetDescription();
+    WARNING_LOG() << "Failed to write m3u8 header to " << m3u8_path->GetPath() << ": " << err->GetDescription();
     return;
   }
   GstClockTime total_time = 0;
@@ -91,15 +91,13 @@ void CatchupStream::WriteM3u8List() {
     total_time += chunks_[i].duration;
     err = fl.WriteLine(chunks_[i]);
     if (err) {
-      WARNING_LOG() << "Failed to write chunk info to " << m3u8_path->GetPath()
-                    << ": " << err->GetDescription();
+      WARNING_LOG() << "Failed to write chunk info to " << m3u8_path->GetPath() << ": " << err->GetDescription();
       return;
     }
   }
   err = fl.WriteFooter();
   if (err) {
-    WARNING_LOG() << "Failed to write m3u8 footer to " << m3u8_path->GetPath()
-                  << ": " << err->GetDescription();
+    WARNING_LOG() << "Failed to write m3u8 footer to " << m3u8_path->GetPath() << ": " << err->GetDescription();
   }
 }
 
@@ -108,18 +106,15 @@ void CatchupStream::PostLoop(ExitStatus status) {
   base_class::PostLoop(status);
 }
 
-gchararray CatchupStream::OnPathSet(GstElement *splitmux, guint fragment_id,
-                                    GstSample *sample) {
+gchararray CatchupStream::OnPathSet(GstElement* splitmux, guint fragment_id, GstSample* sample) {
   const chunk_index_t ind = CalcNextIndex();
-  const utils::ChunkInfo chunk(common::MemSPrintf("%llu." TS_EXTENSION, ind),
-                               GST_CLOCK_TIME_NONE, ind);
+  const utils::ChunkInfo chunk(common::MemSPrintf("%llu." TS_EXTENSION, ind), GST_CLOCK_TIME_NONE, ind);
 
   if (sample) {
-    GstBuffer *buffer = gst_sample_get_buffer(sample);
+    GstBuffer* buffer = gst_sample_get_buffer(sample);
     if (buffer) {
       GstClockTime curr_time = GST_BUFFER_DTS_OR_PTS(buffer);
-      if (GST_CLOCK_TIME_IS_VALID(curr_time) &&
-          GST_CLOCK_TIME_IS_VALID(chunk_.duration)) {
+      if (GST_CLOCK_TIME_IS_VALID(curr_time) && GST_CLOCK_TIME_IS_VALID(chunk_.duration)) {
         GstClockTime diff = GST_CLOCK_DIFF(chunk_.duration, curr_time);
         if (!chunks_.empty()) {
           chunks_[chunks_.size() - 1].duration = diff;
@@ -133,6 +128,6 @@ gchararray CatchupStream::OnPathSet(GstElement *splitmux, guint fragment_id,
   return base_class::OnPathSet(splitmux, fragment_id, sample);
 }
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

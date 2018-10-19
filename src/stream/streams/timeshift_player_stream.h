@@ -23,25 +23,27 @@ namespace stream {
 namespace streams {
 
 class TimeShiftPlayerStream : public RelayStream {
-public:
+ public:
   typedef RelayStream base_class;
-  TimeShiftPlayerStream(RelayConfig *config, const TimeShiftInfo &info,
-                        IStreamClient *client, StreamStruct *stats,
+  TimeShiftPlayerStream(RelayConfig* config,
+                        const TimeShiftInfo& info,
+                        IStreamClient* client,
+                        StreamStruct* stats,
                         chunk_index_t start_chunk_index);
-  virtual const char *ClassName() const override;
+  virtual const char* ClassName() const override;
 
   TimeShiftInfo GetTimeshiftInfo() const;
 
-protected:
-  virtual IBaseBuilder *CreateBuilder() override;
+ protected:
+  virtual IBaseBuilder* CreateBuilder() override;
 
   virtual void OnInputDataFailed() override;
 
-private:
+ private:
   TimeShiftInfo timeshift_info_;
   const chunk_index_t start_chunk_index_;
 };
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

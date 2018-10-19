@@ -29,9 +29,8 @@ namespace iptv_cloud {
 namespace stream {
 
 namespace {
-bool compare_files(const common::file_system::ascii_file_string_path &first,
-                   const common::file_system::ascii_file_string_path
-                       &second) { // should be 0.ts, 1.ts, 2.ts
+bool compare_files(const common::file_system::ascii_file_string_path& first,
+                   const common::file_system::ascii_file_string_path& second) {  // should be 0.ts, 1.ts, 2.ts
   std::string first_chunk = first.GetBaseFileName();
   std::string second_chunk = second.GetBaseFileName();
 
@@ -42,24 +41,19 @@ bool compare_files(const common::file_system::ascii_file_string_path &first,
   UNUSED(ok);
   return first_index < second_index;
 }
-} // namespace
+}  // namespace
 
-TimeShiftInfo::TimeShiftInfo()
-    : timshift_dir(), chunk_max_life_time_hours(0), timeshift_delay(0) {}
+TimeShiftInfo::TimeShiftInfo() : timshift_dir(), chunk_max_life_time_hours(0), timeshift_delay(0) {}
 
-TimeShiftInfo::TimeShiftInfo(const std::string &path, chunk_hours_t lth,
-                             time_shift_delay_t delay)
-    : timshift_dir(path), chunk_max_life_time_hours(lth),
-      timeshift_delay(delay) {}
+TimeShiftInfo::TimeShiftInfo(const std::string& path, chunk_hours_t lth, time_shift_delay_t delay)
+    : timshift_dir(path), chunk_max_life_time_hours(lth), timeshift_delay(delay) {}
 
-bool TimeShiftInfo::FindChunkToPlay(time_t chunk_duration,
-                                    chunk_index_t *index) const {
+bool TimeShiftInfo::FindChunkToPlay(time_t chunk_duration, chunk_index_t* index) const {
   if (!index) {
     return false;
   }
 
-  time_t desired_time =
-      common::time::current_mstime() / 1000 - timeshift_delay * 60;
+  time_t desired_time = common::time::current_mstime() / 1000 - timeshift_delay * 60;
   std::string absolute_path = timshift_dir.GetPath();
   if (!common::file_system::is_directory_exist(absolute_path)) {
     CRITICAL_LOG() << "Folder with chunks doesn't exist: " << absolute_path;
@@ -78,8 +72,7 @@ bool TimeShiftInfo::FindChunkToPlay(time_t chunk_duration,
     bool ok = common::ConvertFromString(fname, &lindex);
     UNUSED(ok);
     time_t file_created_time;
-    common::file_system::get_file_time_last_modification(files[i].GetPath(),
-                                                         &file_created_time);
+    common::file_system::get_file_time_last_modification(files[i].GetPath(), &file_created_time);
     time_t diff = (desired_time - file_created_time) + chunk_duration;
     if (-chunk_duration < diff && diff < chunk_duration) {
       if (diff > 0 && prev_index != invalid_chunk_index) {
@@ -98,8 +91,7 @@ bool TimeShiftInfo::FindChunkToPlay(time_t chunk_duration,
   return false;
 }
 
-bool TimeShiftInfo::FindLastChunk(chunk_index_t *index,
-                                  time_t *file_created_time) const {
+bool TimeShiftInfo::FindLastChunk(chunk_index_t* index, time_t* file_created_time) const {
   if (!index || !file_created_time) {
     return false;
   }
@@ -115,8 +107,7 @@ bool TimeShiftInfo::FindLastChunk(chunk_index_t *index,
 
   std::sort(files.begin(), files.end(), compare_files);
   common::file_system::ascii_file_string_path last_file = files.back();
-  common::file_system::get_file_time_last_modification(last_file.GetPath(),
-                                                       file_created_time);
+  common::file_system::get_file_time_last_modification(last_file.GetPath(), file_created_time);
   chunk_index_t lindex;
   if (!common::ConvertFromString(last_file.GetBaseFileName(), &lindex)) {
     return false;
@@ -125,5 +116,5 @@ bool TimeShiftInfo::FindLastChunk(chunk_index_t *index,
   return true;
 }
 
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace stream
+}  // namespace iptv_cloud

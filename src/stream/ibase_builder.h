@@ -33,42 +33,35 @@ class Pad;
 }
 
 class IBaseBuilder : public ILinker {
-public:
-  IBaseBuilder(Config *api, IBaseBuilderObserver *observer);
+ public:
+  IBaseBuilder(Config* api, IBaseBuilderObserver* observer);
   virtual ~IBaseBuilder();
 
-  bool CreatePipeLine(GstElement **pipeline,
-                      elements_line_t *elements) WARN_UNUSED_RESULT;
+  bool CreatePipeLine(GstElement** pipeline, elements_line_t* elements) WARN_UNUSED_RESULT;
 
-  elements::Element *GetElementByName(const std::string &name) const;
+  elements::Element* GetElementByName(const std::string& name) const;
 
-  virtual bool ElementAdd(elements::Element *elem) override;
-  virtual bool ElementLink(elements::Element *src,
-                           elements::Element *dest) override;
-  virtual bool ElementRemove(elements::Element *elem) override;
-  virtual bool ElementLinkRemove(elements::Element *src,
-                                 elements::Element *dest) override;
+  virtual bool ElementAdd(elements::Element* elem) override;
+  virtual bool ElementLink(elements::Element* src, elements::Element* dest) override;
+  virtual bool ElementRemove(elements::Element* elem) override;
+  virtual bool ElementLinkRemove(elements::Element* src, elements::Element* dest) override;
 
-protected:
-  elements::Element *BuildGenericOutput(const OutputUri &output,
-                                        element_id_t sink_id);
-  virtual elements::Element *CreateSink(const OutputUri &output,
-                                        element_id_t sink_id);
+ protected:
+  elements::Element* BuildGenericOutput(const OutputUri& output, element_id_t sink_id);
+  virtual elements::Element* CreateSink(const OutputUri& output, element_id_t sink_id);
 
   virtual bool InitPipeline() WARN_UNUSED_RESULT = 0;
 
-  void HandleInputSrcPadCreated(common::uri::Url::scheme scheme, pad::Pad *pad,
-                                element_id_t id);
-  void HandleOutputSinkPadCreated(common::uri::Url::scheme scheme,
-                                  pad::Pad *pad, element_id_t id);
+  void HandleInputSrcPadCreated(common::uri::Url::scheme scheme, pad::Pad* pad, element_id_t id);
+  void HandleOutputSinkPadCreated(common::uri::Url::scheme scheme, pad::Pad* pad, element_id_t id);
 
-  Config *const api_;
-  IBaseBuilderObserver *const observer_;
+  Config* const api_;
+  IBaseBuilderObserver* const observer_;
 
-private:
-  GstElement *const pipeline_;
+ private:
+  GstElement* const pipeline_;
   elements_line_t pipeline_elements_;
 };
 
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace stream
+}  // namespace iptv_cloud

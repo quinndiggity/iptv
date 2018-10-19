@@ -15,5 +15,5 @@
 #include "protocol/types.h"
 
 namespace iptv_cloud {
-namespace protocol {} // namespace protocol
-} // namespace iptv_cloud
+namespace protocol {}  // namespace protocol
+}  // namespace iptv_cloud

@@ -35,11 +35,11 @@
 #define MPEGTS_MUX "mpegtsmux"
 #define FILE_SINK "filesink"
 #define RTP_MUX "rtpmux"
-#define RTP_MPEG2_PAY "rtpmp2tpay" //
-#define RTP_H264_PAY "rtph264pay"  //
-#define RTP_H265_PAY "rtph265pay"  //
-#define RTP_AAC_PAY "rtpmp4apay"   //
-#define RTP_AC3_PAY "rtpac3pay"    //
+#define RTP_MPEG2_PAY "rtpmp2tpay"  //
+#define RTP_H264_PAY "rtph264pay"   //
+#define RTP_H265_PAY "rtph265pay"   //
+#define RTP_AAC_PAY "rtpmp4apay"    //
+#define RTP_AC3_PAY "rtpac3pay"     //
 #define V4L2_SRC "v4l2src"
 #define SPLIT_MUX_SINK "splitmuxsink"
 #define ALSA_SRC "alsasrc"
@@ -187,15 +187,11 @@
 #define SUPPORTED_VIDEO_PARSERS_COUNT 3
 #define SUPPORTED_AUDIO_PARSERS_COUNT 3
 
-extern const std::array<const char *, SUPPORTED_VIDEO_PARSERS_COUNT>
-    supported_video_parsers;
-extern const std::array<const char *, SUPPORTED_AUDIO_PARSERS_COUNT>
-    supported_audio_parsers;
+extern const std::array<const char*, SUPPORTED_VIDEO_PARSERS_COUNT> supported_video_parsers;
+extern const std::array<const char*, SUPPORTED_AUDIO_PARSERS_COUNT> supported_audio_parsers;
 
 #define SUPPORTED_VIDEO_ENCODERS_COUNT 9
 #define SUPPORTED_AUDIO_ENCODERS_COUNT 3
 
-extern const std::array<const char *, SUPPORTED_VIDEO_ENCODERS_COUNT>
-    supported_video_encoders;
-extern const std::array<const char *, SUPPORTED_AUDIO_ENCODERS_COUNT>
-    supported_audio_encoders;
+extern const std::array<const char*, SUPPORTED_VIDEO_ENCODERS_COUNT> supported_video_encoders;
+extern const std::array<const char*, SUPPORTED_AUDIO_ENCODERS_COUNT> supported_audio_encoders;

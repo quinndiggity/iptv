@@ -14,7 +14,7 @@
 
 #include "stream/streams/playlist_encoding_stream.h"
 
-#include <gst/app/gstappsrc.h> // for GST_APP_SRC
+#include <gst/app/gstappsrc.h>  // for GST_APP_SRC
 
 #include "stream/elements/sources/appsrc.h"
 
@@ -26,11 +26,8 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-PlaylistEncodingStream::PlaylistEncodingStream(EncodingConfig *config,
-                                               IStreamClient *client,
-                                               StreamStruct *stats)
-    : EncodingStream(config, client, stats), app_src_(nullptr),
-      current_file_(NULL), curent_pos_(0) {}
+PlaylistEncodingStream::PlaylistEncodingStream(EncodingConfig* config, IStreamClient* client, StreamStruct* stats)
+    : EncodingStream(config, client, stats), app_src_(nullptr), current_file_(NULL), curent_pos_(0) {}
 
 PlaylistEncodingStream::~PlaylistEncodingStream() {
   if (current_file_) {
@@ -39,32 +36,29 @@ PlaylistEncodingStream::~PlaylistEncodingStream() {
   }
 }
 
-const char *PlaylistEncodingStream::ClassName() const {
+const char* PlaylistEncodingStream::ClassName() const {
   return "PlaylistEncodingStream";
 }
 
-void PlaylistEncodingStream::OnAppSrcCreatedCreated(
-    elements::sources::ElementAppSrc *src) {
+void PlaylistEncodingStream::OnAppSrcCreatedCreated(elements::sources::ElementAppSrc* src) {
   app_src_ = src;
-  gboolean res = src->RegisterNeedDataCallback(
-      PlaylistEncodingStream::need_data_callback, this);
+  gboolean res = src->RegisterNeedDataCallback(PlaylistEncodingStream::need_data_callback, this);
   DCHECK(res);
 }
 
-IBaseBuilder *PlaylistEncodingStream::CreateBuilder() {
-  PlaylistEncodingConfig *econf =
-      static_cast<PlaylistEncodingConfig *>(GetApi());
+IBaseBuilder* PlaylistEncodingStream::CreateBuilder() {
+  PlaylistEncodingConfig* econf = static_cast<PlaylistEncodingConfig*>(GetApi());
   return new builders::PlaylistEncodingStreamBuilder(econf, this);
 }
 
 void PlaylistEncodingStream::PreLoop() {}
 
-void PlaylistEncodingStream::HandleNeedData(GstElement *pipeline, guint rsize) {
+void PlaylistEncodingStream::HandleNeedData(GstElement* pipeline, guint rsize) {
   UNUSED(pipeline);
   UNUSED(rsize);
 
   size_t size = 0;
-  char *ptr = NULL;
+  char* ptr = NULL;
   while (size == 0) {
     if (!current_file_) {
       current_file_ = OpenNextFile();
@@ -75,7 +69,7 @@ void PlaylistEncodingStream::HandleNeedData(GstElement *pipeline, guint rsize) {
       return;
     }
 
-    ptr = static_cast<char *>(calloc(BUFFER_SIZE, sizeof(char)));
+    ptr = static_cast<char*>(calloc(BUFFER_SIZE, sizeof(char)));
     size = fread(ptr, sizeof(char), BUFFER_SIZE, current_file_);
     if (size == 0) {
       fclose(current_file_);
@@ -84,31 +78,26 @@ void PlaylistEncodingStream::HandleNeedData(GstElement *pipeline, guint rsize) {
     }
   }
 
-  GstBuffer *buffer = gst_buffer_new_wrapped(ptr, size);
+  GstBuffer* buffer = gst_buffer_new_wrapped(ptr, size);
   GstFlowReturn ret = app_src_->PushBuffer(buffer);
   if (ret != GST_FLOW_OK) {
-    WARNING_LOG() << GetID() << " gst_app_src_push_buffer failed: "
-                  << gst_flow_get_name(ret);
+    WARNING_LOG() << GetID() << " gst_app_src_push_buffer failed: " << gst_flow_get_name(ret);
     Quit(EXIT_INNER);
   }
 }
 
-void PlaylistEncodingStream::need_data_callback(GstElement *pipeline,
-                                                guint size,
-                                                gpointer user_data) {
-  PlaylistEncodingStream *stream =
-      reinterpret_cast<PlaylistEncodingStream *>(user_data);
+void PlaylistEncodingStream::need_data_callback(GstElement* pipeline, guint size, gpointer user_data) {
+  PlaylistEncodingStream* stream = reinterpret_cast<PlaylistEncodingStream*>(user_data);
   return stream->HandleNeedData(pipeline, size);
 }
 
-FILE *PlaylistEncodingStream::OpenNextFile() {
-  PlaylistEncodingConfig *econf =
-      static_cast<PlaylistEncodingConfig *>(GetApi());
+FILE* PlaylistEncodingStream::OpenNextFile() {
+  PlaylistEncodingConfig* econf = static_cast<PlaylistEncodingConfig*>(GetApi());
   if (!econf->GetLoop()) {
     input_t input = econf->GetInput();
     if (curent_pos_ >= input.size()) {
       INFO_LOG() << GetID() << " No more files for playing";
-      return NULL; // EOS
+      return NULL;  // EOS
     }
   }
 
@@ -122,19 +111,18 @@ FILE *PlaylistEncodingStream::OpenNextFile() {
   curent_pos_++;
   common::uri::Upath path = uri.GetPath();
   std::string cur_path = path.GetPath();
-  FILE *file = fopen(cur_path.c_str(), "rb");
+  FILE* file = fopen(cur_path.c_str(), "rb");
   if (file) {
     INFO_LOG() << GetID() << " File " << cur_path << " open for playing";
     if (client_) {
       client_->OnInputChanged(iuri);
     }
   } else {
-    WARNING_LOG() << GetID() << " File " << cur_path
-                  << " can't open for playing";
+    WARNING_LOG() << GetID() << " File " << cur_path << " can't open for playing";
   }
   return file;
 }
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

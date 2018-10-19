@@ -14,9 +14,9 @@
 
 #include "stream/elements/encoders/video_encoders.h"
 
-#include <stddef.h> // for NULL
+#include <stddef.h>  // for NULL
 #include <string.h>
-#include <string> // for string
+#include <string>  // for string
 
 #include <gst/gstelementfactory.h>
 #include <gst/gstvalue.h>
@@ -36,8 +36,7 @@ namespace elements {
 namespace encoders {
 namespace {
 
-void setup_encoder_params(const video_encoders_args_t &video_args,
-                          Element *avc) {
+void setup_encoder_params(const video_encoders_args_t& video_args, Element* avc) {
   const std::string video_encoder = avc->GetPluginName();
   for (auto itr = video_args.begin(); itr != video_args.end(); ++itr) {
     const std::string key = itr->first;
@@ -54,11 +53,11 @@ void setup_encoder_params(const video_encoders_args_t &video_args,
   }
 }
 
-Element *
-setup_encoder_str_params(const video_encoders_str_args_t &video_str_args,
-                         ILinker *linker, Element *avc,
-                         element_id_t encoder_id) {
-  Element *last = avc;
+Element* setup_encoder_str_params(const video_encoders_str_args_t& video_str_args,
+                                  ILinker* linker,
+                                  Element* avc,
+                                  element_id_t encoder_id) {
+  Element* last = avc;
   const std::string video_encoder = avc->GetPluginName();
   for (auto it = video_str_args.begin(); it != video_str_args.end(); ++it) {
     const std::string key = it->first;
@@ -70,23 +69,20 @@ setup_encoder_str_params(const video_encoders_str_args_t &video_str_args,
 
     std::string param = key.substr(pos + 1);
     std::string value = it->second;
-    DEBUG_LOG() << "Installing parametr for " << enc_name << "," << param
-                << " = " << value;
+    DEBUG_LOG() << "Installing parametr for " << enc_name << "," << param << " = " << value;
     if (key == X264_ENC_PARAM("profile")) {
-      GstCaps *capsavc = gst_caps_new_simple(
-          "video/x-h264", "profile", G_TYPE_STRING, value.c_str(), NULL);
-      ElementCapsFilter *caps = new ElementCapsFilter(common::MemSPrintf(
-          VIDEO_X264ENC_CAPS_FILTER_PROFILE_NAME_1U, encoder_id));
+      GstCaps* capsavc = gst_caps_new_simple("video/x-h264", "profile", G_TYPE_STRING, value.c_str(), NULL);
+      ElementCapsFilter* caps =
+          new ElementCapsFilter(common::MemSPrintf(VIDEO_X264ENC_CAPS_FILTER_PROFILE_NAME_1U, encoder_id));
       linker->ElementAdd(caps);
       caps->SetCaps(capsavc);
       gst_caps_unref(capsavc);
       linker->ElementLink(last, caps);
       last = caps;
     } else if (key == X264_ENC_PARAM("stream-format")) {
-      GstCaps *capsavc = gst_caps_new_simple(
-          "video/x-h264", "stream-format", G_TYPE_STRING, value.c_str(), NULL);
-      ElementCapsFilter *caps = new ElementCapsFilter(common::MemSPrintf(
-          VIDEO_X264ENC_CAPS_FILTER_STREAM_FORMAT_NAME_1U, encoder_id));
+      GstCaps* capsavc = gst_caps_new_simple("video/x-h264", "stream-format", G_TYPE_STRING, value.c_str(), NULL);
+      ElementCapsFilter* caps =
+          new ElementCapsFilter(common::MemSPrintf(VIDEO_X264ENC_CAPS_FILTER_STREAM_FORMAT_NAME_1U, encoder_id));
       linker->ElementAdd(caps);
       caps->SetCaps(capsavc);
       gst_caps_unref(capsavc);
@@ -100,24 +96,22 @@ setup_encoder_str_params(const video_encoders_str_args_t &video_str_args,
   return last;
 }
 
-} // namespace
+}  // namespace
 
 void ElementMFXH264Enc::SetIDRInterval(guint idr) {
   SetProperty("idr-interval", idr);
 }
 
-Element *build_video_scale(int width, int height, ILinker *linker,
-                           Element *link_to, element_id_t video_scale_id) {
-  video::ElementVideoScale *videoscale = new video::ElementVideoScale(
-      common::MemSPrintf(VIDEO_SCALE_NAME_1U, video_scale_id));
-  ElementCapsFilter *capsfilter = new ElementCapsFilter(
-      common::MemSPrintf(VIDEO_SCALE_CAPS_FILTER_NAME_1U, video_scale_id));
+Element* build_video_scale(int width, int height, ILinker* linker, Element* link_to, element_id_t video_scale_id) {
+  video::ElementVideoScale* videoscale =
+      new video::ElementVideoScale(common::MemSPrintf(VIDEO_SCALE_NAME_1U, video_scale_id));
+  ElementCapsFilter* capsfilter =
+      new ElementCapsFilter(common::MemSPrintf(VIDEO_SCALE_CAPS_FILTER_NAME_1U, video_scale_id));
   linker->ElementAdd(videoscale);
   linker->ElementAdd(capsfilter);
 
-  GstCaps *cap_width_height =
-      gst_caps_new_simple("video/x-raw", "width", G_TYPE_INT, width, "height",
-                          G_TYPE_INT, height, NULL);
+  GstCaps* cap_width_height =
+      gst_caps_new_simple("video/x-raw", "width", G_TYPE_INT, width, "height", G_TYPE_INT, height, NULL);
   capsfilter->SetCaps(cap_width_height);
   gst_caps_unref(cap_width_height);
 
@@ -126,17 +120,15 @@ Element *build_video_scale(int width, int height, ILinker *linker,
   return capsfilter;
 }
 
-Element *build_video_framerate(int framerate, ILinker *linker, Element *link_to,
-                               element_id_t video_framerate_id) {
-  video::ElementVideoRate *videorate = new video::ElementVideoRate(
-      common::MemSPrintf(VIDEO_RATE_NAME_1U, video_framerate_id));
-  ElementCapsFilter *capsfilter = new ElementCapsFilter(
-      common::MemSPrintf(VIDEO_RATE_CAPS_FILTER_NAME_1U, video_framerate_id));
+Element* build_video_framerate(int framerate, ILinker* linker, Element* link_to, element_id_t video_framerate_id) {
+  video::ElementVideoRate* videorate =
+      new video::ElementVideoRate(common::MemSPrintf(VIDEO_RATE_NAME_1U, video_framerate_id));
+  ElementCapsFilter* capsfilter =
+      new ElementCapsFilter(common::MemSPrintf(VIDEO_RATE_CAPS_FILTER_NAME_1U, video_framerate_id));
   linker->ElementAdd(videorate);
   linker->ElementAdd(capsfilter);
 
-  GstCaps *cap_framerate = gst_caps_new_simple(
-      "video/x-raw", "framerate", GST_TYPE_FRACTION, framerate, 1, NULL);
+  GstCaps* cap_framerate = gst_caps_new_simple("video/x-raw", "framerate", GST_TYPE_FRACTION, framerate, 1, NULL);
   capsfilter->SetCaps(cap_framerate);
   gst_caps_unref(cap_framerate);
 
@@ -145,51 +137,51 @@ Element *build_video_framerate(int framerate, ILinker *linker, Element *link_to,
   return capsfilter;
 }
 
-ElementX264Enc *make_h264_encoder(element_id_t encoder_id) {
+ElementX264Enc* make_h264_encoder(element_id_t encoder_id) {
   return make_video_encoder<ElementX264Enc>(encoder_id);
 }
 
-ElementX265Enc *make_h265_encoder(element_id_t encoder_id) {
+ElementX265Enc* make_h265_encoder(element_id_t encoder_id) {
   return make_video_encoder<ElementX265Enc>(encoder_id);
 }
 
-ElementMPEG2Enc *make_mpeg2_encoder(element_id_t encoder_id) {
+ElementMPEG2Enc* make_mpeg2_encoder(element_id_t encoder_id) {
   return make_video_encoder<ElementMPEG2Enc>(encoder_id);
 }
 
-ElementEAVCEnc *make_eavc_encoder(element_id_t encoder_id) {
+ElementEAVCEnc* make_eavc_encoder(element_id_t encoder_id) {
   return make_video_encoder<ElementEAVCEnc>(encoder_id);
 }
 
-ElementOpenH264Enc *make_openh264_encoder(element_id_t encoder_id) {
+ElementOpenH264Enc* make_openh264_encoder(element_id_t encoder_id) {
   return make_video_encoder<ElementOpenH264Enc>(encoder_id);
 }
 
-ElementVAAPIH264Enc *make_vaapi_h264_encoder(element_id_t encoder_id) {
+ElementVAAPIH264Enc* make_vaapi_h264_encoder(element_id_t encoder_id) {
   return make_video_encoder<ElementVAAPIH264Enc>(encoder_id);
 }
 
-ElementVAAPIMpeg2Enc *make_vaapi_mpeg2_encoder(element_id_t encoder_id) {
+ElementVAAPIMpeg2Enc* make_vaapi_mpeg2_encoder(element_id_t encoder_id) {
   return make_video_encoder<ElementVAAPIMpeg2Enc>(encoder_id);
 }
 
-ElementMFXH264Enc *make_mfx_h264_encoder(element_id_t encoder_id) {
+ElementMFXH264Enc* make_mfx_h264_encoder(element_id_t encoder_id) {
   return make_video_encoder<ElementMFXH264Enc>(encoder_id);
 }
 
-ElementNvX264Enc *make_nv_x264_encoder(element_id_t encoder_id) {
+ElementNvX264Enc* make_nv_x264_encoder(element_id_t encoder_id) {
   return make_video_encoder<ElementNvX264Enc>(encoder_id);
 }
 
-ElementMsdkH264Enc *make_msdk_h264_encoder(element_id_t encoder_id) {
+ElementMsdkH264Enc* make_msdk_h264_encoder(element_id_t encoder_id) {
   return make_video_encoder<ElementMsdkH264Enc>(encoder_id);
 }
 
-Element *make_video_encoder(const std::string &codec, const std::string &name) {
+Element* make_video_encoder(const std::string& codec, const std::string& name) {
   if (codec == ElementX264Enc::GetPluginName()) {
     return new ElementX264Enc(name);
   } else if (codec == ElementX265Enc::GetPluginName()) {
-    ElementX265Enc *x265 = new ElementX265Enc(name);
+    ElementX265Enc* x265 = new ElementX265Enc(name);
     return x265;
   } else if (codec == ElementMPEG2Enc::GetPluginName()) {
     return new ElementMPEG2Enc(name);
@@ -198,7 +190,7 @@ Element *make_video_encoder(const std::string &codec, const std::string &name) {
   } else if (codec == ElementVAAPIMpeg2Enc::GetPluginName()) {
     return new ElementVAAPIMpeg2Enc(name);
   } else if (codec == ElementMFXH264Enc::GetPluginName()) {
-    ElementMFXH264Enc *mfx = new ElementMFXH264Enc(name);
+    ElementMFXH264Enc* mfx = new ElementMFXH264Enc(name);
     return mfx;
   } else if (codec == ElementOpenH264Enc::GetPluginName()) {
     return new ElementOpenH264Enc(name);
@@ -214,19 +206,17 @@ Element *make_video_encoder(const std::string &codec, const std::string &name) {
   return nullptr;
 }
 
-elements_line_t build_video_convert(bool is_deinterlace, ILinker *linker,
-                                    element_id_t video_convert_id) {
-  video::ElementVideoConvert *video_convert = new video::ElementVideoConvert(
-      common::MemSPrintf(VIDEO_CONVERT_NAME_1U, video_convert_id));
+elements_line_t build_video_convert(bool is_deinterlace, ILinker* linker, element_id_t video_convert_id) {
+  video::ElementVideoConvert* video_convert =
+      new video::ElementVideoConvert(common::MemSPrintf(VIDEO_CONVERT_NAME_1U, video_convert_id));
   linker->ElementAdd(video_convert);
-  Element *first = video_convert;
-  Element *last = video_convert;
+  Element* first = video_convert;
+  Element* last = video_convert;
 
   if (is_deinterlace) {
     std::string deinterlace_str = AV_DEINTERLACE;
-    Element *deinterlace = video::make_video_deinterlace(
-        deinterlace_str,
-        common::MemSPrintf(DEINTERLACE_NAME_1U, video_convert_id));
+    Element* deinterlace =
+        video::make_video_deinterlace(deinterlace_str, common::MemSPrintf(DEINTERLACE_NAME_1U, video_convert_id));
     linker->ElementAdd(deinterlace);
     linker->ElementLink(last, deinterlace);
     last = deinterlace;
@@ -235,14 +225,14 @@ elements_line_t build_video_convert(bool is_deinterlace, ILinker *linker,
   return {first, last};
 }
 
-elements_line_t
-build_video_encoder(const std::string &codec, int video_bitrate,
-                    const video_encoders_args_t &video_args,
-                    const video_encoders_str_args_t &video_str_args,
-                    ILinker *linker, element_id_t encoder_id) {
-  Element *codec_element = make_video_encoder(
-      codec, common::MemSPrintf(VIDEO_CODEC_NAME_1U, encoder_id));
-  Element *const first = codec_element;
+elements_line_t build_video_encoder(const std::string& codec,
+                                    int video_bitrate,
+                                    const video_encoders_args_t& video_args,
+                                    const video_encoders_str_args_t& video_str_args,
+                                    ILinker* linker,
+                                    element_id_t encoder_id) {
+  Element* codec_element = make_video_encoder(codec, common::MemSPrintf(VIDEO_CODEC_NAME_1U, encoder_id));
+  Element* const first = codec_element;
   linker->ElementAdd(codec_element);
 
   if (video_bitrate != DEFAULT_VIDEO_BITRATE) {
@@ -250,19 +240,15 @@ build_video_encoder(const std::string &codec, int video_bitrate,
       codec_element->SetProperty("bitrate-avg", video_bitrate * 1024);
     } else {
       int bitrate = video_bitrate;
-      if (codec_element->GetPluginName() ==
-          ElementOpenH264Enc::GetPluginName()) {
+      if (codec_element->GetPluginName() == ElementOpenH264Enc::GetPluginName()) {
         bitrate *= 1024;
-      } else if (codec_element->GetPluginName() ==
-                 ElementNvX264Enc::GetPluginName()) {
+      } else if (codec_element->GetPluginName() == ElementNvX264Enc::GetPluginName()) {
         // bitrate *= 1024;
-        codec_element->SetProperty("rc-mode", 2); // constant
-      } else if (codec_element->GetPluginName() ==
-                 ElementVAAPIH264Enc::GetPluginName()) {
-        codec_element->SetProperty("rate-control", 2); // constant
-      } else if (codec_element->GetPluginName() ==
-                 ElementMFXH264Enc::GetPluginName()) {
-        codec_element->SetProperty("rate-control", 1); // constant
+        codec_element->SetProperty("rc-mode", 2);  // constant
+      } else if (codec_element->GetPluginName() == ElementVAAPIH264Enc::GetPluginName()) {
+        codec_element->SetProperty("rate-control", 2);  // constant
+      } else if (codec_element->GetPluginName() == ElementMFXH264Enc::GetPluginName()) {
+        codec_element->SetProperty("rate-control", 1);  // constant
       }
 
       codec_element->SetProperty("bitrate", bitrate);
@@ -271,20 +257,17 @@ build_video_encoder(const std::string &codec, int video_bitrate,
 
   // https://en.wikibooks.org/wiki/MeGUI/x264_Settings
   setup_encoder_params(video_args, codec_element);
-  Element *last = setup_encoder_str_params(video_str_args, linker,
-                                           codec_element, encoder_id);
+  Element* last = setup_encoder_str_params(video_str_args, linker, codec_element, encoder_id);
   return {first, last};
 }
 
-bool IsH264Encoder(const std::string &encoder) {
-  return encoder == ElementX264Enc::GetPluginName() ||
-         encoder == ElementVAAPIH264Enc::GetPluginName() ||
-         encoder == ElementOpenH264Enc::GetPluginName() ||
-         encoder == ElementNvX264Enc::GetPluginName() ||
+bool IsH264Encoder(const std::string& encoder) {
+  return encoder == ElementX264Enc::GetPluginName() || encoder == ElementVAAPIH264Enc::GetPluginName() ||
+         encoder == ElementOpenH264Enc::GetPluginName() || encoder == ElementNvX264Enc::GetPluginName() ||
          encoder == ElementMFXH264Enc::GetPluginName();
 }
 
-} // namespace encoders
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace encoders
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

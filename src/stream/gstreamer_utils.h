@@ -14,28 +14,29 @@
 
 #pragma once
 
-#include <gst/gstelement.h> // for GstElement
+#include <gst/gstelement.h>  // for GstElement
 
-#include <string> // for string
+#include <string>  // for string
 
 namespace iptv_cloud {
 namespace stream {
 
-GstElement *make_element_safe(const std::string &type, const std::string &name);
+GstElement* make_element_safe(const std::string& type, const std::string& name);
 
 /**
  * @brief returns name of pad
  * @param pad pointer
  * @return name
  */
-const gchar *pad_get_type(GstPad *pad);
+const gchar* pad_get_type(GstPad* pad);
 
-template <typename T> GValue make_gvalue(T t);
+template <typename T>
+GValue make_gvalue(T t);
 
-template <typename T> T gvalue_cast(const GValue *val);
+template <typename T>
+T gvalue_cast(const GValue* val);
 
-bool get_type_from_caps(GstCaps *caps, std::string *type_title,
-                        std::string *type_full);
+bool get_type_from_caps(GstCaps* caps, std::string* type_title, std::string* type_full);
 
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace stream
+}  // namespace iptv_cloud

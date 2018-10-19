@@ -20,6 +20,6 @@ namespace dumper {
 
 IDumper::~IDumper() {}
 
-} // namespace dumper
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace dumper
+}  // namespace stream
+}  // namespace iptv_cloud

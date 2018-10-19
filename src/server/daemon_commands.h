@@ -19,18 +19,17 @@
 // daemon
 // client commands
 
-#define CLIENT_START_STREAM                                                    \
-  "start_stream" // {"config": {...}, "command_line": {...} }
+#define CLIENT_START_STREAM "start_stream"  // {"config": {...}, "command_line": {...} }
 #define CLIENT_STOP_STREAM "stop_stream"
 #define CLIENT_RESTART_STREAM "restart_stream"
 
-#define CLIENT_ACTIVATE "activate_request" // { "key": "XXXXXXXXXXXXXXXXXX"}
-#define CLIENT_STOP_SERVICE "stop_service" // {"delay": 0 }
-#define CLIENT_STATE_SERVICE                                                   \
-  "state_service" // { "cmd": "save_directory", "jobs_directory": "",
-                  // "timeshifts_directory": "", "hls_directory": "",
-                  // "ads_directory": "", "playlists_directory": "",
-                  // "dvb_directory": "", "capture_card_directory": "" }
+#define CLIENT_ACTIVATE "activate_request"  // { "key": "XXXXXXXXXXXXXXXXXX"}
+#define CLIENT_STOP_SERVICE "stop_service"  // {"delay": 0 }
+#define CLIENT_STATE_SERVICE \
+  "state_service"  // { "cmd": "save_directory", "jobs_directory": "",
+                   // "timeshifts_directory": "", "hls_directory": "",
+                   // "ads_directory": "", "playlists_directory": "",
+                   // "dvb_directory": "", "capture_card_directory": "" }
 
 #define CLIENT_PING "client_ping"
 
@@ -38,37 +37,31 @@ namespace iptv_cloud {
 namespace server {
 
 protocol::responce_t StopServiceResponceSuccess(protocol::sequance_id_t id);
-protocol::responce_t StopServiceResponceFail(protocol::sequance_id_t id,
-                                             const std::string &error_text);
+protocol::responce_t StopServiceResponceFail(protocol::sequance_id_t id, const std::string& error_text);
 
-protocol::request_t StopServiceRequest(protocol::sequance_id_t id,
-                                       protocol::serializet_t msg);
+protocol::request_t StopServiceRequest(protocol::sequance_id_t id, protocol::serializet_t msg);
 
 protocol::responce_t ActivateResponceSuccess(protocol::sequance_id_t id);
 
-protocol::responce_t StateServiceResponceSuccess(protocol::sequance_id_t id,
-                                                 protocol::serializet_t msg);
+protocol::responce_t StateServiceResponceSuccess(protocol::sequance_id_t id, protocol::serializet_t msg);
 
 // streams
 protocol::responce_t StartStreamResponceSuccess(protocol::sequance_id_t id);
-protocol::responce_t StartStreamResponceFail(protocol::sequance_id_t id,
-                                             const std::string &error_text);
+protocol::responce_t StartStreamResponceFail(protocol::sequance_id_t id, const std::string& error_text);
 
 protocol::responce_t StopStreamResponceSuccess(protocol::sequance_id_t id);
-protocol::responce_t StopStreamResponceFail(protocol::sequance_id_t id,
-                                            const std::string &error_text);
+protocol::responce_t StopStreamResponceFail(protocol::sequance_id_t id, const std::string& error_text);
 
 protocol::responce_t RestartStreamResponceSuccess(protocol::sequance_id_t id);
 
-protocol::responce_t RestartStreamResponceFail(protocol::sequance_id_t id,
-                                               const std::string &error_text);
+protocol::responce_t RestartStreamResponceFail(protocol::sequance_id_t id, const std::string& error_text);
 
 // requests
 // ping
 protocol::request_t PingRequest(protocol::sequance_id_t id);
 protocol::responce_t PingResponceSuccsess(protocol::sequance_id_t id);
 protocol::responce_t PingResponceFail(protocol::sequance_id_t id,
-                                      const std::string &error_text); // escaped
+                                      const std::string& error_text);  // escaped
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

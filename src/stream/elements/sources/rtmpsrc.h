@@ -16,8 +16,8 @@
 
 // for element_id_t
 
-#include "stream/elements/element.h" // for SupportedElements::ELEMENT_RTM...
-#include "stream/elements/sources/sources.h" // for ElementLocation
+#include "stream/elements/element.h"          // for SupportedElements::ELEMENT_RTM...
+#include "stream/elements/sources/sources.h"  // for ElementLocation
 
 namespace iptv_cloud {
 namespace stream {
@@ -25,17 +25,16 @@ namespace elements {
 namespace sources {
 
 class ElementRTMPSrc : public ElementLocation<ELEMENT_RTMP_SRC> {
-public:
+ public:
   typedef ElementLocation<ELEMENT_RTMP_SRC> base_class;
   using base_class::base_class;
 
-  void SetTimeOut(gint secs = 120); // 0 - 2147483647 Default: 120
+  void SetTimeOut(gint secs = 120);  // 0 - 2147483647 Default: 120
 };
 
-ElementRTMPSrc *make_rtmp_src(const std::string &location, gint timeout_secs,
-                              element_id_t input_id);
+ElementRTMPSrc* make_rtmp_src(const std::string& location, gint timeout_secs, element_id_t input_id);
 
-} // namespace sources
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sources
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

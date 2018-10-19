@@ -22,25 +22,21 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-EncodingOnlyVideoStream::EncodingOnlyVideoStream(EncodingConfig *config,
-                                                 IStreamClient *client,
-                                                 StreamStruct *stats)
+EncodingOnlyVideoStream::EncodingOnlyVideoStream(EncodingConfig* config, IStreamClient* client, StreamStruct* stats)
     : EncodingStream(config, client, stats) {}
 
 EncodingOnlyVideoStream::~EncodingOnlyVideoStream() {}
 
-const char *EncodingOnlyVideoStream::ClassName() const {
+const char* EncodingOnlyVideoStream::ClassName() const {
   return "EncodingOnlyVideoStream";
 }
 
-IBaseBuilder *EncodingOnlyVideoStream::CreateBuilder() {
-  EncodingConfig *econf = static_cast<EncodingConfig *>(GetApi());
+IBaseBuilder* EncodingOnlyVideoStream::CreateBuilder() {
+  EncodingConfig* econf = static_cast<EncodingConfig*>(GetApi());
   return new builders::EncodingOnlyVideoStreamBuilder(econf, this);
 }
 
-gboolean EncodingOnlyVideoStream::HandleDecodeBinAutoplugger(GstElement *elem,
-                                                             GstPad *pad,
-                                                             GstCaps *caps) {
+gboolean EncodingOnlyVideoStream::HandleDecodeBinAutoplugger(GstElement* elem, GstPad* pad, GstCaps* caps) {
   UNUSED(elem);
   UNUSED(pad);
 
@@ -53,8 +49,7 @@ gboolean EncodingOnlyVideoStream::HandleDecodeBinAutoplugger(GstElement *elem,
     return TRUE;
   }
 
-  INFO_LOG() << GetID() << " caps notified: " << type_title << "(" << type_full
-             << ")";
+  INFO_LOG() << GetID() << " caps notified: " << type_title << "(" << type_full << ")";
   SupportedAudioCodecs saudio;
   SupportedVideoCodecs svideo;
   SupportedDemuxers sdemuxer;
@@ -70,7 +65,7 @@ gboolean EncodingOnlyVideoStream::HandleDecodeBinAutoplugger(GstElement *elem,
     DNOTREACHED();
   } else if (is_video) {
     if (svideo == VIDEO_H264_CODEC) {
-      GstStructure *pad_struct = gst_caps_get_structure(caps, 0);
+      GstStructure* pad_struct = gst_caps_get_structure(caps, 0);
       gint width = 0;
       gint height = 0;
       if (pad_struct && gst_structure_get_int(pad_struct, "width", &width) &&
@@ -87,7 +82,7 @@ gboolean EncodingOnlyVideoStream::HandleDecodeBinAutoplugger(GstElement *elem,
     DNOTREACHED();
   } else if (is_audio) {
     if (saudio == AUDIO_MPEG_CODEC) {
-      GstStructure *pad_struct = gst_caps_get_structure(caps, 0);
+      GstStructure* pad_struct = gst_caps_get_structure(caps, 0);
       gint rate = 0;
       if (pad_struct && gst_structure_get_int(pad_struct, "rate", &rate)) {
         RegisterAudioCaps(saudio, caps, 0);
@@ -95,7 +90,7 @@ gboolean EncodingOnlyVideoStream::HandleDecodeBinAutoplugger(GstElement *elem,
       }
       return TRUE;
     } else if (saudio == AUDIO_AC3_CODEC) {
-      GstStructure *pad_struct = gst_caps_get_structure(caps, 0);
+      GstStructure* pad_struct = gst_caps_get_structure(caps, 0);
       gint rate = 0;
       if (pad_struct && gst_structure_get_int(pad_struct, "rate", &rate)) {
         RegisterAudioCaps(saudio, caps, 0);
@@ -108,11 +103,10 @@ gboolean EncodingOnlyVideoStream::HandleDecodeBinAutoplugger(GstElement *elem,
 
   SupportedRawStreams sraw;
   SupportedOtherType otype;
-  DCHECK(IsRawStreamFromType(type_title, &sraw) ||
-         IsOtherFromType(type_title, &otype));
+  DCHECK(IsRawStreamFromType(type_title, &sraw) || IsOtherFromType(type_title, &otype));
   return TRUE;
 }
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

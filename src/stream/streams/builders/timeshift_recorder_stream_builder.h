@@ -24,25 +24,23 @@ namespace elements {
 namespace sink {
 class ElementSplitMuxSink;
 }
-} // namespace elements
+}  // namespace elements
 namespace streams {
 class TimeShiftRecorderStream;
 namespace builders {
 
 class TimeShiftRecorderStreamBuilder : public RelayStreamBuilder {
-public:
+ public:
   typedef RelayStreamBuilder base_class;
-  TimeShiftRecorderStreamBuilder(TimeshiftConfig *api,
-                                 TimeShiftRecorderStream *observer);
+  TimeShiftRecorderStreamBuilder(TimeshiftConfig* api, TimeShiftRecorderStream* observer);
 
   virtual Connector BuildOutput(Connector conn) override;
 
-protected:
-  void HandleSplitmuxsinkCreated(Connector conn,
-                                 elements::sink::ElementSplitMuxSink *sink);
+ protected:
+  void HandleSplitmuxsinkCreated(Connector conn, elements::sink::ElementSplitMuxSink* sink);
 };
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

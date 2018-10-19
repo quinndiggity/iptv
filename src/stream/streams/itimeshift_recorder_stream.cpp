@@ -18,15 +18,15 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-ITimeShiftRecorderStream::ITimeShiftRecorderStream(RelayConfig *config,
-                                                   const TimeShiftInfo &info,
-                                                   IStreamClient *client,
-                                                   StreamStruct *stats)
+ITimeShiftRecorderStream::ITimeShiftRecorderStream(RelayConfig* config,
+                                                   const TimeShiftInfo& info,
+                                                   IStreamClient* client,
+                                                   StreamStruct* stats)
     : base_class(config, client, stats), timeshift_info_(info) {
   CHECK(GetType() == TIMESHIFT_RECORDER || GetType() == CATCHUP);
 }
 
-const char *ITimeShiftRecorderStream::ClassName() const {
+const char* ITimeShiftRecorderStream::ClassName() const {
   return "TimeShiftRecorderStream";
 }
 
@@ -34,6 +34,6 @@ TimeShiftInfo ITimeShiftRecorderStream::GetTimeshiftInfo() const {
   return timeshift_info_;
 }
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

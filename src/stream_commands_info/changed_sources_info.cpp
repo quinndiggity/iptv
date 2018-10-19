@@ -18,25 +18,24 @@
 
 namespace iptv_cloud {
 
-ChangedSouresInfo::ChangedSouresInfo(const url_t &url)
-    : base_class(), url_(url) {}
+ChangedSouresInfo::ChangedSouresInfo(const url_t& url) : base_class(), url_(url) {}
 
 ChangedSouresInfo::ChangedSouresInfo() : base_class(), url_() {}
 
-common::Error ChangedSouresInfo::SerializeFields(json_object *out) const {
+common::Error ChangedSouresInfo::SerializeFields(json_object* out) const {
   std::string url_str = common::ConvertToString(url_);
-  json_object_object_add(out, CHANGE_SOURCES_URL_FIELD,
-                         json_object_new_string(url_str.c_str()));
+  json_object_object_add(out, CHANGE_SOURCES_URL_FIELD, json_object_new_string(url_str.c_str()));
   return common::Error();
 }
 
-ChangedSouresInfo::url_t ChangedSouresInfo::GetUrl() const { return url_; }
+ChangedSouresInfo::url_t ChangedSouresInfo::GetUrl() const {
+  return url_;
+}
 
-common::Error ChangedSouresInfo::DoDeSerialize(json_object *serialized) {
+common::Error ChangedSouresInfo::DoDeSerialize(json_object* serialized) {
   ChangedSouresInfo inf;
-  json_object *jurl = NULL;
-  json_bool jurl_exists =
-      json_object_object_get_ex(serialized, CHANGE_SOURCES_URL_FIELD, &jurl);
+  json_object* jurl = NULL;
+  json_bool jurl_exists = json_object_object_get_ex(serialized, CHANGE_SOURCES_URL_FIELD, &jurl);
   if (jurl_exists) {
     std::string url_str = json_object_get_string(jurl);
     url_t lurl;
@@ -49,4 +48,4 @@ common::Error ChangedSouresInfo::DoDeSerialize(json_object *serialized) {
   return common::Error();
 }
 
-} // namespace iptv_cloud
+}  // namespace iptv_cloud

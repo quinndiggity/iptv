@@ -35,133 +35,124 @@ class PipeClient;
 class DaemonClient;
 
 class ProcessSlaveWrapper : public common::libev::IoLoopObserver {
-public:
+ public:
   typedef uint64_t seq_id_t;
-  enum {
-    node_stats_send_seconds = 10,
-    ping_timeout_clients_seconds = 60,
-    cleanup_seconds = 5
-  };
-  ProcessSlaveWrapper(const std::string &licensy_key);
+  enum { node_stats_send_seconds = 10, ping_timeout_clients_seconds = 60, cleanup_seconds = 5 };
+  ProcessSlaveWrapper(const std::string& licensy_key);
   virtual ~ProcessSlaveWrapper();
 
-  static int SendStopDaemonRequest(const std::string &license);
+  static int SendStopDaemonRequest(const std::string& license);
 
-  int Exec(int argc, char **argv);
+  int Exec(int argc, char** argv);
 
   std::string GetLogPath() const;
 
-protected:
-  virtual void PreLooped(common::libev::IoLoop *server) override;
-  virtual void Accepted(common::libev::IoClient *client) override;
-  virtual void Moved(common::libev::IoLoop *server,
-                     common::libev::IoClient *client)
-      override; // owner server, now client is orphan
-  virtual void Closed(common::libev::IoClient *client) override;
-  virtual void TimerEmited(common::libev::IoLoop *server,
-                           common::libev::timer_id_t id) override;
+ protected:
+  virtual void PreLooped(common::libev::IoLoop* server) override;
+  virtual void Accepted(common::libev::IoClient* client) override;
+  virtual void Moved(common::libev::IoLoop* server,
+                     common::libev::IoClient* client) override;  // owner server, now client is orphan
+  virtual void Closed(common::libev::IoClient* client) override;
+  virtual void TimerEmited(common::libev::IoLoop* server, common::libev::timer_id_t id) override;
 
-  virtual void Accepted(common::libev::IoChild *child) override;
-  virtual void Moved(common::libev::IoLoop *server,
-                     common::libev::IoChild *child) override;
-  virtual void ChildStatusChanged(common::libev::IoChild *child,
-                                  int status) override;
+  virtual void Accepted(common::libev::IoChild* child) override;
+  virtual void Moved(common::libev::IoLoop* server, common::libev::IoChild* child) override;
+  virtual void ChildStatusChanged(common::libev::IoChild* child, int status) override;
 
-  virtual void DataReceived(common::libev::IoClient *client) override;
-  virtual void DataReadyToWrite(common::libev::IoClient *client) override;
-  virtual void PostLooped(common::libev::IoLoop *server) override;
+  virtual void DataReceived(common::libev::IoClient* client) override;
+  virtual void DataReadyToWrite(common::libev::IoClient* client) override;
+  virtual void PostLooped(common::libev::IoLoop* server) override;
 
-  virtual common::ErrnoError
-  HandleRequestServiceCommand(DaemonClient *dclient, protocol::sequance_id_t id,
-                              int argc, char *argv[]) WARN_UNUSED_RESULT;
-  virtual common::ErrnoError
-  HandleResponceServiceCommand(DaemonClient *dclient,
-                               protocol::sequance_id_t id, int argc,
-                               char *argv[]) WARN_UNUSED_RESULT;
+  virtual common::ErrnoError HandleRequestServiceCommand(DaemonClient* dclient,
+                                                         protocol::sequance_id_t id,
+                                                         int argc,
+                                                         char* argv[]) WARN_UNUSED_RESULT;
+  virtual common::ErrnoError HandleResponceServiceCommand(DaemonClient* dclient,
+                                                          protocol::sequance_id_t id,
+                                                          int argc,
+                                                          char* argv[]) WARN_UNUSED_RESULT;
 
-  virtual common::ErrnoError
-  HandleRequestStreamsCommand(pipe::PipeClient *pclient,
-                              protocol::sequance_id_t id, int argc,
-                              char *argv[]) WARN_UNUSED_RESULT;
-  virtual common::ErrnoError
-  HandleResponceStreamsCommand(pipe::PipeClient *pclient,
-                               protocol::sequance_id_t id, int argc,
-                               char *argv[]) WARN_UNUSED_RESULT;
+  virtual common::ErrnoError HandleRequestStreamsCommand(pipe::PipeClient* pclient,
+                                                         protocol::sequance_id_t id,
+                                                         int argc,
+                                                         char* argv[]) WARN_UNUSED_RESULT;
+  virtual common::ErrnoError HandleResponceStreamsCommand(pipe::PipeClient* pclient,
+                                                          protocol::sequance_id_t id,
+                                                          int argc,
+                                                          char* argv[]) WARN_UNUSED_RESULT;
 
-private:
-  ChildStream *FindChildByID(const std::string &cid) const;
+ private:
+  ChildStream* FindChildByID(const std::string& cid) const;
 
   struct NodeStats;
-  common::ErrnoError
-  DaemonDataReceived(DaemonClient *dclient) WARN_UNUSED_RESULT;
-  common::ErrnoError
-  PipeDataReceived(pipe::PipeClient *pclient) WARN_UNUSED_RESULT;
+  common::ErrnoError DaemonDataReceived(DaemonClient* dclient) WARN_UNUSED_RESULT;
+  common::ErrnoError PipeDataReceived(pipe::PipeClient* pclient) WARN_UNUSED_RESULT;
 
   protocol::sequance_id_t NextRequestID();
 
-  common::ErrnoError CreateChildStream(common::libev::IoLoop *server,
-                                       const StartStreamInfo &start_info);
+  common::ErrnoError CreateChildStream(common::libev::IoLoop* server, const StartStreamInfo& start_info);
 
-  common::ErrnoError
-  HandleRequestChangedSourcesStream(pipe::PipeClient *pclient,
-                                    protocol::sequance_id_t id, int argc,
-                                    char *argv[]) WARN_UNUSED_RESULT;
+  common::ErrnoError HandleRequestChangedSourcesStream(pipe::PipeClient* pclient,
+                                                       protocol::sequance_id_t id,
+                                                       int argc,
+                                                       char* argv[]) WARN_UNUSED_RESULT;
 
-  common::ErrnoError
-  HandleRequestStatisticStream(pipe::PipeClient *pclient,
-                               protocol::sequance_id_t id, int argc,
-                               char *argv[]) WARN_UNUSED_RESULT;
+  common::ErrnoError HandleRequestStatisticStream(pipe::PipeClient* pclient,
+                                                  protocol::sequance_id_t id,
+                                                  int argc,
+                                                  char* argv[]) WARN_UNUSED_RESULT;
 
-  common::ErrnoError
-  HandleRequestClientStartStream(DaemonClient *dclient,
-                                 protocol::sequance_id_t id, int argc,
-                                 char *argv[]) WARN_UNUSED_RESULT;
-  common::ErrnoError
-  HandleRequestClientStopStream(DaemonClient *dclient,
-                                protocol::sequance_id_t id, int argc,
-                                char *argv[]) WARN_UNUSED_RESULT;
-  common::ErrnoError
-  HandleRequestClientRestartStream(DaemonClient *dclient,
-                                   protocol::sequance_id_t id, int argc,
-                                   char *argv[]) WARN_UNUSED_RESULT;
+  common::ErrnoError HandleRequestClientStartStream(DaemonClient* dclient,
+                                                    protocol::sequance_id_t id,
+                                                    int argc,
+                                                    char* argv[]) WARN_UNUSED_RESULT;
+  common::ErrnoError HandleRequestClientStopStream(DaemonClient* dclient,
+                                                   protocol::sequance_id_t id,
+                                                   int argc,
+                                                   char* argv[]) WARN_UNUSED_RESULT;
+  common::ErrnoError HandleRequestClientRestartStream(DaemonClient* dclient,
+                                                      protocol::sequance_id_t id,
+                                                      int argc,
+                                                      char* argv[]) WARN_UNUSED_RESULT;
 
   // service
-  common::ErrnoError
-  HandleRequestClientStateService(DaemonClient *dclient,
-                                  protocol::sequance_id_t id, int argc,
-                                  char *argv[]) WARN_UNUSED_RESULT;
-  common::ErrnoError
-  HandleRequestClientActivate(DaemonClient *dclient, protocol::sequance_id_t id,
-                              int argc, char *argv[]) WARN_UNUSED_RESULT;
-  common::ErrnoError
-  HandleRequestClientStopService(DaemonClient *dclient,
-                                 protocol::sequance_id_t id, int argc,
-                                 char *argv[]) WARN_UNUSED_RESULT;
+  common::ErrnoError HandleRequestClientStateService(DaemonClient* dclient,
+                                                     protocol::sequance_id_t id,
+                                                     int argc,
+                                                     char* argv[]) WARN_UNUSED_RESULT;
+  common::ErrnoError HandleRequestClientActivate(DaemonClient* dclient,
+                                                 protocol::sequance_id_t id,
+                                                 int argc,
+                                                 char* argv[]) WARN_UNUSED_RESULT;
+  common::ErrnoError HandleRequestClientStopService(DaemonClient* dclient,
+                                                    protocol::sequance_id_t id,
+                                                    int argc,
+                                                    char* argv[]) WARN_UNUSED_RESULT;
 
   void ReadConfig();
   void ClearStat();
 
   static common::net::HostAndPort GetServerHostAndPort();
 
-  stats::IStat *stats_; // all calls should be in loop thread
+  stats::IStat* stats_;  // all calls should be in loop thread
 
   std::string node_id_;
   const time_t start_time_;
 
   int process_argc_;
-  char **process_argv_;
+  char** process_argv_;
 
   std::string log_path_;
 
-  common::libev::IoLoop *loop_;
+  common::libev::IoLoop* loop_;
 
   const std::string license_key_;
   std::atomic<seq_id_t> id_;
   common::libev::timer_id_t ping_client_id_timer_;
   common::libev::timer_id_t node_stats_timer_;
   common::libev::timer_id_t cleanup_timer_;
-  NodeStats *node_stats_;
+  NodeStats* node_stats_;
 };
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

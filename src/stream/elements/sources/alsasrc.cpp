@@ -19,18 +19,17 @@ namespace stream {
 namespace elements {
 namespace sources {
 
-void ElementAlsaSrc::SetDevice(const std::string &device) {
+void ElementAlsaSrc::SetDevice(const std::string& device) {
   SetProperty("device", device);
 }
 
-ElementAlsaSrc *make_alsa_src(const std::string &device,
-                              element_id_t input_id) {
-  ElementAlsaSrc *alsa = make_sources<ElementAlsaSrc>(input_id);
+ElementAlsaSrc* make_alsa_src(const std::string& device, element_id_t input_id) {
+  ElementAlsaSrc* alsa = make_sources<ElementAlsaSrc>(input_id);
   alsa->SetDevice(device);
   return alsa;
 }
 
-} // namespace sources
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sources
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

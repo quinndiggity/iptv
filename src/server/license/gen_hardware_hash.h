@@ -19,8 +19,8 @@ namespace server {
 namespace license {
 
 enum ALGO_TYPE { HDD = 0, MACHINE_ID = 1 };
-bool GenerateHardwareHash(ALGO_TYPE t, std::string *hash);
+bool GenerateHardwareHash(ALGO_TYPE t, std::string* hash);
 
-} // namespace license
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace license
+}  // namespace server
+}  // namespace iptv_cloud

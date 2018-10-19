@@ -24,22 +24,20 @@ namespace elements {
 namespace sources {
 
 class ElementAppSrc : public ElementEx<ELEMENT_APP_SRC> {
-public:
+ public:
   typedef ElementEx<ELEMENT_APP_SRC> base_class;
-  typedef void (*need_data_callback_t)(GstElement *pipeline, guint size,
-                                       gpointer user_data);
+  typedef void (*need_data_callback_t)(GstElement* pipeline, guint size, gpointer user_data);
   using base_class::base_class;
 
-  gboolean RegisterNeedDataCallback(need_data_callback_t cb,
-                                    gpointer user_data) WARN_UNUSED_RESULT;
+  gboolean RegisterNeedDataCallback(need_data_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT;
 
-  GstFlowReturn PushBuffer(GstBuffer *buffer);
+  GstFlowReturn PushBuffer(GstBuffer* buffer);
   void SendEOS();
 };
 
-ElementAppSrc *make_app_src(element_id_t input_id);
+ElementAppSrc* make_app_src(element_id_t input_id);
 
-} // namespace sources
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sources
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

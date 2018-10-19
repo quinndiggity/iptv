@@ -14,31 +14,30 @@
 
 #include "stream/elements/sources/appsrc.h"
 
-#include <gst/app/gstappsrc.h> // for GST_APP_SRC
+#include <gst/app/gstappsrc.h>  // for GST_APP_SRC
 
 namespace iptv_cloud {
 namespace stream {
 namespace elements {
 namespace sources {
 
-gboolean ElementAppSrc::RegisterNeedDataCallback(need_data_callback_t cb,
-                                                 gpointer user_data) {
+gboolean ElementAppSrc::RegisterNeedDataCallback(need_data_callback_t cb, gpointer user_data) {
   return RegisterCallback("need-data", G_CALLBACK(cb), user_data);
 }
 
-GstFlowReturn ElementAppSrc::PushBuffer(GstBuffer *buffer) {
+GstFlowReturn ElementAppSrc::PushBuffer(GstBuffer* buffer) {
   return gst_app_src_push_buffer(GST_APP_SRC(GetGstElement()), buffer);
 }
 
 void ElementAppSrc::SendEOS() {
-  gst_app_src_end_of_stream(GST_APP_SRC(GetGstElement())); // send  eos
+  gst_app_src_end_of_stream(GST_APP_SRC(GetGstElement()));  // send  eos
 }
 
-ElementAppSrc *make_app_src(element_id_t input_id) {
+ElementAppSrc* make_app_src(element_id_t input_id) {
   return make_sources<ElementAppSrc>(input_id);
 }
 
-} // namespace sources
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sources
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

@@ -19,6 +19,6 @@
 namespace iptv_cloud {
 namespace stream {
 
-Config *make_config(const utils::ArgsMap &config);
+Config* make_config(const utils::ArgsMap& config);
 }
-} // namespace iptv_cloud
+}  // namespace iptv_cloud

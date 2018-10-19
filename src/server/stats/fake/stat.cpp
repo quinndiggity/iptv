@@ -21,23 +21,23 @@ namespace fake {
 
 StatCredentials::StatCredentials() : StatCredentialsBase(STAT_FAKE) {}
 
-Stat::Stat(StatCredentials *creds) : IStat(creds) {}
+Stat::Stat(StatCredentials* creds) : IStat(creds) {}
 
-bool Stat::SetKey(const std::string &key, const std::string &value) {
+bool Stat::SetKey(const std::string& key, const std::string& value) {
   UNUSED(key);
   UNUSED(value);
 
   return true;
 }
 
-bool Stat::GetKey(const std::string &key, std::string *value) {
+bool Stat::GetKey(const std::string& key, std::string* value) {
   UNUSED(key);
   UNUSED(value);
 
   return true;
 }
 
-} // namespace fake
-} // namespace stats
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace fake
+}  // namespace stats
+}  // namespace server
+}  // namespace iptv_cloud

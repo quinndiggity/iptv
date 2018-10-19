@@ -19,7 +19,7 @@ namespace server {
 
 ActivateInfo::ActivateInfo() : LicenseInfo() {}
 
-ActivateInfo::ActivateInfo(const std::string &license) : LicenseInfo(license) {}
+ActivateInfo::ActivateInfo(const std::string& license) : LicenseInfo(license) {}
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

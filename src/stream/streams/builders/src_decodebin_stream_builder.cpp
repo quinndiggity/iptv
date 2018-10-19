@@ -33,8 +33,7 @@
 namespace iptv_cloud {
 namespace stream {
 namespace {
-elements::Element *make_video_pay(SupportedVideoCodecs vcodec,
-                                  element_id_t pay_id) {
+elements::Element* make_video_pay(SupportedVideoCodecs vcodec, element_id_t pay_id) {
   if (vcodec == VIDEO_H264_CODEC) {
     return elements::pay::make_h264_pay(96, pay_id);
   } else if (vcodec == VIDEO_H265_CODEC) {
@@ -47,8 +46,7 @@ elements::Element *make_video_pay(SupportedVideoCodecs vcodec,
   return nullptr;
 }
 
-elements::Element *make_audio_pay(SupportedAudioCodecs acodec,
-                                  element_id_t pay_id) {
+elements::Element* make_audio_pay(SupportedAudioCodecs acodec, element_id_t pay_id) {
   if (acodec == AUDIO_AAC_CODEC) {
     return elements::pay::make_aac_pay(97, pay_id);
   } else if (acodec == AUDIO_AC3_CODEC) {
@@ -60,18 +58,16 @@ elements::Element *make_audio_pay(SupportedAudioCodecs acodec,
   NOTREACHED() << "Please add rtp pay for audio codec type: " << acodec;
   return nullptr;
 }
-} // namespace
+}  // namespace
 namespace streams {
 namespace builders {
 
-SrcDecodeStreamBuilder::SrcDecodeStreamBuilder(Config *api,
-                                               SrcDecodeBinStream *observer)
+SrcDecodeStreamBuilder::SrcDecodeStreamBuilder(Config* api, SrcDecodeBinStream* observer)
     : GstBaseBuilder(api, observer) {}
 
 Connector SrcDecodeStreamBuilder::BuildInput() {
-  elements::Element *src = BuildInputSrc();
-  elements::ElementDecodebin *decodebin =
-      new elements::ElementDecodebin(common::MemSPrintf(DECODEBIN_NAME_1U, 0));
+  elements::Element* src = BuildInputSrc();
+  elements::ElementDecodebin* decodebin = new elements::ElementDecodebin(common::MemSPrintf(DECODEBIN_NAME_1U, 0));
   ElementAdd(decodebin);
   ElementLink(src, decodebin);
   HandleDecodebinCreated(decodebin);
@@ -79,21 +75,18 @@ Connector SrcDecodeStreamBuilder::BuildInput() {
   return {nullptr, nullptr};
 }
 
-void SrcDecodeStreamBuilder::HandleDecodebinCreated(
-    elements::ElementDecodebin *decodebin) {
+void SrcDecodeStreamBuilder::HandleDecodebinCreated(elements::ElementDecodebin* decodebin) {
   if (observer_) {
-    SrcDecodeBinStream *srcdec_observer =
-        static_cast<SrcDecodeBinStream *>(observer_);
+    SrcDecodeBinStream* srcdec_observer = static_cast<SrcDecodeBinStream*>(observer_);
     srcdec_observer->OnDecodebinCreated(decodebin);
   }
 }
 
-elements::Element *SrcDecodeStreamBuilder::BuildInputSrc() {
+elements::Element* SrcDecodeStreamBuilder::BuildInputSrc() {
   input_t prepared = api_->GetInput();
   const common::uri::Url uri = prepared[0].GetInput();
-  elements::Element *src =
-      elements::sources::make_src(uri, 0, IBaseStream::src_timeout_sec);
-  pad::Pad *src_pad = src->StaticPad("src");
+  elements::Element* src = elements::sources::make_src(uri, 0, IBaseStream::src_timeout_sec);
+  pad::Pad* src_pad = src->StaticPad("src");
   if (src_pad->IsValid()) {
     HandleInputSrcPadCreated(uri.GetScheme(), src_pad, 0);
   }
@@ -102,30 +95,28 @@ elements::Element *SrcDecodeStreamBuilder::BuildInputSrc() {
   return src;
 }
 
-elements::Element *SrcDecodeStreamBuilder::BuildVideoUdbConnection() {
-  elements::ElementQueue *video_queue =
-      new elements::ElementQueue(common::MemSPrintf(UDB_VIDEO_NAME_1U, 0));
+elements::Element* SrcDecodeStreamBuilder::BuildVideoUdbConnection() {
+  elements::ElementQueue* video_queue = new elements::ElementQueue(common::MemSPrintf(UDB_VIDEO_NAME_1U, 0));
   return video_queue;
 }
 
-elements::Element *SrcDecodeStreamBuilder::BuildAudioUdbConnection() {
-  elements::ElementQueue *audio_queue =
-      new elements::ElementQueue(common::MemSPrintf(UDB_AUDIO_NAME_1U, 0));
+elements::Element* SrcDecodeStreamBuilder::BuildAudioUdbConnection() {
+  elements::ElementQueue* audio_queue = new elements::ElementQueue(common::MemSPrintf(UDB_AUDIO_NAME_1U, 0));
   return audio_queue;
 }
 
 Connector SrcDecodeStreamBuilder::BuildUdbConnections(Connector conn) {
   CHECK(conn.video == nullptr);
   CHECK(conn.audio == nullptr);
-  AudioVideoConfig *cfg = static_cast<AudioVideoConfig *>(api_);
+  AudioVideoConfig* cfg = static_cast<AudioVideoConfig*>(api_);
   if (cfg->HaveVideo()) {
-    elements::Element *vudb = BuildVideoUdbConnection();
+    elements::Element* vudb = BuildVideoUdbConnection();
     CHECK(vudb);
     ElementAdd(vudb);
     conn.video = vudb;
   }
   if (cfg->HaveAudio()) {
-    elements::Element *audb = BuildAudioUdbConnection();
+    elements::Element* audb = BuildAudioUdbConnection();
     CHECK(audb);
     ElementAdd(audb);
     conn.audio = audb;
@@ -134,12 +125,12 @@ Connector SrcDecodeStreamBuilder::BuildUdbConnections(Connector conn) {
 }
 
 Connector SrcDecodeStreamBuilder::BuildOutput(Connector conn) {
-  AudioVideoConfig *conf = static_cast<AudioVideoConfig *>(api_);
+  AudioVideoConfig* conf = static_cast<AudioVideoConfig*>(api_);
   output_t out = conf->GetOutput();
   for (size_t i = 0; i < out.size(); ++i) {
     const OutputUri output = out[i];
     SinkDeviceType dt;
-    if (IsDeviceOutUrl(output.GetOutput(), &dt)) { // monitor
+    if (IsDeviceOutUrl(output.GetOutput(), &dt)) {  // monitor
       CRITICAL_LOG() << "Decklink not supported for encoding based streams!";
       continue;
     }
@@ -147,18 +138,18 @@ Connector SrcDecodeStreamBuilder::BuildOutput(Connector conn) {
     common::uri::Url uri = output.GetOutput();
     common::uri::Url::scheme scheme = uri.GetScheme();
     bool is_rtp_out = scheme == common::uri::Url::udp;
-    elements::Element *mux = elements::muxer::make_muxer(scheme, i);
+    elements::Element* mux = elements::muxer::make_muxer(scheme, i);
     ElementAdd(mux);
 
     if (conf->HaveVideo()) {
-      elements::ElementQueue *video_tee_queue = new elements::ElementQueue(
-          common::MemSPrintf(VIDEO_TEE_QUEUE_NAME_1U, i));
+      elements::ElementQueue* video_tee_queue =
+          new elements::ElementQueue(common::MemSPrintf(VIDEO_TEE_QUEUE_NAME_1U, i));
       ElementAdd(video_tee_queue);
-      elements::Element *next = video_tee_queue;
+      elements::Element* next = video_tee_queue;
       ElementLink(conn.video, next);
 
       if (is_rtp_out) {
-        elements::Element *rtp_pay = make_video_pay(GetVideoCodecType(), i);
+        elements::Element* rtp_pay = make_video_pay(GetVideoCodecType(), i);
         ElementAdd(rtp_pay);
         ElementLink(next, rtp_pay);
         next = rtp_pay;
@@ -168,14 +159,14 @@ Connector SrcDecodeStreamBuilder::BuildOutput(Connector conn) {
     }
 
     if (conf->HaveAudio()) {
-      elements::ElementQueue *audio_tee_queue = new elements::ElementQueue(
-          common::MemSPrintf(AUDIO_TEE_QUEUE_NAME_1U, i));
+      elements::ElementQueue* audio_tee_queue =
+          new elements::ElementQueue(common::MemSPrintf(AUDIO_TEE_QUEUE_NAME_1U, i));
       ElementAdd(audio_tee_queue);
-      elements::Element *next = audio_tee_queue;
+      elements::Element* next = audio_tee_queue;
       ElementLink(conn.audio, next);
 
       if (is_rtp_out) {
-        elements::Element *rtp_pay = make_audio_pay(GetAudioCodecType(), i);
+        elements::Element* rtp_pay = make_audio_pay(GetAudioCodecType(), i);
         ElementAdd(rtp_pay);
         ElementLink(next, rtp_pay);
         next = rtp_pay;
@@ -184,14 +175,14 @@ Connector SrcDecodeStreamBuilder::BuildOutput(Connector conn) {
       ElementLink(next, mux);
     }
 
-    elements::Element *sink = BuildGenericOutput(output, i);
+    elements::Element* sink = BuildGenericOutput(output, i);
     ElementAdd(sink);
     ElementLink(mux, sink);
   }
   return conn;
 }
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

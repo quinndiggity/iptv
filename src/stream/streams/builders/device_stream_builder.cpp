@@ -16,11 +16,11 @@
 
 #include <common/sprintf.h>
 
-#include "input_uri.h" // for InputUri
+#include "input_uri.h"  // for InputUri
 
-#include "stream/pad/pad.h" // for Pad
+#include "stream/pad/pad.h"  // for Pad
 
-#include "stream/elements/element.h" // for Element
+#include "stream/elements/element.h"  // for Element
 #include "stream/elements/sources/alsasrc.h"
 #include "stream/elements/sources/v4l2src.h"
 
@@ -29,33 +29,31 @@ namespace stream {
 namespace streams {
 namespace builders {
 
-DeviceStreamBuilder::DeviceStreamBuilder(EncodingConfig *api,
-                                         SrcDecodeBinStream *observer)
+DeviceStreamBuilder::DeviceStreamBuilder(EncodingConfig* api, SrcDecodeBinStream* observer)
     : EncodingStreamBuilder(api, observer) {}
 
 Connector DeviceStreamBuilder::BuildInput() {
-  EncodingConfig *conf = static_cast<EncodingConfig *>(api_);
+  EncodingConfig* conf = static_cast<EncodingConfig*>(api_);
   input_t input = conf->GetInput();
   InputUri diuri = input[0];
   common::uri::Url duri = diuri.GetInput();
   common::uri::Upath dpath = duri.GetPath();
-  elements::Element *video = nullptr;
+  elements::Element* video = nullptr;
   if (conf->HaveVideo()) {
     video = elements::sources::make_v4l2_src(dpath.GetPath(), 0);
     ElementAdd(video);
-    pad::Pad *src_pad = video->StaticPad("src");
+    pad::Pad* src_pad = video->StaticPad("src");
     if (src_pad->IsValid()) {
       HandleInputSrcPadCreated(duri.GetScheme(), src_pad, 0);
     }
     delete src_pad;
 
-    elements::ElementCapsFilter *capsfilter = new elements::ElementCapsFilter(
-        common::MemSPrintf(VIDEO_CAPS_DEVICE_NAME_1U, 0));
+    elements::ElementCapsFilter* capsfilter =
+        new elements::ElementCapsFilter(common::MemSPrintf(VIDEO_CAPS_DEVICE_NAME_1U, 0));
     ElementAdd(capsfilter);
 
-    GstCaps *cap_width_height =
-        gst_caps_new_simple("video/x-raw", "width", G_TYPE_INT, VIDEO_WIDTH,
-                            "height", G_TYPE_INT, VIDEO_HEIGHT, NULL);
+    GstCaps* cap_width_height =
+        gst_caps_new_simple("video/x-raw", "width", G_TYPE_INT, VIDEO_WIDTH, "height", G_TYPE_INT, VIDEO_HEIGHT, NULL);
     capsfilter->SetCaps(cap_width_height);
     gst_caps_unref(cap_width_height);
 
@@ -63,12 +61,12 @@ Connector DeviceStreamBuilder::BuildInput() {
     video = capsfilter;
   }
 
-  elements::Element *audio = nullptr;
+  elements::Element* audio = nullptr;
   if (conf->HaveAudio()) {
     audio = elements::sources::make_alsa_src(dpath.GetQuery(), 1);
     ElementAdd(audio);
     if (!conf->HaveAudio()) {
-      pad::Pad *src_pad = audio->StaticPad("src");
+      pad::Pad* src_pad = audio->StaticPad("src");
       if (src_pad->IsValid()) {
         HandleInputSrcPadCreated(duri.GetScheme(), src_pad, 1);
       }
@@ -78,7 +76,7 @@ Connector DeviceStreamBuilder::BuildInput() {
   return {video, audio};
 }
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

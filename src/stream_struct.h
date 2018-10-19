@@ -22,20 +22,12 @@
 
 namespace iptv_cloud {
 
-enum StreamStatus {
-  SNEW = 0,
-  SNULL,
-  SSTARTED,
-  SREADY,
-  SPLAYING,
-  SFROZEN,
-  SWAITING
-};
+enum StreamStatus { SNEW = 0, SNULL, SSTARTED, SREADY, SPLAYING, SFROZEN, SWAITING };
 
 class StreamStats;
 
-typedef std::vector<StreamStats *> input_stream_info_t;
-typedef std::vector<StreamStats *> output_stream_info_t;
+typedef std::vector<StreamStats*> input_stream_info_t;
+typedef std::vector<StreamStats*> output_stream_info_t;
 
 struct StreamInfo {
   channel_id_t id;
@@ -43,24 +35,27 @@ struct StreamInfo {
   std::vector<stream_id_t> input;
   std::vector<stream_id_t> output;
 
-  bool Equals(const StreamInfo &inf) const;
+  bool Equals(const StreamInfo& inf) const;
 };
 
-inline bool operator==(const StreamInfo &left, const StreamInfo &right) {
+inline bool operator==(const StreamInfo& left, const StreamInfo& right) {
   return left.Equals(right);
 }
 
-inline bool operator!=(const StreamInfo &left, const StreamInfo &right) {
+inline bool operator!=(const StreamInfo& left, const StreamInfo& right) {
   return !operator==(left, right);
 }
 
 struct StreamStruct {
   StreamStruct();
-  explicit StreamStruct(const StreamInfo &sha);
-  StreamStruct(const StreamInfo &sha, time_t start_time, time_t lst,
-               size_t rest);
-  StreamStruct(channel_id_t cid, StreamType type, input_stream_info_t input,
-               output_stream_info_t output, time_t start_time, time_t lst,
+  explicit StreamStruct(const StreamInfo& sha);
+  StreamStruct(const StreamInfo& sha, time_t start_time, time_t lst, size_t rest);
+  StreamStruct(channel_id_t cid,
+               StreamType type,
+               input_stream_info_t input,
+               output_stream_info_t output,
+               time_t start_time,
+               time_t lst,
                size_t rest);
 
   bool IsValid() const;
@@ -74,18 +69,18 @@ struct StreamStruct {
   const channel_id_t id;
   const StreamType type;
 
-  const time_t start_time; // sec
+  const time_t start_time;  // sec
 
   time_t loop_start_time;
   size_t restarts;
 
-  const input_stream_info_t input;   // ptrs
-  const output_stream_info_t output; // ptrs
+  const input_stream_info_t input;    // ptrs
+  const output_stream_info_t output;  // ptrs
 
   DISALLOW_COPY_AND_ASSIGN(StreamStruct);
 };
 
-} // namespace iptv_cloud
+}  // namespace iptv_cloud
 
 namespace common {
 std::string ConvertToString(iptv_cloud::StreamStatus st);

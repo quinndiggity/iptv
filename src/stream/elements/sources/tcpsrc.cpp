@@ -19,21 +19,22 @@ namespace stream {
 namespace elements {
 namespace sources {
 
-void ElementTCPSrc::SetHost(const std::string &host) {
+void ElementTCPSrc::SetHost(const std::string& host) {
   SetProperty("host", host);
 }
 
-void ElementTCPSrc::SetPort(uint16_t port) { SetProperty("port", port); }
+void ElementTCPSrc::SetPort(uint16_t port) {
+  SetProperty("port", port);
+}
 
-ElementTCPSrc *make_tcp_server_src(const common::net::HostAndPort &location,
-                                   element_id_t input_id) {
-  ElementTCPSrc *tcpsrc = make_sources<ElementTCPSrc>(input_id);
+ElementTCPSrc* make_tcp_server_src(const common::net::HostAndPort& location, element_id_t input_id) {
+  ElementTCPSrc* tcpsrc = make_sources<ElementTCPSrc>(input_id);
   tcpsrc->SetHost(location.GetHost());
   tcpsrc->SetPort(location.GetPort());
   return tcpsrc;
 }
 
-} // namespace sources
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sources
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

@@ -16,7 +16,7 @@
 
 #include <string.h>
 
-#include "stream/gstreamer_utils.h" // for pad_get_type
+#include "stream/gstreamer_utils.h"  // for pad_get_type
 
 #include "gst_constants.h"
 #include "stream/constants.h"
@@ -41,18 +41,16 @@ namespace iptv_cloud {
 namespace stream {
 namespace elements {
 namespace {
-Element *build_mux_video_scale(common::draw::Size sz, ILinker *linker,
-                               Element *link_to, element_id_t video_scale_id) {
-  video::ElementVideoScale *videoscale = new video::ElementVideoScale(
-      common::MemSPrintf("mux_" VIDEO_SCALE_NAME_1U, video_scale_id));
-  ElementCapsFilter *capsfilter = new ElementCapsFilter(common::MemSPrintf(
-      "mux_" VIDEO_SCALE_CAPS_FILTER_NAME_1U, video_scale_id));
+Element* build_mux_video_scale(common::draw::Size sz, ILinker* linker, Element* link_to, element_id_t video_scale_id) {
+  video::ElementVideoScale* videoscale =
+      new video::ElementVideoScale(common::MemSPrintf("mux_" VIDEO_SCALE_NAME_1U, video_scale_id));
+  ElementCapsFilter* capsfilter =
+      new ElementCapsFilter(common::MemSPrintf("mux_" VIDEO_SCALE_CAPS_FILTER_NAME_1U, video_scale_id));
   linker->ElementAdd(videoscale);
   linker->ElementAdd(capsfilter);
 
-  GstCaps *cap_width_height =
-      gst_caps_new_simple("video/x-raw", "width", G_TYPE_INT, sz.width,
-                          "height", G_TYPE_INT, sz.height, NULL);
+  GstCaps* cap_width_height =
+      gst_caps_new_simple("video/x-raw", "width", G_TYPE_INT, sz.width, "height", G_TYPE_INT, sz.height, NULL);
   capsfilter->SetCaps(cap_width_height);
   gst_caps_unref(cap_width_height);
 
@@ -60,17 +58,16 @@ Element *build_mux_video_scale(common::draw::Size sz, ILinker *linker,
   linker->ElementLink(videoscale, capsfilter);
   return capsfilter;
 }
-} // namespace
-} // namespace elements
+}  // namespace
+}  // namespace elements
 namespace streams {
 namespace builders {
 
-MosaicStreamBuilder::MosaicStreamBuilder(EncodingConfig *config,
-                                         MosaicStream *observer)
+MosaicStreamBuilder::MosaicStreamBuilder(EncodingConfig* config, MosaicStream* observer)
     : IBaseBuilder(config, observer) {}
 
 bool MosaicStreamBuilder::InitPipeline() {
-  EncodingConfig *config = static_cast<EncodingConfig *>(api_);
+  EncodingConfig* config = static_cast<EncodingConfig*>(api_);
   input_t prepared = config->GetInput();
   size_t sz = prepared.size();
   MosaicImageOptions options;
@@ -98,13 +95,11 @@ bool MosaicStreamBuilder::InitPipeline() {
     return false;
   }
 
-  elements::video::ElementVideoMixer *vmix =
-      new elements::video::ElementVideoMixer(
-          common::MemSPrintf(VIDEOMIXER_NAME_1U, 0));
+  elements::video::ElementVideoMixer* vmix =
+      new elements::video::ElementVideoMixer(common::MemSPrintf(VIDEOMIXER_NAME_1U, 0));
   ElementAdd(vmix);
-  elements::audio::ElementAudioMixer *amix =
-      new elements::audio::ElementAudioMixer(
-          common::MemSPrintf(INTERLIVE_NAME_1U, 0));
+  elements::audio::ElementAudioMixer* amix =
+      new elements::audio::ElementAudioMixer(common::MemSPrintf(INTERLIVE_NAME_1U, 0));
   ElementAdd(amix);
 
   size_t i = 0;
@@ -114,42 +109,37 @@ bool MosaicStreamBuilder::InitPipeline() {
       SoundInfo sound;
       InputUri uri = prepared[i];
       const common::uri::Url iuri = uri.GetInput();
-      elements::Element *src =
-          elements::sources::make_src(iuri, i, IBaseStream::src_timeout_sec);
-      pad::Pad *src_pad = src->StaticPad("src");
+      elements::Element* src = elements::sources::make_src(iuri, i, IBaseStream::src_timeout_sec);
+      pad::Pad* src_pad = src->StaticPad("src");
       if (src_pad->IsValid()) {
         HandleInputSrcPadCreated(iuri.GetScheme(), src_pad, i);
       }
       delete src_pad;
       ElementAdd(src);
 
-      elements::ElementDecodebin *decodebin = new elements::ElementDecodebin(
-          common::MemSPrintf(DECODEBIN_NAME_1U, i));
+      elements::ElementDecodebin* decodebin = new elements::ElementDecodebin(common::MemSPrintf(DECODEBIN_NAME_1U, i));
       ElementAdd(decodebin);
       ElementLink(src, decodebin);
       HandleDecodebinCreated(decodebin);
 
       if (config->HaveVideo()) {
-        elements::ElementQueue *video_queue = new elements::ElementQueue(
-            common::MemSPrintf(UDB_VIDEO_NAME_1U, i));
+        elements::ElementQueue* video_queue = new elements::ElementQueue(common::MemSPrintf(UDB_VIDEO_NAME_1U, i));
         ElementAdd(video_queue);
 
         common::draw::Size image_size(options.screen_size.width / column_counts,
                                       options.screen_size.height / row_counts);
         image.size = image_size;
-        elements::Element *scale =
-            elements::build_mux_video_scale(image.size, this, video_queue, i);
+        elements::Element* scale = elements::build_mux_video_scale(image.size, this, video_queue, i);
 
-        elements::video::ElementVideoBox *video_box =
-            new elements::video::ElementVideoBox(
-                common::MemSPrintf(VIDEO_BOX_NAME_1U, i));
+        elements::video::ElementVideoBox* video_box =
+            new elements::video::ElementVideoBox(common::MemSPrintf(VIDEO_BOX_NAME_1U, i));
         ElementAdd(video_box);
         ElementLink(scale, video_box);
         video_box->SetProperty("border-alpha", 1.0);
         ElementLink(video_box, vmix);
 
         const std::string pad_name = common::MemSPrintf("sink_%lu", i);
-        pad::Pad *sink_pad = vmix->StaticPad(pad_name.c_str());
+        pad::Pad* sink_pad = vmix->StaticPad(pad_name.c_str());
         common::draw::Point p(c * image_size.width, r * image_size.height);
         image.x_y = p;
         if (sink_pad->IsValid()) {
@@ -160,18 +150,17 @@ bool MosaicStreamBuilder::InitPipeline() {
       }
 
       if (config->HaveAudio()) {
-        elements::ElementQueue *audio_queue = new elements::ElementQueue(
-            common::MemSPrintf(UDB_AUDIO_NAME_1U, i));
+        elements::ElementQueue* audio_queue = new elements::ElementQueue(common::MemSPrintf(UDB_AUDIO_NAME_1U, i));
         ElementAdd(audio_queue);
 
-        elements::audio::ElementLevel *spec = new elements::audio::ElementLevel(
-            common::MemSPrintf(AUDIO_LEVEL_NAME_1U, i));
+        elements::audio::ElementLevel* spec =
+            new elements::audio::ElementLevel(common::MemSPrintf(AUDIO_LEVEL_NAME_1U, i));
         ElementAdd(spec);
         ElementLink(audio_queue, spec);
 
         ElementLink(spec, amix);
         const std::string pad_name = common::MemSPrintf("sink_%lu", i);
-        pad::Pad *sink_pad = amix->StaticPad(pad_name.c_str());
+        pad::Pad* sink_pad = amix->StaticPad(pad_name.c_str());
         volume_t vol = uri.GetVolume();
         bool mute = uri.GetMute();
         if (sink_pad->IsValid()) {
@@ -198,22 +187,19 @@ bool MosaicStreamBuilder::InitPipeline() {
 
   Connector conn{vmix, amix};
   if (config->HaveVideo()) {
-    elements::video::ElementCairoOverlay *cairo =
-        new elements::video::ElementCairoOverlay(
-            common::MemSPrintf(CAIRO_NAME_1U, 0));
+    elements::video::ElementCairoOverlay* cairo =
+        new elements::video::ElementCairoOverlay(common::MemSPrintf(CAIRO_NAME_1U, 0));
     ElementAdd(cairo);
     ElementLink(conn.video, cairo);
 
     HandleCairoCreated(cairo, options);
     conn.video = cairo;
 
-    elements_line_t first_last = elements::encoders::build_video_convert(
-        config->GetDeinterlace(), this, 0);
+    elements_line_t first_last = elements::encoders::build_video_convert(config->GetDeinterlace(), this, 0);
     ElementLink(conn.video, first_last.front());
     conn.video = first_last.back();
 
-    elements::ElementTee *tee =
-        new elements::ElementTee(common::MemSPrintf(VIDEO_TEE_NAME_1U, 0));
+    elements::ElementTee* tee = new elements::ElementTee(common::MemSPrintf(VIDEO_TEE_NAME_1U, 0));
     ElementAdd(tee);
     ElementLink(conn.video, tee);
     conn.video = tee;
@@ -221,13 +207,11 @@ bool MosaicStreamBuilder::InitPipeline() {
   if (config->HaveAudio()) {
     const volume_t volume = config->GetVolume();
     audio_channel_count_t achannels = config->GetAudioChannels();
-    elements_line_t first_last =
-        elements::encoders::build_audio_converters(volume, achannels, this, 0);
+    elements_line_t first_last = elements::encoders::build_audio_converters(volume, achannels, this, 0);
     ElementLink(conn.audio, first_last.front());
     conn.audio = first_last.back();
 
-    elements::ElementTee *tee =
-        new elements::ElementTee(common::MemSPrintf(AUDIO_TEE_NAME_1U, 0));
+    elements::ElementTee* tee = new elements::ElementTee(common::MemSPrintf(AUDIO_TEE_NAME_1U, 0));
     ElementAdd(tee);
     ElementLink(conn.audio, tee);
     conn.audio = tee;
@@ -236,36 +220,34 @@ bool MosaicStreamBuilder::InitPipeline() {
   return true;
 }
 
-void MosaicStreamBuilder::BuildOutput(elements::Element *video,
-                                      elements::Element *audio) {
-  EncodingConfig *config = static_cast<EncodingConfig *>(api_);
+void MosaicStreamBuilder::BuildOutput(elements::Element* video, elements::Element* audio) {
+  EncodingConfig* config = static_cast<EncodingConfig*>(api_);
   output_t out = config->GetOutput();
 
   for (size_t i = 0; i < out.size(); ++i) {
     const OutputUri output = out[i];
 
     SinkDeviceType dt;
-    if (IsDeviceOutUrl(output.GetOutput(), &dt)) { // monitor
+    if (IsDeviceOutUrl(output.GetOutput(), &dt)) {  // monitor
       if (config->HaveVideo()) {
-        elements::ElementQueue *video_tee_queue = new elements::ElementQueue(
-            common::MemSPrintf(VIDEO_TEE_QUEUE_NAME_1U, i));
+        elements::ElementQueue* video_tee_queue =
+            new elements::ElementQueue(common::MemSPrintf(VIDEO_TEE_QUEUE_NAME_1U, i));
         // video_tee_queue->SetMaxSizeBuffers(4);
         ElementAdd(video_tee_queue);
-        elements::Element *next = video_tee_queue;
+        elements::Element* next = video_tee_queue;
         ElementLink(video, next);
 
-        elements::Element *video_sink =
-            elements::sink::make_video_device_sink(dt, i);
+        elements::Element* video_sink = elements::sink::make_video_device_sink(dt, i);
         if (dt == DECKLINK_OUTPUT) {
           decklink_video_mode_t decklink_mode = config->GetDecklinkMode();
           if (decklink_mode != DEFAULT_DECKLINK_VIDEO_MODE) {
-            elements::sink::ElementVideoDeckSink *decl_sink =
-                static_cast<elements::sink::ElementVideoDeckSink *>(video_sink);
+            elements::sink::ElementVideoDeckSink* decl_sink =
+                static_cast<elements::sink::ElementVideoDeckSink*>(video_sink);
             decl_sink->SetMode(decklink_mode);
           }
         }
         ElementAdd(video_sink);
-        pad::Pad *sink_pad = video_sink->StaticPad("sink");
+        pad::Pad* sink_pad = video_sink->StaticPad("sink");
         if (sink_pad->IsValid()) {
           HandleOutputSinkPadCreated(common::uri::Url::unknown, sink_pad, i);
         }
@@ -274,17 +256,16 @@ void MosaicStreamBuilder::BuildOutput(elements::Element *video,
       }
 
       if (config->HaveAudio()) {
-        elements::ElementQueue *audio_tee_queue = new elements::ElementQueue(
-            common::MemSPrintf(AUDIO_TEE_QUEUE_NAME_1U, i));
+        elements::ElementQueue* audio_tee_queue =
+            new elements::ElementQueue(common::MemSPrintf(AUDIO_TEE_QUEUE_NAME_1U, i));
         // audio_tee_queue->SetMaxSizeBuffers(4);
         ElementAdd(audio_tee_queue);
-        elements::Element *next = audio_tee_queue;
+        elements::Element* next = audio_tee_queue;
         ElementLink(audio, next);
 
-        elements::Element *audio =
-            elements::sink::make_audio_device_sink(dt, i);
+        elements::Element* audio = elements::sink::make_audio_device_sink(dt, i);
         ElementAdd(audio);
-        pad::Pad *sink_pad = audio->StaticPad("sink");
+        pad::Pad* sink_pad = audio->StaticPad("sink");
         if (sink_pad->IsValid()) {
           HandleOutputSinkPadCreated(common::uri::Url::unknown, sink_pad, i);
         }
@@ -298,32 +279,29 @@ void MosaicStreamBuilder::BuildOutput(elements::Element *video,
     common::uri::Url::scheme scheme = uri.GetScheme();
     bool is_rtp_out = scheme == common::uri::Url::udp;
     const std::string vcodec = config->GetVideoEncoder();
-    elements::Element *mux = elements::muxer::make_muxer(scheme, i);
+    elements::Element* mux = elements::muxer::make_muxer(scheme, i);
     ElementAdd(mux);
 
     if (config->HaveVideo()) {
-      elements::ElementQueue *video_tee_queue = new elements::ElementQueue(
-          common::MemSPrintf(VIDEO_TEE_QUEUE_NAME_1U, i));
+      elements::ElementQueue* video_tee_queue =
+          new elements::ElementQueue(common::MemSPrintf(VIDEO_TEE_QUEUE_NAME_1U, i));
       // video_tee_queue->SetMaxSizeBuffers(4);
       ElementAdd(video_tee_queue);
-      elements::Element *next = video_tee_queue;
+      elements::Element* next = video_tee_queue;
       ElementLink(video, next);
 
       int width = output.GetWidth();
       int height = output.GetHeight();
       int video_bitrate = output.GetVideoBitrate();
-      elements::Element *last = next;
-      if (width != DEFAULT_VIDEO_WIDTH && height != DEFAULT_VIDEO_HEIGHT &&
-          !config->IsMfxGpu()) {
-        last =
-            elements::encoders::build_video_scale(width, height, this, last, i);
+      elements::Element* last = next;
+      if (width != DEFAULT_VIDEO_WIDTH && height != DEFAULT_VIDEO_HEIGHT && !config->IsMfxGpu()) {
+        last = elements::encoders::build_video_scale(width, height, this, last, i);
       }
 
       common::media::Rational rat = config->GetAspectRatio();
       if (rat != unknown_aspect_ratio) {
-        elements::video::ElementAspectRatio *aspect_ratio =
-            new elements::video::ElementAspectRatio(
-                common::MemSPrintf(ASPECT_RATIO_NAME_1U, i));
+        elements::video::ElementAspectRatio* aspect_ratio =
+            new elements::video::ElementAspectRatio(common::MemSPrintf(ASPECT_RATIO_NAME_1U, i));
         aspect_ratio->SetAspectRatio(rat.num, rat.den);
         ElementAdd(aspect_ratio);
         ElementLink(last, aspect_ratio);
@@ -332,26 +310,22 @@ void MosaicStreamBuilder::BuildOutput(elements::Element *video,
 
       const int framerate = config->GetFramerate();
       if (framerate != DEFAULT_FRAME_RATE && !config->IsMfxGpu()) {
-        last =
-            elements::encoders::build_video_framerate(framerate, this, last, i);
+        last = elements::encoders::build_video_framerate(framerate, this, last, i);
       }
 
       elements_line_t video_encoder = elements::encoders::build_video_encoder(
-          config->GetVideoEncoder(), video_bitrate,
-          config->GetVideoEncoderArgs(), config->GetVideoEncoderStrArgs(), this,
-          i);
+          config->GetVideoEncoder(), video_bitrate, config->GetVideoEncoderArgs(), config->GetVideoEncoderStrArgs(),
+          this, i);
       ElementLink(last, video_encoder.front());
       next = video_encoder.back();
 
       if (is_rtp_out) {
-        elements::Element *rtp_pay = nullptr;
+        elements::Element* rtp_pay = nullptr;
         if (elements::encoders::IsH264Encoder(vcodec)) {
           rtp_pay = elements::pay::make_h264_pay(96, i);
-        } else if (vcodec ==
-                   elements::encoders::ElementX265Enc::GetPluginName()) {
+        } else if (vcodec == elements::encoders::ElementX265Enc::GetPluginName()) {
           rtp_pay = elements::pay::make_h265_pay(96, i);
-        } else if (vcodec ==
-                   elements::encoders::ElementMPEG2Enc::GetPluginName()) {
+        } else if (vcodec == elements::encoders::ElementMPEG2Enc::GetPluginName()) {
           rtp_pay = elements::pay::make_mpeg2_pay(96, i);
         } else {
           NOTREACHED();
@@ -362,8 +336,7 @@ void MosaicStreamBuilder::BuildOutput(elements::Element *video,
       }
 
       if (elements::encoders::IsH264Encoder(vcodec)) {
-        elements::parser::ElementH264Parse *premux_parser =
-            elements::parser::make_h264_parser(i);
+        elements::parser::ElementH264Parse* premux_parser = elements::parser::make_h264_parser(i);
         ElementAdd(premux_parser);
         ElementLink(next, premux_parser);
         next = premux_parser;
@@ -373,27 +346,24 @@ void MosaicStreamBuilder::BuildOutput(elements::Element *video,
     }
 
     if (config->HaveAudio()) {
-      elements::ElementQueue *audio_tee_queue = new elements::ElementQueue(
-          common::MemSPrintf(AUDIO_TEE_QUEUE_NAME_1U, i));
+      elements::ElementQueue* audio_tee_queue =
+          new elements::ElementQueue(common::MemSPrintf(AUDIO_TEE_QUEUE_NAME_1U, i));
       // audio_tee_queue->SetMaxSizeBuffers(4);
       ElementAdd(audio_tee_queue);
-      elements::Element *next = audio_tee_queue;
+      elements::Element* next = audio_tee_queue;
       ElementLink(audio, next);
 
       int audiorate = output.GetAudioBitrate();
       const std::string audio_encoder_str = config->GetAudioEncoder();
       std::string name_codec = common::MemSPrintf(AUDIO_CODEC_NAME_1U, i);
-      elements::Element *audio_encoder = elements::encoders::make_audio_encoder(
-          audio_encoder_str, name_codec, audiorate);
+      elements::Element* audio_encoder =
+          elements::encoders::make_audio_encoder(audio_encoder_str, name_codec, audiorate);
       ElementAdd(audio_encoder);
-      if (audio_encoder_str ==
-          elements::encoders::ElementMP3Enc::GetPluginName()) {
-        elements::audio::ElementAudioResample *audioresample =
-            new elements::audio::ElementAudioResample(
-                common::MemSPrintf(AUDIO_RESAMPLE_NAME_1U, i));
-        elements::parser::ElementMPEGAudioParse *mpegaudioparse =
-            new elements::parser::ElementMPEGAudioParse(
-                common::MemSPrintf(MPEG_AUDIO_PARSE_NAME_1U, i));
+      if (audio_encoder_str == elements::encoders::ElementMP3Enc::GetPluginName()) {
+        elements::audio::ElementAudioResample* audioresample =
+            new elements::audio::ElementAudioResample(common::MemSPrintf(AUDIO_RESAMPLE_NAME_1U, i));
+        elements::parser::ElementMPEGAudioParse* mpegaudioparse =
+            new elements::parser::ElementMPEGAudioParse(common::MemSPrintf(MPEG_AUDIO_PARSE_NAME_1U, i));
 
         ElementAdd(audioresample);
         ElementAdd(mpegaudioparse);
@@ -408,8 +378,7 @@ void MosaicStreamBuilder::BuildOutput(elements::Element *video,
       }
 
       if (is_rtp_out) {
-        elements::pay::ElementRtpAACPay *rtp_pay =
-            elements::pay::make_aac_pay(97, i);
+        elements::pay::ElementRtpAACPay* rtp_pay = elements::pay::make_aac_pay(97, i);
         ElementAdd(rtp_pay);
         ElementLink(next, rtp_pay);
         next = rtp_pay;
@@ -418,30 +387,28 @@ void MosaicStreamBuilder::BuildOutput(elements::Element *video,
       ElementLink(next, mux);
     }
 
-    elements::Element *sink = BuildGenericOutput(output, i);
+    elements::Element* sink = BuildGenericOutput(output, i);
     ElementAdd(sink);
     ElementLink(mux, sink);
   }
 }
 
-void MosaicStreamBuilder::HandleDecodebinCreated(
-    elements::ElementDecodebin *decodebin) {
+void MosaicStreamBuilder::HandleDecodebinCreated(elements::ElementDecodebin* decodebin) {
   if (observer_) {
-    MosaicStream *srcdec_observer = static_cast<MosaicStream *>(observer_);
+    MosaicStream* srcdec_observer = static_cast<MosaicStream*>(observer_);
     srcdec_observer->OnDecodebinCreated(decodebin);
   }
 }
 
-void MosaicStreamBuilder::HandleCairoCreated(
-    elements::video::ElementCairoOverlay *cairo,
-    const MosaicImageOptions &options) {
+void MosaicStreamBuilder::HandleCairoCreated(elements::video::ElementCairoOverlay* cairo,
+                                             const MosaicImageOptions& options) {
   if (observer_) {
-    MosaicStream *srcdec_observer = static_cast<MosaicStream *>(observer_);
+    MosaicStream* srcdec_observer = static_cast<MosaicStream*>(observer_);
     srcdec_observer->OnCairoCreated(cairo, options);
   }
 }
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

@@ -15,7 +15,7 @@
 #pragma once
 
 #include <map>
-#include <string> // for string
+#include <string>  // for string
 
 #include <common/uri/url.h>
 
@@ -51,10 +51,8 @@
 
 #define VIDEO_CAPS_DEVICE_NAME_1U "video_caps_device_%lu"
 #define VIDEO_SCALE_CAPS_FILTER_NAME_1U "videoscale_capsfilter_%lu"
-#define VIDEO_X264ENC_CAPS_FILTER_STREAM_FORMAT_NAME_1U                        \
-  "x264enc_capsfilter_stream_format_%lu"
-#define VIDEO_X264ENC_CAPS_FILTER_PROFILE_NAME_1U                              \
-  "x264enc_capsfilter_profile_%lu"
+#define VIDEO_X264ENC_CAPS_FILTER_STREAM_FORMAT_NAME_1U "x264enc_capsfilter_stream_format_%lu"
+#define VIDEO_X264ENC_CAPS_FILTER_PROFILE_NAME_1U "x264enc_capsfilter_profile_%lu"
 #define VIDEO_SCALE_NAME_1U "videoscale_%lu"
 #define VIDEO_BOX_NAME_1U "videobox_%lu"
 #define VIDEO_RATE_CAPS_FILTER_NAME_1U "videorate_capsfilter_%lu"
@@ -107,58 +105,58 @@ typedef uint8_t decklink_video_mode_t;
 typedef std::map<std::string, uint32_t> video_encoders_args_t;
 typedef std::map<std::string, std::string> video_encoders_str_args_t;
 
-bool GetElementId(const std::string &name, element_id_t *elem_id);
-bool GetPadId(const std::string &name, int *pad_id);
+bool GetElementId(const std::string& name, element_id_t* elem_id);
+bool GetPadId(const std::string& name, int* pad_id);
 
 enum SinkDeviceType { SCREEN_OUTPUT, DECKLINK_OUTPUT };
 
 enum SupportedOtherType {
-  APPLICATION_HLS_TYPE,      // "application/x-hls"
-  APPLICATION_ICY_TYPE,      // "application/x-icy"
-  APPLICATION_TELETEXT_TYPE, // "application/x-teletext"
-  APPLICATION_GZIP_TYPE,     // "application/x-gzip"
-  SUBPICTURE_DVB_TYPE,       // "subpicture/x-dvb"
-  IMAGE_PNG_TYPE,            // "image/png"
-  IMAGE_JPEG_TYPE            // "image/jpeg"
+  APPLICATION_HLS_TYPE,       // "application/x-hls"
+  APPLICATION_ICY_TYPE,       // "application/x-icy"
+  APPLICATION_TELETEXT_TYPE,  // "application/x-teletext"
+  APPLICATION_GZIP_TYPE,      // "application/x-gzip"
+  SUBPICTURE_DVB_TYPE,        // "subpicture/x-dvb"
+  IMAGE_PNG_TYPE,             // "image/png"
+  IMAGE_JPEG_TYPE             // "image/jpeg"
 };
 
 enum SupportedDemuxers {
-  VIDEO_MPEGTS_DEMUXER, // "video/mpegts"
-  VIDEO_FLV_DEMUXER     // "video/x-flv"
+  VIDEO_MPEGTS_DEMUXER,  // "video/mpegts"
+  VIDEO_FLV_DEMUXER      // "video/x-flv"
 };
 
 enum SupportedVideoCodecs {
-  VIDEO_H264_CODEC, // video/x-h264
-  VIDEO_MPEG_CODEC, // video/mpeg
-  VIDEO_H265_CODEC  // video/x-h265
+  VIDEO_H264_CODEC,  // video/x-h264
+  VIDEO_MPEG_CODEC,  // video/mpeg
+  VIDEO_H265_CODEC   // video/x-h265
 };
 
 enum SupportedAudioCodecs {
-  AUDIO_MPEG_CODEC, // "audio/mpeg"
-  AUDIO_AAC_CODEC,  // "audio/aac"
-  AUDIO_AC3_CODEC   // "audio/x-ac3"
+  AUDIO_MPEG_CODEC,  // "audio/mpeg"
+  AUDIO_AAC_CODEC,   // "audio/aac"
+  AUDIO_AC3_CODEC    // "audio/x-ac3"
 };
 
 enum SupportedRawStreams {
-  VIDEO_RAW_STREAM, // video/x-raw
-  AUDIO_RAW_STREAM  // audio/x-raw
+  VIDEO_RAW_STREAM,  // video/x-raw
+  AUDIO_RAW_STREAM   // audio/x-raw
 };
 
-bool IsOtherFromType(const std::string &type, SupportedOtherType *oc);
-bool IsDemuxerFromType(const std::string &type, SupportedDemuxers *dc);
-bool IsVideoCodecFromType(const std::string &type, SupportedVideoCodecs *vc);
-bool IsAudioCodecFromType(const std::string &type, SupportedAudioCodecs *ac);
-bool IsRawStreamFromType(const std::string &type, SupportedRawStreams *rc);
+bool IsOtherFromType(const std::string& type, SupportedOtherType* oc);
+bool IsDemuxerFromType(const std::string& type, SupportedDemuxers* dc);
+bool IsVideoCodecFromType(const std::string& type, SupportedVideoCodecs* vc);
+bool IsAudioCodecFromType(const std::string& type, SupportedAudioCodecs* ac);
+bool IsRawStreamFromType(const std::string& type, SupportedRawStreams* rc);
 
 std::string GenHttpTsTemplate(time_t msec);
-bool GetIndexFromHttpTsTemplate(const std::string &file_name, uint64_t *index);
+bool GetIndexFromHttpTsTemplate(const std::string& file_name, uint64_t* index);
 
-bool IsScreenUrl(const common::uri::Url &url);
-bool IsDecklinkUrl(const common::uri::Url &url);
-bool IsDeviceOutUrl(const common::uri::Url &url, SinkDeviceType *type);
+bool IsScreenUrl(const common::uri::Url& url);
+bool IsDecklinkUrl(const common::uri::Url& url);
+bool IsDeviceOutUrl(const common::uri::Url& url, SinkDeviceType* type);
 
-bool IsRecordingUrl(const common::uri::Url &url);
-bool IsFakeUrl(const common::uri::Url &url);
+bool IsRecordingUrl(const common::uri::Url& url);
+bool IsFakeUrl(const common::uri::Url& url);
 
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace stream
+}  // namespace iptv_cloud

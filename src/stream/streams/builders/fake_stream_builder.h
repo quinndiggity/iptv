@@ -22,16 +22,16 @@ namespace streams {
 namespace builders {
 
 class FakeStreamBuilder : public EncodingStreamBuilder {
-public:
-  FakeStreamBuilder(EncodingConfig *api, SrcDecodeBinStream *observer);
+ public:
+  FakeStreamBuilder(EncodingConfig* api, SrcDecodeBinStream* observer);
 
   virtual Connector BuildOutput(Connector conn) override;
 
-private:
+ private:
   Connector BuildFakeOutput(Connector conn);
 };
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

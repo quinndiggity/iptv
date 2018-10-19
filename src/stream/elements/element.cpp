@@ -14,47 +14,58 @@
 
 #include "stream/elements/element.h"
 
-#include <stddef.h> // for NULL
+#include <stddef.h>  // for NULL
 
-#include <gst/gstelement.h> // for GstElement
+#include <gst/gstelement.h>  // for GstElement
 
-#include "stream/gstreamer_utils.h" // for make_element_safe
+#include "stream/gstreamer_utils.h"  // for make_element_safe
 
-#include "gst_constants.h" // for AAC_PARSE, AC3_PARSE, ALSA_SRC
+#include "gst_constants.h"  // for AAC_PARSE, AC3_PARSE, ALSA_SRC
 
 #include "stream/pad/pad.h"
 #include "stream/stypes.h"
 
-#define DECLARE_ELEMENT_TRAITS_SPECIALIZATION(x)                               \
-  template <> const char *ElementsTraits<ELEMENT_##x>::name() { return x; }
+#define DECLARE_ELEMENT_TRAITS_SPECIALIZATION(x)    \
+  template <>                                       \
+  const char* ElementsTraits<ELEMENT_##x>::name() { \
+    return x;                                       \
+  }
 
 namespace iptv_cloud {
 namespace stream {
 namespace elements {
 
-std::string Element::GetPluginName() const { return plugin_name_; }
+std::string Element::GetPluginName() const {
+  return plugin_name_;
+}
 
-std::string Element::GetName() const { return name_; }
+std::string Element::GetName() const {
+  return name_;
+}
 
-bool Element::IsValid() const { return element_ != nullptr; }
+bool Element::IsValid() const {
+  return element_ != nullptr;
+}
 
-GstElement *Element::GetGstElement() const { return element_; }
+GstElement* Element::GetGstElement() const {
+  return element_;
+}
 
-pad::Pad *Element::StaticPad(const gchar *name) const {
-  GstPad *pad = gst_element_get_static_pad(element_, name);
-  pad::Pad *p = new pad::Pad(pad);
+pad::Pad* Element::StaticPad(const gchar* name) const {
+  GstPad* pad = gst_element_get_static_pad(element_, name);
+  pad::Pad* p = new pad::Pad(pad);
   gst_object_unref(pad);
   return p;
 }
 
-pad::Pad *Element::RequestPad(const gchar *name) const {
-  GstPad *pad = gst_element_get_request_pad(element_, name);
-  pad::Pad *p = new pad::Pad(pad);
+pad::Pad* Element::RequestPad(const gchar* name) const {
+  GstPad* pad = gst_element_get_request_pad(element_, name);
+  pad::Pad* p = new pad::Pad(pad);
   gst_object_unref(pad);
   return p;
 }
 
-void Element::ReleaseRequestedPad(pad::Pad *pad) {
+void Element::ReleaseRequestedPad(pad::Pad* pad) {
   if (!pad || !pad->IsValid()) {
     DNOTREACHED();
     return;
@@ -63,17 +74,15 @@ void Element::ReleaseRequestedPad(pad::Pad *pad) {
   gst_element_release_request_pad(GetGstElement(), pad->GetGstPad());
 }
 
-Element::Element(const std::string &plugin_name, const std::string &name)
+Element::Element(const std::string& plugin_name, const std::string& name)
     : Element(plugin_name, name, make_element_safe(plugin_name, name)) {
   element_id_t elem_id;
   if (!GetElementId(name, &elem_id)) {
-    WARNING_LOG() << "Not template plugin '" << plugin_name
-                  << "' named: " << name;
+    WARNING_LOG() << "Not template plugin '" << plugin_name << "' named: " << name;
   }
 }
 
-Element::Element(const std::string &plugin_name, const std::string &name,
-                 GstElement *const element)
+Element::Element(const std::string& plugin_name, const std::string& name, GstElement* const element)
     : name_(name), plugin_name_(plugin_name), element_(element) {}
 
 Element::~Element() {
@@ -84,8 +93,7 @@ Element::~Element() {
   signals_.clear();
 }
 
-gboolean Element::RegisterCallback(const char *signal_name, GCallback cb,
-                                   gpointer user_data) {
+gboolean Element::RegisterCallback(const char* signal_name, GCallback cb, gpointer user_data) {
   gulong id = g_signal_connect(element_, signal_name, cb, user_data);
   if (id == 0) {
     return FALSE;
@@ -99,79 +107,79 @@ void Element::UnRegisterCallback(gulong signal_id) {
   g_signal_handler_disconnect(element_, signal_id);
 }
 
-void Element::SetProperty(const char *property, bool val) {
+void Element::SetProperty(const char* property, bool val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, gfloat val) {
+void Element::SetProperty(const char* property, gfloat val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, gdouble val) {
+void Element::SetProperty(const char* property, gdouble val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, gint8 val) {
+void Element::SetProperty(const char* property, gint8 val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, guint8 val) {
+void Element::SetProperty(const char* property, guint8 val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, gint16 val) {
+void Element::SetProperty(const char* property, gint16 val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, guint16 val) {
+void Element::SetProperty(const char* property, guint16 val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, gint val) {
+void Element::SetProperty(const char* property, gint val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, guint val) {
+void Element::SetProperty(const char* property, guint val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, gint64 val) {
+void Element::SetProperty(const char* property, gint64 val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, guint64 val) {
+void Element::SetProperty(const char* property, guint64 val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, const char *val) {
+void Element::SetProperty(const char* property, const char* val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetProperty(const char *property, const std::string &val) {
+void Element::SetProperty(const char* property, const std::string& val) {
   SetProperty(property, val.c_str());
 }
 
-void Element::SetProperty(const char *property, void *val) {
+void Element::SetProperty(const char* property, void* val) {
   g_object_set(element_, property, val, NULL);
 }
 
-void Element::SetFractionProperty(const char *property, gint num, gint den) {
+void Element::SetFractionProperty(const char* property, gint num, gint den) {
   g_object_set(element_, property, num, den, NULL);
 }
 
-GValue Element::GetProperty(const char *property, GType type) const {
+GValue Element::GetProperty(const char* property, GType type) const {
   GValue value = G_VALUE_INIT;
   g_value_init(&value, type);
   g_object_get_property(G_OBJECT(element_), property, &value);
   return value;
 }
 
-std::string Element::GetElementName(GstElement *element) {
+std::string Element::GetElementName(GstElement* element) {
   if (!element) {
     return std::string();
   }
 
-  gchar *name = gst_element_get_name(element);
+  gchar* name = gst_element_get_name(element);
   if (!name) {
     return std::string();
   }
@@ -181,12 +189,12 @@ std::string Element::GetElementName(GstElement *element) {
   return name_str;
 }
 
-std::string Element::GetPluginName(GstElement *element) {
+std::string Element::GetPluginName(GstElement* element) {
   if (!element) {
     return std::string();
   }
 
-  GstElementFactory *factory = gst_element_get_factory(element);
+  GstElementFactory* factory = gst_element_get_factory(element);
   gpointer plug_feature = GST_PLUGIN_FEATURE(factory);
   if (!plug_feature) {
     return std::string();
@@ -199,24 +207,19 @@ void ElementDecodebin::SetUseBuffering(bool use_buffering) {
   SetProperty("use-buffering", use_buffering);
 }
 
-gboolean ElementDecodebin::RegisterPadAddedCallback(pad_added_callback_t cb,
-                                                    gpointer user_data) {
+gboolean ElementDecodebin::RegisterPadAddedCallback(pad_added_callback_t cb, gpointer user_data) {
   return RegisterCallback("pad-added", G_CALLBACK(cb), user_data);
 }
 
-gboolean
-ElementDecodebin::RegisterAutoplugContinue(autoplug_continue_callback_t cb,
-                                           gpointer user_data) {
+gboolean ElementDecodebin::RegisterAutoplugContinue(autoplug_continue_callback_t cb, gpointer user_data) {
   return RegisterCallback("autoplug-continue", G_CALLBACK(cb), user_data);
 }
 
-gboolean ElementDecodebin::RegisterAutoplugSelect(autoplug_select_callback_t cb,
-                                                  gpointer user_data) {
+gboolean ElementDecodebin::RegisterAutoplugSelect(autoplug_select_callback_t cb, gpointer user_data) {
   return RegisterCallback("autoplug-select", G_CALLBACK(cb), user_data);
 }
 
-gboolean ElementDecodebin::RegisterAutoplugSort(autoplug_sort_callback_t cb,
-                                                gpointer user_data) {
+gboolean ElementDecodebin::RegisterAutoplugSort(autoplug_sort_callback_t cb, gpointer user_data) {
   return RegisterCallback("autoplug-sort", G_CALLBACK(cb), user_data);
 }
 
@@ -232,7 +235,9 @@ void ElementQueue::SetMaxSizeBytes(guint64 val) {
   SetProperty("max-size-bytes", val);
 }
 
-void ElementCapsFilter::SetCaps(GstCaps *caps) { SetProperty("caps", caps); }
+void ElementCapsFilter::SetCaps(GstCaps* caps) {
+  SetProperty("caps", caps);
+}
 
 void ElementQueue2::SetMaxSizeBuffers(guint val) {
   SetProperty("max-size-buffers", val);
@@ -302,9 +307,13 @@ void ElementMFXVpp::SetForceAspectRatio(bool ratio) {
   SetProperty("force-aspect-ratio", ratio);
 }
 
-void ElementMFXVpp::SetWidth(gint width) { SetProperty("width", width); }
+void ElementMFXVpp::SetWidth(gint width) {
+  SetProperty("width", width);
+}
 
-void ElementMFXVpp::SetHeight(gint height) { SetProperty("height", height); }
+void ElementMFXVpp::SetHeight(gint height) {
+  SetProperty("height", height);
+}
 
 void ElementMFXVpp::SetFrameRate(int framerate) {
   SetFractionProperty("framerate", framerate, 1);
@@ -412,6 +421,6 @@ DECLARE_ELEMENT_TRAITS_SPECIALIZATION(VAAPI_POST_PROC)
 DECLARE_ELEMENT_TRAITS_SPECIALIZATION(MFX_VPP)
 DECLARE_ELEMENT_TRAITS_SPECIALIZATION(MFX_H264_DEC)
 
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

@@ -19,11 +19,10 @@ namespace stream {
 namespace streams {
 namespace builders {
 
-CatchupStreamBuilder::CatchupStreamBuilder(TimeshiftConfig *api,
-                                           TimeShiftRecorderStream *observer)
+CatchupStreamBuilder::CatchupStreamBuilder(TimeshiftConfig* api, TimeShiftRecorderStream* observer)
     : base_class(api, observer) {}
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

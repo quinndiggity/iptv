@@ -16,6 +16,6 @@
 
 namespace iptv_cloud {
 namespace server {
-namespace redis {} // namespace redis
-} // namespace server
-} // namespace iptv_cloud
+namespace redis {}  // namespace redis
+}  // namespace server
+}  // namespace iptv_cloud

@@ -19,8 +19,7 @@ namespace stream {
 namespace streams {
 namespace builders {
 
-GstBaseBuilder::GstBaseBuilder(Config *api, IBaseBuilderObserver *observer)
-    : IBaseBuilder(api, observer) {}
+GstBaseBuilder::GstBaseBuilder(Config* api, IBaseBuilderObserver* observer) : IBaseBuilder(api, observer) {}
 
 GstBaseBuilder::~GstBaseBuilder() {}
 
@@ -33,7 +32,7 @@ bool GstBaseBuilder::InitPipeline() {
   return true;
 }
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

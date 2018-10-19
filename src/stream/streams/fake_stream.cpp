@@ -20,35 +20,38 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-FakeStream::FakeStream(EncodingConfig *config, IStreamClient *client)
-    : EncodingStream(config, client,
-                     new StreamStruct(StreamInfo{"fake", ENCODING, {0}, {1}})) {
+FakeStream::FakeStream(EncodingConfig* config, IStreamClient* client)
+    : EncodingStream(config, client, new StreamStruct(StreamInfo{"fake", ENCODING, {0}, {1}})) {}
+
+const char* FakeStream::ClassName() const {
+  return "FakeStream";
 }
 
-const char *FakeStream::ClassName() const { return "FakeStream"; }
-
 FakeStream::~FakeStream() {
-  StreamStruct *stat = GetStats();
+  StreamStruct* stat = GetStats();
   delete stat;
 }
 
-gboolean FakeStream::HandleMainTimerTick() { return TRUE; }
+gboolean FakeStream::HandleMainTimerTick() {
+  return TRUE;
+}
 
 void FakeStream::PreLoop() {}
 
-void FakeStream::PostLoop(ExitStatus status) { UNUSED(status); }
+void FakeStream::PostLoop(ExitStatus status) {
+  UNUSED(status);
+}
 
-IBaseBuilder *FakeStream::CreateBuilder() {
-  EncodingConfig *econf = static_cast<EncodingConfig *>(GetApi());
+IBaseBuilder* FakeStream::CreateBuilder() {
+  EncodingConfig* econf = static_cast<EncodingConfig*>(GetApi());
   return new builders::FakeStreamBuilder(econf, this);
 }
 
-gboolean FakeStream::HandleAsyncBusMessageReceived(GstBus *bus,
-                                                   GstMessage *message) {
+gboolean FakeStream::HandleAsyncBusMessageReceived(GstBus* bus, GstMessage* message) {
   GstMessageType type = GST_MESSAGE_TYPE(message);
   if (type == GST_MESSAGE_ERROR) {
-    GError *err = NULL;
-    gchar *err_msg = NULL;
+    GError* err = NULL;
+    gchar* err_msg = NULL;
 
     gst_message_parse_error(message, &err, &err_msg);
     if (err->code == G_FILE_ERROR_NOENT) {
@@ -60,17 +63,16 @@ gboolean FakeStream::HandleAsyncBusMessageReceived(GstBus *bus,
   return EncodingStream::HandleAsyncBusMessageReceived(bus, message);
 }
 
-void FakeStream::HandleDecodeBinElementAdded(GstBin *bin, GstElement *element) {
+void FakeStream::HandleDecodeBinElementAdded(GstBin* bin, GstElement* element) {
   UNUSED(bin);
   UNUSED(element);
 }
 
-void FakeStream::HandleDecodeBinElementRemoved(GstBin *bin,
-                                               GstElement *element) {
+void FakeStream::HandleDecodeBinElementRemoved(GstBin* bin, GstElement* element) {
   UNUSED(bin);
   UNUSED(element);
 }
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

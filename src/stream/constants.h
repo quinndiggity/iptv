@@ -24,7 +24,7 @@
 // cmd line
 #define CONFIG_FIELD "config"
 #define CONFIG_DATA_FIELD "config_data"
-#define FEEDBACK_DIR_FIELD "feedback_dir" // required
+#define FEEDBACK_DIR_FIELD "feedback_dir"  // required
 #define LOG_LEVEL_FIELD "log_level"
 
 #define DEFAULT_VIDEO_BITRATE 0
@@ -47,13 +47,13 @@
 
 #define DEFAULT_TIMESHIFT_CHUNK_DURATION 120
 
-#define ID_FIELD "id"     // required for daemon and slave
-#define TYPE_FIELD "type" // required for slave
-#define STATS_CREDENTIALS_FIELD "stats_credentials" // required for daemon
+#define ID_FIELD "id"                                // required for daemon and slave
+#define TYPE_FIELD "type"                            // required for slave
+#define STATS_CREDENTIALS_FIELD "stats_credentials"  // required for daemon
 #define LOG_FILE_FIELD "log_file"
 #define AUTO_EXIT_TIME_FIELD "auto_exit_time"
 
-#define INPUT_FIELD "input" // required
+#define INPUT_FIELD "input"  // required
 #define OUTPUT_FIELD "output"
 #define NO_VIDEO_FIELD "no_video"
 #define NO_AUDIO_FIELD "no_audio"
@@ -66,9 +66,9 @@
 #define VIDEO_CODEC_FIELD "video_codec"
 #define AUDIO_CODEC_FIELD "audio_codec"
 #define AUDIO_SELECT_FIELD "audio_select"
-#define TIMESHIFT_DIR_FIELD "timeshift_dir" // requeired in timeshift mode
-#define TIMESHIFT_CHUNK_MAX_LIFE_TIME_FIELD "chunk_max_life_time" // in hours
-#define TIMESHIFT_DELAY_FIELD "timeshift_delay"                   // in mins
+#define TIMESHIFT_DIR_FIELD "timeshift_dir"                        // requeired in timeshift mode
+#define TIMESHIFT_CHUNK_MAX_LIFE_TIME_FIELD "chunk_max_life_time"  // in hours
+#define TIMESHIFT_DELAY_FIELD "timeshift_delay"                    // in mins
 #define TIMESHIFT_CHUNK_DURATION_FIELD "timeshift_chunk_duration"
 #define LOGO_PATH_FIELD "logo_path"
 #define LOGO_POS_FIELD "logo_pos"

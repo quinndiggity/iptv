@@ -26,9 +26,8 @@
 namespace iptv_cloud {
 namespace server {
 
-class StateServiceInfo
-    : public common::serializer::JsonSerializer<StateServiceInfo> {
-public:
+class StateServiceInfo : public common::serializer::JsonSerializer<StateServiceInfo> {
+ public:
   typedef JsonSerializer<StateServiceInfo> base_class;
   StateServiceInfo();
 
@@ -40,11 +39,11 @@ public:
   std::string GetDvbDirectory() const;
   std::string GetCaptureDirectory() const;
 
-protected:
-  virtual common::Error DoDeSerialize(json_object *serialized) override;
-  virtual common::Error SerializeFields(json_object *out) const override;
+ protected:
+  virtual common::Error DoDeSerialize(json_object* serialized) override;
+  virtual common::Error SerializeFields(json_object* out) const override;
 
-private:
+ private:
   std::string jobs_directory_;
   std::string timeshifts_directory_;
   std::string hls_directory_;
@@ -54,5 +53,5 @@ private:
   std::string capture_card_directory_;
 };
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

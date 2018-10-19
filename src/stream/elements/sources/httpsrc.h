@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include "stream/elements/element.h" // for SupportedElements::ELEMENT_SOU...
-#include "stream/elements/sources/sources.h" // for ElementLocation
+#include "stream/elements/element.h"          // for SupportedElements::ELEMENT_SOU...
+#include "stream/elements/sources/sources.h"  // for ElementLocation
 
 // for element_id_t
 
@@ -25,18 +25,17 @@ namespace elements {
 namespace sources {
 
 class ElementSoupHTTPSrc : public ElementLocation<ELEMENT_SOUP_HTTP_SRC> {
-public:
+ public:
   typedef ElementLocation<ELEMENT_SOUP_HTTP_SRC> base_class;
   using base_class::base_class;
 
-  void SetIsLive(bool live = false); // Defaut: false
-  void SetTimeOut(gint secs = 15);   // 0 - 3600 Default: 15
+  void SetIsLive(bool live = false);  // Defaut: false
+  void SetTimeOut(gint secs = 15);    // 0 - 3600 Default: 15
 };
 
-ElementSoupHTTPSrc *make_http_src(const std::string &location,
-                                  gint timeout_secs, element_id_t input_id);
+ElementSoupHTTPSrc* make_http_src(const std::string& location, gint timeout_secs, element_id_t input_id);
 
-} // namespace sources
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sources
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

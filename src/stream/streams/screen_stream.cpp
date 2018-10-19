@@ -22,35 +22,36 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-ScreenStream::ScreenStream(AudioVideoConfig *config, IStreamClient *client,
-                           StreamStruct *stats)
+ScreenStream::ScreenStream(AudioVideoConfig* config, IStreamClient* client, StreamStruct* stats)
     : IBaseStream(config, client, stats) {}
 
-const char *ScreenStream::ClassName() const { return "ScreenStream"; }
+const char* ScreenStream::ClassName() const {
+  return "ScreenStream";
+}
 
-void ScreenStream::OnInpudSrcPadCreated(common::uri::Url::scheme scheme,
-                                        pad::Pad *src_pad, element_id_t id) {
+void ScreenStream::OnInpudSrcPadCreated(common::uri::Url::scheme scheme, pad::Pad* src_pad, element_id_t id) {
   UNUSED(scheme);
   UNUSED(src_pad);
   UNUSED(id);
   // LinkInputPad(sink_pad);
 }
 
-void ScreenStream::OnOutputSinkPadCreated(common::uri::Url::scheme scheme,
-                                          pad::Pad *sink_pad, element_id_t id) {
+void ScreenStream::OnOutputSinkPadCreated(common::uri::Url::scheme scheme, pad::Pad* sink_pad, element_id_t id) {
   UNUSED(scheme);
   LinkOutputPad(sink_pad->GetGstPad(), id);
 }
 
-IBaseBuilder *ScreenStream::CreateBuilder() {
-  AudioVideoConfig *aconf = static_cast<AudioVideoConfig *>(GetApi());
+IBaseBuilder* ScreenStream::CreateBuilder() {
+  AudioVideoConfig* aconf = static_cast<AudioVideoConfig*>(GetApi());
   return new builders::ScreenStreamBuilder(aconf, this);
 }
 
 void ScreenStream::PreLoop() {}
 
-void ScreenStream::PostLoop(ExitStatus status) { UNUSED(status); }
+void ScreenStream::PostLoop(ExitStatus status) {
+  UNUSED(status);
+}
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

@@ -17,17 +17,22 @@
 namespace iptv_cloud {
 namespace server {
 
-DaemonClient::DaemonClient(common::libev::IoLoop *server,
-                           const common::net::socket_info &info)
+DaemonClient::DaemonClient(common::libev::IoLoop* server, const common::net::socket_info& info)
     : base_class(server, info), is_verified_(false) {}
 
 DaemonClient::~DaemonClient() {}
 
-bool DaemonClient::IsVerified() const { return is_verified_; }
+bool DaemonClient::IsVerified() const {
+  return is_verified_;
+}
 
-void DaemonClient::SetVerified(bool verif) { is_verified_ = verif; }
+void DaemonClient::SetVerified(bool verif) {
+  is_verified_ = verif;
+}
 
-const char *DaemonClient::ClassName() const { return "DaemonClient"; }
+const char* DaemonClient::ClassName() const {
+  return "DaemonClient";
+}
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

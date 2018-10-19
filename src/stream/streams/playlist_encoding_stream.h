@@ -23,7 +23,7 @@ namespace elements {
 namespace sources {
 class ElementAppSrc;
 }
-} // namespace elements
+}  // namespace elements
 
 namespace streams {
 
@@ -34,32 +34,30 @@ class PlaylistEncodingStreamBuilder;
 class PlaylistEncodingStream : public EncodingStream {
   friend class builders::PlaylistEncodingStreamBuilder;
 
-public:
-  PlaylistEncodingStream(EncodingConfig *config, IStreamClient *client,
-                         StreamStruct *stats);
+ public:
+  PlaylistEncodingStream(EncodingConfig* config, IStreamClient* client, StreamStruct* stats);
   ~PlaylistEncodingStream();
 
-  virtual const char *ClassName() const override;
+  virtual const char* ClassName() const override;
 
-protected:
+ protected:
   virtual void PreLoop() override;
 
-  virtual void OnAppSrcCreatedCreated(elements::sources::ElementAppSrc *src);
-  virtual IBaseBuilder *CreateBuilder() override;
+  virtual void OnAppSrcCreatedCreated(elements::sources::ElementAppSrc* src);
+  virtual IBaseBuilder* CreateBuilder() override;
 
-  virtual void HandleNeedData(GstElement *pipeline, guint rsize);
+  virtual void HandleNeedData(GstElement* pipeline, guint rsize);
 
-private:
-  static void need_data_callback(GstElement *pipeline, guint size,
-                                 gpointer user_data);
+ private:
+  static void need_data_callback(GstElement* pipeline, guint size, gpointer user_data);
 
-  FILE *OpenNextFile();
+  FILE* OpenNextFile();
 
-  elements::sources::ElementAppSrc *app_src_;
-  FILE *current_file_;
+  elements::sources::ElementAppSrc* app_src_;
+  FILE* current_file_;
   size_t curent_pos_;
 };
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

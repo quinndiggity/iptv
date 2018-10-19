@@ -14,7 +14,7 @@
 
 #include "stream/streams/builders/screen_stream_builder.h"
 
-#include "stream/elements/element.h" // for Element
+#include "stream/elements/element.h"  // for Element
 #include "stream/elements/sink/screen.h"
 #include "stream/elements/sources/sources.h"
 
@@ -28,30 +28,27 @@ namespace stream {
 namespace streams {
 namespace builders {
 
-ScreenStreamBuilder::ScreenStreamBuilder(AudioVideoConfig *api,
-                                         IBaseBuilderObserver *observer)
+ScreenStreamBuilder::ScreenStreamBuilder(AudioVideoConfig* api, IBaseBuilderObserver* observer)
     : GstBaseBuilder(api, observer) {}
 
 Connector ScreenStreamBuilder::BuildInput() {
-  AudioVideoConfig *aconf = static_cast<AudioVideoConfig *>(api_);
-  elements::Element *video = nullptr;
+  AudioVideoConfig* aconf = static_cast<AudioVideoConfig*>(api_);
+  elements::Element* video = nullptr;
   if (aconf->HaveVideo()) {
-    video = new elements::sources::ElementVideoTestSrc(
-        common::MemSPrintf(VIDEO_SRC_NAME_1U, 0));
+    video = new elements::sources::ElementVideoTestSrc(common::MemSPrintf(VIDEO_SRC_NAME_1U, 0));
     ElementAdd(video);
-    pad::Pad *src_pad = video->StaticPad("src");
+    pad::Pad* src_pad = video->StaticPad("src");
     if (src_pad->IsValid()) {
       HandleInputSrcPadCreated(common::uri::Url::unknown, src_pad, 0);
     }
     delete src_pad;
   }
 
-  elements::Element *audio = nullptr;
+  elements::Element* audio = nullptr;
   if (aconf->HaveAudio()) {
-    audio = new elements::sources::ElementAudioTestSrc(
-        common::MemSPrintf(AUDIO_SRC_NAME_1U, 0));
+    audio = new elements::sources::ElementAudioTestSrc(common::MemSPrintf(AUDIO_SRC_NAME_1U, 0));
     ElementAdd(audio);
-    pad::Pad *src_pad = audio->StaticPad("src");
+    pad::Pad* src_pad = audio->StaticPad("src");
     if (src_pad->IsValid()) {
       HandleInputSrcPadCreated(common::uri::Url::unknown, src_pad, 0);
     }
@@ -64,18 +61,22 @@ Connector ScreenStreamBuilder::BuildUdbConnections(Connector conn) {
   return conn;
 }
 
-Connector ScreenStreamBuilder::BuildPostProc(Connector conn) { return conn; }
+Connector ScreenStreamBuilder::BuildPostProc(Connector conn) {
+  return conn;
+}
 
-Connector ScreenStreamBuilder::BuildConverter(Connector conn) { return conn; }
+Connector ScreenStreamBuilder::BuildConverter(Connector conn) {
+  return conn;
+}
 
 Connector ScreenStreamBuilder::BuildOutput(Connector conn) {
-  AudioVideoConfig *aconf = static_cast<AudioVideoConfig *>(api_);
+  AudioVideoConfig* aconf = static_cast<AudioVideoConfig*>(api_);
   output_t out = aconf->GetOutput();
   for (size_t i = 0; i < out.size(); ++i) {
     if (aconf->HaveVideo()) {
-      elements::Element *video = elements::sink::make_video_screen_sink(i);
+      elements::Element* video = elements::sink::make_video_screen_sink(i);
       ElementAdd(video);
-      pad::Pad *sink_pad = video->StaticPad("sink");
+      pad::Pad* sink_pad = video->StaticPad("sink");
       if (sink_pad->IsValid()) {
         HandleOutputSinkPadCreated(common::uri::Url::unknown, sink_pad, i);
       }
@@ -86,9 +87,9 @@ Connector ScreenStreamBuilder::BuildOutput(Connector conn) {
     }
 
     if (aconf->HaveAudio()) {
-      elements::Element *audio = elements::sink::make_audio_screen_sink(i + 1);
+      elements::Element* audio = elements::sink::make_audio_screen_sink(i + 1);
       ElementAdd(audio);
-      pad::Pad *sink_pad = audio->StaticPad("sink");
+      pad::Pad* sink_pad = audio->StaticPad("sink");
       if (sink_pad->IsValid()) {
         HandleOutputSinkPadCreated(common::uri::Url::unknown, sink_pad, i);
       }
@@ -102,7 +103,7 @@ Connector ScreenStreamBuilder::BuildOutput(Connector conn) {
   return conn;
 }
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

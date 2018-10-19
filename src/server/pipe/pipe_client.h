@@ -23,35 +23,31 @@ namespace server {
 namespace pipe {
 
 class PipeClient : public common::libev::IoClient {
-public:
-  PipeClient(common::libev::IoLoop *server, descriptor_t read_fd,
-             descriptor_t write_fd);
+ public:
+  PipeClient(common::libev::IoLoop* server, descriptor_t read_fd, descriptor_t write_fd);
   virtual ~PipeClient();
 
-  virtual const char *ClassName() const override;
+  virtual const char* ClassName() const override;
 
-  virtual common::ErrnoError Write(const void *data, size_t size,
-                                   size_t *nwrite_out) override;
-  virtual common::ErrnoError Read(char *out, size_t max_size,
-                                  size_t *nread) override;
-  virtual common::ErrnoError Read(unsigned char *out, size_t max_size,
-                                  size_t *nread) override;
+  virtual common::ErrnoError Write(const void* data, size_t size, size_t* nwrite_out) override;
+  virtual common::ErrnoError Read(char* out, size_t max_size, size_t* nread) override;
+  virtual common::ErrnoError Read(unsigned char* out, size_t max_size, size_t* nread) override;
 
-protected:
+ protected:
   virtual descriptor_t GetFd() const override;
 
-private:
+ private:
   virtual common::ErrnoError DoClose() override;
 
   DISALLOW_COPY_AND_ASSIGN(PipeClient);
 
-  common::libev::PipeReadClient *pipe_read_client_;
-  common::libev::PipeWriteClient *pipe_write_client_;
+  common::libev::PipeReadClient* pipe_read_client_;
+  common::libev::PipeWriteClient* pipe_write_client_;
   const descriptor_t read_fd_;
 };
 
 typedef protocol::ProtocolClient<PipeClient> ProtocoledPipeClient;
 
-} // namespace pipe
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace pipe
+}  // namespace server
+}  // namespace iptv_cloud

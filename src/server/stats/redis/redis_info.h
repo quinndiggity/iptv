@@ -23,23 +23,22 @@ namespace stats {
 namespace redis {
 
 class RedisInfo : public common::serializer::JsonSerializer<RedisInfo> {
-public:
+ public:
   typedef JsonSerializer<RedisInfo> base_class;
-  typedef iptv_cloud::server::redis::redis_configuration_t
-      redis_configuration_t;
+  typedef iptv_cloud::server::redis::redis_configuration_t redis_configuration_t;
   RedisInfo();
 
   redis_configuration_t GetConfig() const;
 
-protected:
-  virtual common::Error DoDeSerialize(json_object *serialized) override;
-  virtual common::Error SerializeFields(json_object *out) const override;
+ protected:
+  virtual common::Error DoDeSerialize(json_object* serialized) override;
+  virtual common::Error SerializeFields(json_object* out) const override;
 
-private:
+ private:
   redis_configuration_t config_;
 };
 
-} // namespace redis
-} // namespace stats
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace redis
+}  // namespace stats
+}  // namespace server
+}  // namespace iptv_cloud

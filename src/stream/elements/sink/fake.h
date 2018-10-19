@@ -14,8 +14,8 @@
 
 #pragma once
 
-#include "stream/elements/element.h" // for SupportedElements::ELEMENT_FAKE_SINK
-#include "stream/elements/sink/sink.h" // for ElementSync
+#include "stream/elements/element.h"    // for SupportedElements::ELEMENT_FAKE_SINK
+#include "stream/elements/sink/sink.h"  // for ElementSync
 
 // for element_id_
 
@@ -25,14 +25,14 @@ namespace elements {
 namespace sink {
 
 class ElementFakeSink : public ElementSync<ELEMENT_FAKE_SINK> {
-public:
+ public:
   typedef ElementSync<ELEMENT_FAKE_SINK> base_class;
   using base_class::base_class;
 };
 
-ElementFakeSink *make_fake_sink(element_id_t sink_id);
+ElementFakeSink* make_fake_sink(element_id_t sink_id);
 
-} // namespace sink
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sink
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

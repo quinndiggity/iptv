@@ -22,12 +22,12 @@ namespace streams {
 namespace builders {
 
 class CatchupStreamBuilder : public TimeShiftRecorderStreamBuilder {
-public:
+ public:
   typedef TimeShiftRecorderStreamBuilder base_class;
-  CatchupStreamBuilder(TimeshiftConfig *api, TimeShiftRecorderStream *observer);
+  CatchupStreamBuilder(TimeshiftConfig* api, TimeShiftRecorderStream* observer);
 };
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

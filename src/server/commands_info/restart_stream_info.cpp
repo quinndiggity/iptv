@@ -21,16 +21,16 @@ namespace server {
 
 RestartStreamInfo::RestartStreamInfo() : base_class(), stream_id_() {}
 
-RestartStreamInfo::RestartStreamInfo(const std::string &stream_id)
-    : stream_id_(stream_id) {}
+RestartStreamInfo::RestartStreamInfo(const std::string& stream_id) : stream_id_(stream_id) {}
 
-std::string RestartStreamInfo::GetStreamID() const { return stream_id_; }
+std::string RestartStreamInfo::GetStreamID() const {
+  return stream_id_;
+}
 
-common::Error RestartStreamInfo::DoDeSerialize(json_object *serialized) {
+common::Error RestartStreamInfo::DoDeSerialize(json_object* serialized) {
   RestartStreamInfo inf;
-  json_object *jid = NULL;
-  json_bool jid_exists =
-      json_object_object_get_ex(serialized, STREAM_ID_FIELD, &jid);
+  json_object* jid = NULL;
+  json_bool jid_exists = json_object_object_get_ex(serialized, STREAM_ID_FIELD, &jid);
   if (!jid_exists) {
     return common::make_error_inval();
   }
@@ -40,11 +40,10 @@ common::Error RestartStreamInfo::DoDeSerialize(json_object *serialized) {
   return common::Error();
 }
 
-common::Error RestartStreamInfo::SerializeFields(json_object *out) const {
-  json_object_object_add(out, STREAM_ID_FIELD,
-                         json_object_new_string(stream_id_.c_str()));
+common::Error RestartStreamInfo::SerializeFields(json_object* out) const {
+  json_object_object_add(out, STREAM_ID_FIELD, json_object_new_string(stream_id_.c_str()));
   return common::Error();
 }
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

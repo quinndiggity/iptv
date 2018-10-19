@@ -16,8 +16,8 @@
 
 // for element_id_t
 
-#include "stream/elements/element.h" // for SupportedElements::ELEMENT_RTMP_SINK
-#include "stream/elements/sink/sink.h" // for ElementSync
+#include "stream/elements/element.h"    // for SupportedElements::ELEMENT_RTMP_SINK
+#include "stream/elements/sink/sink.h"  // for ElementSync
 
 namespace iptv_cloud {
 namespace stream {
@@ -25,17 +25,16 @@ namespace elements {
 namespace sink {
 
 class ElementRtmpSink : public ElementSync<ELEMENT_RTMP_SINK> {
-public:
+ public:
   typedef ElementSync<ELEMENT_RTMP_SINK> base_class;
   using base_class::base_class;
 
-  void SetLocation(const std::string &location);
+  void SetLocation(const std::string& location);
 };
 
-ElementRtmpSink *make_rtmp_sink(element_id_t sink_id,
-                                const std::string &output);
+ElementRtmpSink* make_rtmp_sink(element_id_t sink_id, const std::string& output);
 
-} // namespace sink
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sink
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

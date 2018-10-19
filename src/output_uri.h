@@ -31,19 +31,19 @@
 namespace iptv_cloud {
 
 class OutputUri {
-public:
+ public:
   typedef common::file_system::ascii_directory_string_path http_root_t;
   OutputUri();
-  explicit OutputUri(stream_id_t id, const common::uri::Url &output);
+  explicit OutputUri(stream_id_t id, const common::uri::Url& output);
 
   stream_id_t GetID() const;
   void SetID(stream_id_t id);
 
   common::uri::Url GetOutput() const;
-  void SetOutput(const common::uri::Url &uri);
+  void SetOutput(const common::uri::Url& uri);
 
   http_root_t GetHttpRoot() const;
-  void SetHttpRoot(const http_root_t &root);
+  void SetHttpRoot(const http_root_t& root);
 
   int GetWidth() const;
   void SetWidth(int width);
@@ -57,9 +57,9 @@ public:
   int GetVideoBitrate() const;
   void SetVideoBitrate(int rate);
 
-  bool Equals(const OutputUri &inf) const;
+  bool Equals(const OutputUri& inf) const;
 
-private:
+ private:
   stream_id_t id_;
   common::uri::Url output_;
   http_root_t http_root_;
@@ -71,17 +71,17 @@ private:
   int video_bitrate_;
 };
 
-inline bool operator==(const OutputUri &left, const OutputUri &right) {
+inline bool operator==(const OutputUri& left, const OutputUri& right) {
   return left.Equals(right);
 }
 
-inline bool operator!=(const OutputUri &left, const OutputUri &right) {
+inline bool operator!=(const OutputUri& left, const OutputUri& right) {
   return !operator==(left, right);
 }
 
-} // namespace iptv_cloud
+}  // namespace iptv_cloud
 
 namespace common {
-std::string ConvertToString(const iptv_cloud::OutputUri &value); // json
-bool ConvertFromString(const std::string &from, iptv_cloud::OutputUri *out);
-} // namespace common
+std::string ConvertToString(const iptv_cloud::OutputUri& value);  // json
+bool ConvertFromString(const std::string& from, iptv_cloud::OutputUri* out);
+}  // namespace common

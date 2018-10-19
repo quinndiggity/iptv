@@ -23,21 +23,16 @@
 
 namespace iptv_cloud {
 
-protocol::request_t RestartStreamRequest(protocol::sequance_id_t id,
-                                         protocol::serializet_t msg);
+protocol::request_t RestartStreamRequest(protocol::sequance_id_t id, protocol::serializet_t msg);
 protocol::responce_t RestartStreamResponceSuccess(protocol::sequance_id_t id);
 
-protocol::request_t StopStreamRequest(protocol::sequance_id_t id,
-                                      protocol::serializet_t msg);
+protocol::request_t StopStreamRequest(protocol::sequance_id_t id, protocol::serializet_t msg);
 protocol::responce_t StopStreamResponceSuccess(protocol::sequance_id_t id);
 
-protocol::request_t ChangedSourcesStreamRequest(protocol::sequance_id_t id,
-                                                protocol::serializet_t msg);
-protocol::responce_t
-ChangedSourcesStreamResponceSuccess(protocol::sequance_id_t id);
+protocol::request_t ChangedSourcesStreamRequest(protocol::sequance_id_t id, protocol::serializet_t msg);
+protocol::responce_t ChangedSourcesStreamResponceSuccess(protocol::sequance_id_t id);
 
-protocol::request_t StatisticStreamRequest(protocol::sequance_id_t id,
-                                           protocol::serializet_t msg);
+protocol::request_t StatisticStreamRequest(protocol::sequance_id_t id, protocol::serializet_t msg);
 protocol::responce_t StatisticStreamResponceSuccess(protocol::sequance_id_t id);
 
-} // namespace iptv_cloud
+}  // namespace iptv_cloud

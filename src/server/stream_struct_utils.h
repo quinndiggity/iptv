@@ -21,10 +21,9 @@
 namespace iptv_cloud {
 namespace server {
 // id, type, input, output
-common::ErrnoError AllocSharedStreamStruct(const StreamInfo &sha,
-                                           StreamStruct **stream);
+common::ErrnoError AllocSharedStreamStruct(const StreamInfo& sha, StreamStruct** stream);
 
-void FreeSharedStreamStruct(StreamStruct **data);
+void FreeSharedStreamStruct(StreamStruct** data);
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

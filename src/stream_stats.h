@@ -20,8 +20,8 @@
 
 namespace iptv_cloud {
 
-class StreamStats { // only compile time size fields
-public:
+class StreamStats {  // only compile time size fields
+ public:
   StreamStats();
   explicit StreamStats(stream_id_t sid);
 
@@ -46,23 +46,23 @@ public:
 
   void UpdateCheckPoint();
 
-  void SetDesireBytesPerSecond(const common::media::DesireBytesPerSec &bps);
+  void SetDesireBytesPerSecond(const common::media::DesireBytesPerSec& bps);
   common::media::DesireBytesPerSec GetDesireBytesPerSecond() const;
 
   void SetIsBroken(bool broken);
   bool IsBroken() const;
 
-private:
+ private:
   stream_id_t id_;
 
-  time_t last_update_time_; // up_time
-  size_t total_bytes_;      // received bytes
-  size_t prev_total_bytes_; // checkpoint received bytes
-  size_t bytes_per_second_; // bps
+  time_t last_update_time_;  // up_time
+  size_t total_bytes_;       // received bytes
+  size_t prev_total_bytes_;  // checkpoint received bytes
+  size_t bytes_per_second_;  // bps
 
   common::media::DesireBytesPerSec desire_bytes_per_second_;
 
   bool is_broken_;
 };
 
-} // namespace iptv_cloud
+}  // namespace iptv_cloud

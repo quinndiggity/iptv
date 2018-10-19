@@ -24,8 +24,7 @@ namespace iptv_cloud {
 namespace stream {
 namespace dumper {
 
-IDumper *DumpersFactory::CreateDumper(
-    const common::file_system::ascii_file_string_path &path) {
+IDumper* DumpersFactory::CreateDumper(const common::file_system::ascii_file_string_path& path) {
   if (!path.IsValid()) {
     return nullptr;
   }
@@ -38,6 +37,6 @@ IDumper *DumpersFactory::CreateDumper(
   return new HtmlDump;
 }
 
-} // namespace dumper
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace dumper
+}  // namespace stream
+}  // namespace iptv_cloud

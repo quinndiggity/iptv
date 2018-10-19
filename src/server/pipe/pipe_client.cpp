@@ -18,28 +18,27 @@ namespace iptv_cloud {
 namespace server {
 namespace pipe {
 
-PipeClient::PipeClient(common::libev::IoLoop *server, descriptor_t read_fd,
-                       descriptor_t write_fd)
+PipeClient::PipeClient(common::libev::IoLoop* server, descriptor_t read_fd, descriptor_t write_fd)
     : common::libev::IoClient(server),
       pipe_read_client_(new common::libev::PipeReadClient(nullptr, read_fd)),
       pipe_write_client_(new common::libev::PipeWriteClient(nullptr, write_fd)),
       read_fd_(read_fd) {}
 
-common::ErrnoError PipeClient::Write(const void *data, size_t size,
-                                     size_t *nwrite_out) {
+common::ErrnoError PipeClient::Write(const void* data, size_t size, size_t* nwrite_out) {
   return pipe_write_client_->Write(data, size, nwrite_out);
 }
 
-common::ErrnoError PipeClient::Read(char *out, size_t max_size, size_t *nread) {
+common::ErrnoError PipeClient::Read(char* out, size_t max_size, size_t* nread) {
   return pipe_read_client_->Read(out, max_size, nread);
 }
 
-common::ErrnoError PipeClient::Read(unsigned char *out, size_t max_size,
-                                    size_t *nread) {
+common::ErrnoError PipeClient::Read(unsigned char* out, size_t max_size, size_t* nread) {
   return pipe_read_client_->Read(out, max_size, nread);
 }
 
-descriptor_t PipeClient::GetFd() const { return read_fd_; }
+descriptor_t PipeClient::GetFd() const {
+  return read_fd_;
+}
 
 common::ErrnoError PipeClient::DoClose() {
   pipe_write_client_->Close();
@@ -47,13 +46,15 @@ common::ErrnoError PipeClient::DoClose() {
   return common::ErrnoError();
 }
 
-const char *PipeClient::ClassName() const { return "PipeClient"; }
+const char* PipeClient::ClassName() const {
+  return "PipeClient";
+}
 
 PipeClient::~PipeClient() {
   destroy(&pipe_write_client_);
   destroy(&pipe_read_client_);
 }
 
-} // namespace pipe
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace pipe
+}  // namespace server
+}  // namespace iptv_cloud

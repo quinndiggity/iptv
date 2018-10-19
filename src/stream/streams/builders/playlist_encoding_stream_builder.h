@@ -22,22 +22,21 @@ namespace elements {
 namespace sources {
 class ElementAppSrc;
 }
-} // namespace elements
+}  // namespace elements
 
 namespace streams {
 class PlaylistEncodingStream;
 namespace builders {
 class PlaylistEncodingStreamBuilder : public EncodingStreamBuilder {
-public:
-  PlaylistEncodingStreamBuilder(PlaylistEncodingConfig *api,
-                                PlaylistEncodingStream *observer);
-  virtual elements::Element *BuildInputSrc() override;
+ public:
+  PlaylistEncodingStreamBuilder(PlaylistEncodingConfig* api, PlaylistEncodingStream* observer);
+  virtual elements::Element* BuildInputSrc() override;
 
-protected:
-  void HandleAppSrcCreated(elements::sources::ElementAppSrc *src);
+ protected:
+  void HandleAppSrcCreated(elements::sources::ElementAppSrc* src);
 };
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

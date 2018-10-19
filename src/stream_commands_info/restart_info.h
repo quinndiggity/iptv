@@ -18,13 +18,13 @@
 namespace iptv_cloud {
 
 class RestartInfo : public common::serializer::JsonSerializer<RestartInfo> {
-public:
+ public:
   typedef JsonSerializer<RestartInfo> base_class;
   RestartInfo();
 
-protected:
-  virtual common::Error DoDeSerialize(json_object *serialized) override;
-  virtual common::Error SerializeFields(json_object *out) const override;
+ protected:
+  virtual common::Error DoDeSerialize(json_object* serialized) override;
+  virtual common::Error SerializeFields(json_object* out) const override;
 };
 
-} // namespace iptv_cloud
+}  // namespace iptv_cloud

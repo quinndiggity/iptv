@@ -15,5 +15,5 @@
 #include "utils/arg_converter.h"
 
 namespace iptv_cloud {
-namespace utils {} // namespace utils
-} // namespace iptv_cloud
+namespace utils {}  // namespace utils
+}  // namespace iptv_cloud

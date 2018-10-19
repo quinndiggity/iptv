@@ -25,21 +25,21 @@
 #include <common/time.h>
 
 extern "C" {
-#include "sds_fasto.h" // for sdsfreesplitres, sds
+#include "sds_fasto.h"  // for sdsfreesplitres, sds
 }
 
 #include "stream/ibase_stream.h"
 
 #include "gst_constants.h"
-#include "stream/constants.h" // for ID_FIELD
-#include "stream_commands.h"  // for CMD_FIELD
+#include "stream/constants.h"  // for ID_FIELD
+#include "stream_commands.h"   // for CMD_FIELD
 
 #include "stream_commands_info/changed_sources_info.h"
 #include "stream_commands_info/restart_info.h"
 #include "stream_commands_info/stop_info.h"
 #include "stream_commands_info/stream_struct_info.h"
 
-#include "stream/streams_factory.h" // for isTimeshiftP...
+#include "stream/streams_factory.h"  // for isTimeshiftP...
 
 #include "probes.h"
 #include "protocol/protocol.h"
@@ -55,13 +55,12 @@ namespace stream {
 
 namespace {
 
-bool PrepareStatus(StreamStruct *stats, StreamStatus st, double cpu_load,
-                   std::string *status_out) {
+bool PrepareStatus(StreamStruct* stats, StreamStatus st, double cpu_load, std::string* status_out) {
   if (!stats || !status_out) {
     return false;
   }
 
-  if (isnan(cpu_load) || isinf(cpu_load)) { // stable double
+  if (isnan(cpu_load) || isinf(cpu_load)) {  // stable double
     cpu_load = 0.0;
   }
 
@@ -80,74 +79,80 @@ bool PrepareStatus(StreamStruct *stats, StreamStatus st, double cpu_load,
 }
 
 class StreamServer : public common::libev::IoLoop {
-public:
+ public:
   typedef common::libev::IoLoop base_class;
-  StreamServer(common::libev::IoClient *command_client,
-               common::libev::IoLoopObserver *observer = nullptr)
+  StreamServer(common::libev::IoClient* command_client, common::libev::IoLoopObserver* observer = nullptr)
       : base_class(new common::libev::LibEvLoop, observer),
-        command_client_(
-            static_cast<protocol::protocol_client_t *>(command_client)) {
+        command_client_(static_cast<protocol::protocol_client_t*>(command_client)) {
     CHECK(command_client);
   }
 
-  void WriteRequest(const protocol::request_t &request) WARN_UNUSED_RESULT {
+  void WriteRequest(const protocol::request_t& request) WARN_UNUSED_RESULT {
     auto cb = [this, request] { command_client_->WriteRequest(request); };
     ExecInLoopThread(cb);
   }
 
-  virtual const char *ClassName() const override { return "StreamServer"; }
+  virtual const char* ClassName() const override { return "StreamServer"; }
 
-  virtual common::libev::IoChild *CreateChild() override {
+  virtual common::libev::IoChild* CreateChild() override {
     NOTREACHED();
     return nullptr;
   }
 
-  virtual common::libev::IoClient *
-  CreateClient(const common::net::socket_info &info) override {
+  virtual common::libev::IoClient* CreateClient(const common::net::socket_info& info) override {
     UNUSED(info);
     NOTREACHED();
     return nullptr;
   }
 
-  virtual void Started(common::libev::LibEvLoop *loop) override {
+  virtual void Started(common::libev::LibEvLoop* loop) override {
     RegisterClient(command_client_);
     base_class::Started(loop);
   }
 
-  virtual void Stopped(common::libev::LibEvLoop *loop) override {
+  virtual void Stopped(common::libev::LibEvLoop* loop) override {
     UnRegisterClient(command_client_);
     base_class::Stopped(loop);
   }
 
-private:
-  protocol::protocol_client_t *const command_client_;
+ private:
+  protocol::protocol_client_t* const command_client_;
 };
 
-} // namespace
+}  // namespace
 
-ProcessWrapper::ProcessWrapper(const std::string &process_name,
-                               const std::string &feedback_dir,
-                               const utils::ArgsMap &config_args,
-                               common::libev::IoClient *command_client,
-                               StreamStruct *mem)
-    : IBaseStream::IStreamClient(), max_restart_attempts_(restart_attempts),
-      process_name_(process_name), feedback_dir_(feedback_dir),
-      config_args_(config_args), restart_attempts_(0), stop_mutex_(),
-      stop_cond_(), stop_(false), channel_id_(), ev_thread_(),
-      loop_(new StreamServer(command_client, this)), ttl_master_timer_(0),
-      ttl_sec_(0), libev_stated_(2), mem_(mem),
+ProcessWrapper::ProcessWrapper(const std::string& process_name,
+                               const std::string& feedback_dir,
+                               const utils::ArgsMap& config_args,
+                               common::libev::IoClient* command_client,
+                               StreamStruct* mem)
+    : IBaseStream::IStreamClient(),
+      max_restart_attempts_(restart_attempts),
+      process_name_(process_name),
+      feedback_dir_(feedback_dir),
+      config_args_(config_args),
+      restart_attempts_(0),
+      stop_mutex_(),
+      stop_cond_(),
+      stop_(false),
+      channel_id_(),
+      ev_thread_(),
+      loop_(new StreamServer(command_client, this)),
+      ttl_master_timer_(0),
+      ttl_sec_(0),
+      libev_stated_(2),
+      mem_(mem),
       //
-      origin_(nullptr), id_() {
+      origin_(nullptr),
+      id_() {
   CHECK(mem);
 
   std::string timeshift_dir;
   if (utils::ArgsGetValue(config_args_, TIMESHIFT_DIR_FIELD, &timeshift_dir)) {
     if (!common::file_system::is_directory_exist(timeshift_dir)) {
-      common::ErrnoError err =
-          common::file_system::create_directory(timeshift_dir, true);
+      common::ErrnoError err = common::file_system::create_directory(timeshift_dir, true);
       if (err) {
-        ERROR_LOG() << "Failed to create TimeShift directory, path: "
-                    << timeshift_dir;
+        ERROR_LOG() << "Failed to create TimeShift directory, path: " << timeshift_dir;
       } else {
         DEBUG_LOG() << "TimeShift directory exists, path: " << timeshift_dir;
       }
@@ -161,8 +166,7 @@ ProcessWrapper::ProcessWrapper(const std::string &process_name,
     max_restart_attempts_ = attemps;
   }
 
-  CHECK(max_restart_attempts_ > 0)
-      << "restart attempts must be grether than 0!";
+  CHECK(max_restart_attempts_ > 0) << "restart attempts must be grether than 0!";
   if (!utils::ArgsGetValue(config_args_, ID_FIELD, &channel_id_)) {
     CRITICAL_LOG() << "Define " ID_FIELD " variable and make it valid.";
   }
@@ -202,24 +206,21 @@ int ProcessWrapper::Exec() {
   bool is_timeshift_player = IsTimeshiftPlayer(config_args_, &tinfo);
   time_t timeshift_chunk_duration;
   if (is_timeshift_player) {
-    if (!utils::ArgsGetValue(config_args_, TIMESHIFT_CHUNK_DURATION_FIELD,
-                             &timeshift_chunk_duration)) {
+    if (!utils::ArgsGetValue(config_args_, TIMESHIFT_CHUNK_DURATION_FIELD, &timeshift_chunk_duration)) {
       timeshift_chunk_duration = DEFAULT_TIMESHIFT_CHUNK_DURATION;
     }
   }
 
   while (!stop_) {
     chunk_index_t start_chunk_index = invalid_chunk_index;
-    if (is_timeshift_player) { // if timeshift player or cathcup player
-      while (!tinfo.FindChunkToPlay(timeshift_chunk_duration,
-                                    &start_chunk_index)) {
+    if (is_timeshift_player) {  // if timeshift player or cathcup player
+      while (!tinfo.FindChunkToPlay(timeshift_chunk_duration, &start_chunk_index)) {
         DumpStreamStatus(mem_, SWAITING);
 
         {
           std::unique_lock<std::mutex> lock(stop_mutex_);
-          std::cv_status interrupt_status = stop_cond_.wait_for(
-              lock, std::chrono::seconds(timeshift_chunk_duration));
-          if (interrupt_status == std::cv_status::no_timeout) { // if notify
+          std::cv_status interrupt_status = stop_cond_.wait_for(lock, std::chrono::seconds(timeshift_chunk_duration));
+          if (interrupt_status == std::cv_status::no_timeout) {  // if notify
             mem_->restarts++;
             break;
           }
@@ -235,8 +236,7 @@ int ProcessWrapper::Exec() {
     int stabled_status = EXIT_SUCCESS;
     int signal_number = 0;
     time_t start_utc_now = common::time::current_mstime() / 1000;
-    origin_ = StreamsFactory::GetInstance().CreateStream(
-        config_args_, this, mem_, start_chunk_index);
+    origin_ = StreamsFactory::GetInstance().CreateStream(config_args_, this, mem_, start_chunk_index);
     ExitStatus res = origin_->Exec();
     destroy(&origin_);
     if (res == EXIT_INNER) {
@@ -245,17 +245,14 @@ int ProcessWrapper::Exec() {
 
     time_t end_utc_now = common::time::current_mstime() / 1000;
     time_t diff_utc_time = end_utc_now - start_utc_now;
-    INFO_LOG() << "Stream exit with status: "
-               << (stabled_status ? "FAILURE" : "SUCCESS")
-               << ", signal: " << signal_number
-               << ", working time: " << diff_utc_time << " seconds.";
+    INFO_LOG() << "Stream exit with status: " << (stabled_status ? "FAILURE" : "SUCCESS")
+               << ", signal: " << signal_number << ", working time: " << diff_utc_time << " seconds.";
     if (stabled_status == EXIT_SUCCESS) {
       restart_attempts_ = 0;
       continue;
     }
 
-    if (mem_->WithoutRestartTime() >
-        restart_after_frozen_sec * 10) { // if longer work
+    if (mem_->WithoutRestartTime() > restart_after_frozen_sec * 10) {  // if longer work
       restart_attempts_ = 0;
       continue;
     }
@@ -266,18 +263,15 @@ int ProcessWrapper::Exec() {
       DumpStreamStatus(mem_, SFROZEN);
       wait_time = restart_after_frozen_sec;
     } else {
-      wait_time = restart_attempts_ *
-                  (restart_after_frozen_sec / max_restart_attempts_);
+      wait_time = restart_attempts_ * (restart_after_frozen_sec / max_restart_attempts_);
     }
 
-    INFO_LOG() << process_name_ << " automatically restarted after "
-               << wait_time << " seconds, stream restarts: " << mem_->restarts
-               << ", attempts: " << restart_attempts_;
+    INFO_LOG() << process_name_ << " automatically restarted after " << wait_time
+               << " seconds, stream restarts: " << mem_->restarts << ", attempts: " << restart_attempts_;
 
     std::unique_lock<std::mutex> lock(stop_mutex_);
-    std::cv_status interrupt_status =
-        stop_cond_.wait_for(lock, std::chrono::seconds(wait_time));
-    if (interrupt_status == std::cv_status::no_timeout) { // if notify
+    std::cv_status interrupt_status = stop_cond_.wait_for(lock, std::chrono::seconds(wait_time));
+    if (interrupt_status == std::cv_status::no_timeout) {  // if notify
       restart_attempts_ = 0;
     }
   }
@@ -302,7 +296,7 @@ void ProcessWrapper::Restart() {
   StopStream();
 }
 
-void ProcessWrapper::PreLooped(common::libev::IoLoop *loop) {
+void ProcessWrapper::PreLooped(common::libev::IoLoop* loop) {
   UNUSED(loop);
 
   if (ttl_sec_) {
@@ -314,7 +308,7 @@ void ProcessWrapper::PreLooped(common::libev::IoLoop *loop) {
   INFO_LOG() << "Child listening started!";
 }
 
-void ProcessWrapper::PostLooped(common::libev::IoLoop *loop) {
+void ProcessWrapper::PostLooped(common::libev::IoLoop* loop) {
   UNUSED(loop);
   if (ttl_master_timer_) {
     loop_->RemoveTimer(ttl_master_timer_);
@@ -322,29 +316,26 @@ void ProcessWrapper::PostLooped(common::libev::IoLoop *loop) {
   INFO_LOG() << "Child listening finished!";
 }
 
-void ProcessWrapper::Accepted(common::libev::IoClient *client) {
+void ProcessWrapper::Accepted(common::libev::IoClient* client) {
   UNUSED(client);
 }
 
-void ProcessWrapper::Moved(common::libev::IoLoop *server,
-                           common::libev::IoClient *client) {
+void ProcessWrapper::Moved(common::libev::IoLoop* server, common::libev::IoClient* client) {
   UNUSED(server);
   UNUSED(client);
 }
 
-void ProcessWrapper::Closed(common::libev::IoClient *client) {
+void ProcessWrapper::Closed(common::libev::IoClient* client) {
   UNUSED(client);
   Stop();
 }
 
-common::ErrnoError
-ProcessWrapper::StreamDataRecived(common::libev::IoClient *client) {
+common::ErrnoError ProcessWrapper::StreamDataRecived(common::libev::IoClient* client) {
   std::string input_command;
-  protocol::protocol_client_t *pclient =
-      static_cast<protocol::protocol_client_t *>(client);
+  protocol::protocol_client_t* pclient = static_cast<protocol::protocol_client_t*>(client);
   common::ErrnoError err = pclient->ReadCommand(&input_command);
-  if (err) { // i don't want handle spam, comand must be formated according
-             // protocol
+  if (err) {  // i don't want handle spam, comand must be formated according
+              // protocol
     return err;
   }
 
@@ -352,26 +343,22 @@ ProcessWrapper::StreamDataRecived(common::libev::IoClient *client) {
   protocol::sequance_id_t id;
   std::string cmd_str;
 
-  common::Error err_parse =
-      common::protocols::three_way_handshake::ParseCommand(input_command, &seq,
-                                                           &id, &cmd_str);
+  common::Error err_parse = common::protocols::three_way_handshake::ParseCommand(input_command, &seq, &id, &cmd_str);
   if (err_parse) {
     const std::string err_str = err_parse->GetDescription();
     return common::make_errno_error(err_str, EAGAIN);
   }
 
   int argc;
-  sds *argv = sdssplitargslong(cmd_str.c_str(), &argc);
+  sds* argv = sdssplitargslong(cmd_str.c_str(), &argc);
   if (argv == NULL) {
-    const std::string error_str =
-        "PROBLEM PARSING INNER COMMAND: " + input_command;
+    const std::string error_str = "PROBLEM PARSING INNER COMMAND: " + input_command;
     return common::make_errno_error(error_str, EAGAIN);
   }
 
   INFO_LOG() << "HANDLE INNER COMMAND client[" << pclient->GetFormatedName()
-             << "] seq: "
-             << common::protocols::three_way_handshake::CmdIdToString(seq)
-             << ", id:" << id << ", cmd: " << cmd_str;
+             << "] seq: " << common::protocols::three_way_handshake::CmdIdToString(seq) << ", id:" << id
+             << ", cmd: " << cmd_str;
   if (seq == REQUEST_COMMAND) {
     err = HandleRequestCommand(client, id, argc, argv);
     if (err) {
@@ -392,7 +379,7 @@ ProcessWrapper::StreamDataRecived(common::libev::IoClient *client) {
   return common::ErrnoError();
 }
 
-void ProcessWrapper::DataReceived(common::libev::IoClient *client) {
+void ProcessWrapper::DataReceived(common::libev::IoClient* client) {
   auto err = StreamDataRecived(client);
   if (err) {
     DEBUG_MSG_ERROR(err, common::logging::LOG_LEVEL_ERR);
@@ -402,12 +389,11 @@ void ProcessWrapper::DataReceived(common::libev::IoClient *client) {
   }
 }
 
-void ProcessWrapper::DataReadyToWrite(common::libev::IoClient *client) {
+void ProcessWrapper::DataReadyToWrite(common::libev::IoClient* client) {
   UNUSED(client);
 }
 
-void ProcessWrapper::TimerEmited(common::libev::IoLoop *loop,
-                                 common::libev::timer_id_t id) {
+void ProcessWrapper::TimerEmited(common::libev::IoLoop* loop, common::libev::timer_id_t id) {
   UNUSED(loop);
   if (id == ttl_master_timer_) {
     NOTICE_LOG() << "Timeout notified ttl was: " << ttl_sec_;
@@ -415,27 +401,27 @@ void ProcessWrapper::TimerEmited(common::libev::IoLoop *loop,
   }
 }
 
-void ProcessWrapper::Accepted(common::libev::IoChild *child) { UNUSED(child); }
+void ProcessWrapper::Accepted(common::libev::IoChild* child) {
+  UNUSED(child);
+}
 
-void ProcessWrapper::Moved(common::libev::IoLoop *server,
-                           common::libev::IoChild *child) {
+void ProcessWrapper::Moved(common::libev::IoLoop* server, common::libev::IoChild* child) {
   UNUSED(server);
   UNUSED(child);
 }
 
-void ProcessWrapper::ChildStatusChanged(common::libev::IoChild *child,
-                                        int status) {
+void ProcessWrapper::ChildStatusChanged(common::libev::IoChild* child, int status) {
   UNUSED(child);
   UNUSED(status);
 }
 
-common::ErrnoError
-ProcessWrapper::HandleRequestCommand(common::libev::IoClient *client,
-                                     protocol::sequance_id_t id, int argc,
-                                     char *argv[]) {
+common::ErrnoError ProcessWrapper::HandleRequestCommand(common::libev::IoClient* client,
+                                                        protocol::sequance_id_t id,
+                                                        int argc,
+                                                        char* argv[]) {
   UNUSED(id);
   UNUSED(argc);
-  char *command = argv[0];
+  char* command = argv[0];
 
   if (IS_EQUAL_COMMAND(command, STOP_STREAM)) {
     return HandleRequestStopStream(client, id, argc, argv);
@@ -448,10 +434,10 @@ ProcessWrapper::HandleRequestCommand(common::libev::IoClient *client,
   return common::ErrnoError();
 }
 
-common::ErrnoError
-ProcessWrapper::HandleResponceCommand(common::libev::IoClient *client,
-                                      protocol::sequance_id_t id, int argc,
-                                      char *argv[]) {
+common::ErrnoError ProcessWrapper::HandleResponceCommand(common::libev::IoClient* client,
+                                                         protocol::sequance_id_t id,
+                                                         int argc,
+                                                         char* argv[]) {
   UNUSED(client);
   UNUSED(id);
   UNUSED(argc);
@@ -462,23 +448,20 @@ ProcessWrapper::HandleResponceCommand(common::libev::IoClient *client,
 protocol::sequance_id_t ProcessWrapper::NextRequestID() {
   const seq_id_t next_id = id_++;
   char bytes[sizeof(seq_id_t)];
-  const seq_id_t stabled =
-      common::NetToHost64(next_id); // for human readable hex
+  const seq_id_t stabled = common::NetToHost64(next_id);  // for human readable hex
   memcpy(&bytes, &stabled, sizeof(seq_id_t));
   protocol::sequance_id_t hexed;
-  common::utils::hex::encode(std::string(bytes, sizeof(seq_id_t)), true,
-                             &hexed);
+  common::utils::hex::encode(std::string(bytes, sizeof(seq_id_t)), true, &hexed);
   return hexed;
 }
 
-common::ErrnoError
-ProcessWrapper::HandleRequestStopStream(common::libev::IoClient *client,
-                                        protocol::sequance_id_t id, int argc,
-                                        char *argv[]) {
-  protocol::protocol_client_t *pclient =
-      static_cast<protocol::protocol_client_t *>(client);
+common::ErrnoError ProcessWrapper::HandleRequestStopStream(common::libev::IoClient* client,
+                                                           protocol::sequance_id_t id,
+                                                           int argc,
+                                                           char* argv[]) {
+  protocol::protocol_client_t* pclient = static_cast<protocol::protocol_client_t*>(client);
   if (argc > 1) {
-    json_object *jstop_info = json_tokener_parse(argv[1]);
+    json_object* jstop_info = json_tokener_parse(argv[1]);
     if (!jstop_info) {
       return common::make_errno_error_inval();
     }
@@ -501,14 +484,13 @@ ProcessWrapper::HandleRequestStopStream(common::libev::IoClient *client,
   return common::make_errno_error_inval();
 }
 
-common::ErrnoError
-ProcessWrapper::HandleRequestRestartStream(common::libev::IoClient *client,
-                                           protocol::sequance_id_t id, int argc,
-                                           char *argv[]) {
-  protocol::protocol_client_t *pclient =
-      static_cast<protocol::protocol_client_t *>(client);
+common::ErrnoError ProcessWrapper::HandleRequestRestartStream(common::libev::IoClient* client,
+                                                              protocol::sequance_id_t id,
+                                                              int argc,
+                                                              char* argv[]) {
+  protocol::protocol_client_t* pclient = static_cast<protocol::protocol_client_t*>(client);
   if (argc > 1) {
-    json_object *jrestart_info = json_tokener_parse(argv[1]);
+    json_object* jrestart_info = json_tokener_parse(argv[1]);
     if (!jrestart_info) {
       return common::make_errno_error_inval();
     }
@@ -543,55 +525,48 @@ void ProcessWrapper::RestartStream() {
   }
 }
 
-void ProcessWrapper::OnStatusChanged(IBaseStream *stream, StreamStatus status) {
+void ProcessWrapper::OnStatusChanged(IBaseStream* stream, StreamStatus status) {
   UNUSED(status);
   DumpStreamStatus(stream->GetStats(), stream->GetStatus());
 }
 
-GstPadProbeInfo *ProcessWrapper::OnCheckReveivedData(IBaseStream *stream,
-                                                     Probe *probe,
-                                                     GstPadProbeInfo *info) {
+GstPadProbeInfo* ProcessWrapper::OnCheckReveivedData(IBaseStream* stream, Probe* probe, GstPadProbeInfo* info) {
   UNUSED(stream);
   UNUSED(probe);
   return info;
 }
 
-GstPadProbeInfo *
-ProcessWrapper::OnCheckReveivedOutputData(IBaseStream *stream, Probe *probe,
-                                          GstPadProbeInfo *info) {
+GstPadProbeInfo* ProcessWrapper::OnCheckReveivedOutputData(IBaseStream* stream, Probe* probe, GstPadProbeInfo* info) {
   UNUSED(stream);
   UNUSED(probe);
   return info;
 }
 
-void ProcessWrapper::OnProbeEvent(IBaseStream *stream, Probe *probe,
-                                  GstEvent *event) {
+void ProcessWrapper::OnProbeEvent(IBaseStream* stream, Probe* probe, GstEvent* event) {
   UNUSED(stream);
   UNUSED(probe);
   UNUSED(event);
 }
 
-void ProcessWrapper::OnPipelineEOS(IBaseStream *stream) {
+void ProcessWrapper::OnPipelineEOS(IBaseStream* stream) {
   stream->Quit(EXIT_INNER);
 }
 
-void ProcessWrapper::OnTimeoutUpdated(IBaseStream *stream) {
+void ProcessWrapper::OnTimeoutUpdated(IBaseStream* stream) {
   DumpStreamStatus(stream->GetStats(), stream->GetStatus());
 }
 
-void ProcessWrapper::OnASyncMessageReceived(IBaseStream *stream,
-                                            GstMessage *message) {
+void ProcessWrapper::OnASyncMessageReceived(IBaseStream* stream, GstMessage* message) {
   UNUSED(stream);
   UNUSED(message);
 }
 
-void ProcessWrapper::OnSyncMessageReceived(IBaseStream *stream,
-                                           GstMessage *message) {
+void ProcessWrapper::OnSyncMessageReceived(IBaseStream* stream, GstMessage* message) {
   UNUSED(stream);
   UNUSED(message);
 }
 
-void ProcessWrapper::OnInputChanged(const InputUri &uri) {
+void ProcessWrapper::OnInputChanged(const InputUri& uri) {
   ChangedSouresInfo ch(uri);
   std::string changed_str;
   common::Error err = ch.SerializeToString(&changed_str);
@@ -599,12 +574,11 @@ void ProcessWrapper::OnInputChanged(const InputUri &uri) {
     return;
   }
 
-  protocol::request_t req =
-      ChangedSourcesStreamRequest(NextRequestID(), changed_str);
-  static_cast<StreamServer *>(loop_)->WriteRequest(req);
+  protocol::request_t req = ChangedSourcesStreamRequest(NextRequestID(), changed_str);
+  static_cast<StreamServer*>(loop_)->WriteRequest(req);
 }
 
-void ProcessWrapper::OnPipelineCreated(IBaseStream *stream) {
+void ProcessWrapper::OnPipelineCreated(IBaseStream* stream) {
   common::file_system::ascii_directory_string_path feedback_dir(feedback_dir_);
   auto dump_file = feedback_dir.MakeFileStringPath(DUMP_FILE_NAME);
   if (dump_file) {
@@ -612,14 +586,13 @@ void ProcessWrapper::OnPipelineCreated(IBaseStream *stream) {
   }
 }
 
-void ProcessWrapper::DumpStreamStatus(StreamStruct *stat, StreamStatus st) {
+void ProcessWrapper::DumpStreamStatus(StreamStruct* stat, StreamStatus st) {
   std::string status;
-  if (PrepareStatus(stat, st, common::system_info::GetCpuLoad(getpid()),
-                    &status)) {
+  if (PrepareStatus(stat, st, common::system_info::GetCpuLoad(getpid()), &status)) {
     protocol::request_t req = StatisticStreamRequest(NextRequestID(), status);
-    static_cast<StreamServer *>(loop_)->WriteRequest(req);
+    static_cast<StreamServer*>(loop_)->WriteRequest(req);
   }
 }
 
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace stream
+}  // namespace iptv_cloud

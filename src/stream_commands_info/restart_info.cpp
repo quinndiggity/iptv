@@ -18,16 +18,16 @@ namespace iptv_cloud {
 
 RestartInfo::RestartInfo() : base_class() {}
 
-common::Error RestartInfo::SerializeFields(json_object *out) const {
+common::Error RestartInfo::SerializeFields(json_object* out) const {
   UNUSED(out);
   return common::Error();
 }
 
-common::Error RestartInfo::DoDeSerialize(json_object *serialized) {
+common::Error RestartInfo::DoDeSerialize(json_object* serialized) {
   UNUSED(serialized);
   RestartInfo inf;
   *this = inf;
   return common::Error();
 }
 
-} // namespace iptv_cloud
+}  // namespace iptv_cloud

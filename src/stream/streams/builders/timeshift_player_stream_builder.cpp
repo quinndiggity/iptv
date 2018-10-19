@@ -25,23 +25,21 @@ namespace builders {
 
 TimeShiftPlayerBuilder::TimeShiftPlayerBuilder(TimeShiftInfo tinfo,
                                                chunk_index_t start_chunk_index,
-                                               RelayConfig *api,
-                                               SrcDecodeBinStream *observer)
-    : base_class(api, observer), tinfo_(tinfo),
-      start_chunk_index_(start_chunk_index) {}
+                                               RelayConfig* api,
+                                               SrcDecodeBinStream* observer)
+    : base_class(api, observer), tinfo_(tinfo), start_chunk_index_(start_chunk_index) {}
 
-elements::Element *TimeShiftPlayerBuilder::BuildInputSrc() {
+elements::Element* TimeShiftPlayerBuilder::BuildInputSrc() {
   elements::sources::MultiFileSrcInfo info;
   info.location = tinfo_.timshift_dir.GetPath() + "%llu." TS_EXTENSION;
   info.index = start_chunk_index_;
   info.loop = false;
-  elements::sources::ElementMultiFileSrc *multifilesrc =
-      make_multifile_src(info, 0);
+  elements::sources::ElementMultiFileSrc* multifilesrc = make_multifile_src(info, 0);
   ElementAdd(multifilesrc);
   return multifilesrc;
 }
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

@@ -21,20 +21,17 @@ namespace server {
 
 LicenseInfo::LicenseInfo() : base_class(), license_() {}
 
-LicenseInfo::LicenseInfo(const std::string &license)
-    : base_class(), license_(license) {}
+LicenseInfo::LicenseInfo(const std::string& license) : base_class(), license_(license) {}
 
-common::Error LicenseInfo::SerializeFields(json_object *out) const {
-  json_object_object_add(out, LICENSE_INFO_KEY_FIELD,
-                         json_object_new_string(license_.c_str()));
+common::Error LicenseInfo::SerializeFields(json_object* out) const {
+  json_object_object_add(out, LICENSE_INFO_KEY_FIELD, json_object_new_string(license_.c_str()));
   return common::Error();
 }
 
-common::Error LicenseInfo::DoDeSerialize(json_object *serialized) {
+common::Error LicenseInfo::DoDeSerialize(json_object* serialized) {
   LicenseInfo inf;
-  json_object *jlicense = NULL;
-  json_bool jlicense_exists =
-      json_object_object_get_ex(serialized, LICENSE_INFO_KEY_FIELD, &jlicense);
+  json_object* jlicense = NULL;
+  json_bool jlicense_exists = json_object_object_get_ex(serialized, LICENSE_INFO_KEY_FIELD, &jlicense);
   if (jlicense_exists) {
     inf.license_ = json_object_get_string(jlicense);
   }
@@ -43,7 +40,9 @@ common::Error LicenseInfo::DoDeSerialize(json_object *serialized) {
   return common::Error();
 }
 
-std::string LicenseInfo::GetLicense() const { return license_; }
+std::string LicenseInfo::GetLicense() const {
+  return license_;
+}
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

@@ -20,15 +20,14 @@ namespace iptv_cloud {
 namespace stream {
 namespace streams {
 
-TimeShiftPlayerStream::TimeShiftPlayerStream(RelayConfig *config,
-                                             const TimeShiftInfo &info,
-                                             IStreamClient *client,
-                                             StreamStruct *stats,
+TimeShiftPlayerStream::TimeShiftPlayerStream(RelayConfig* config,
+                                             const TimeShiftInfo& info,
+                                             IStreamClient* client,
+                                             StreamStruct* stats,
                                              chunk_index_t start_chunk_index)
-    : base_class(config, client, stats), timeshift_info_(info),
-      start_chunk_index_(start_chunk_index) {}
+    : base_class(config, client, stats), timeshift_info_(info), start_chunk_index_(start_chunk_index) {}
 
-const char *TimeShiftPlayerStream::ClassName() const {
+const char* TimeShiftPlayerStream::ClassName() const {
   return "TimeShiftPlayerStream";
 }
 
@@ -36,14 +35,15 @@ TimeShiftInfo TimeShiftPlayerStream::GetTimeshiftInfo() const {
   return timeshift_info_;
 }
 
-IBaseBuilder *TimeShiftPlayerStream::CreateBuilder() {
-  RelayConfig *rconf = static_cast<RelayConfig *>(GetApi());
-  return new builders::TimeShiftPlayerBuilder(GetTimeshiftInfo(),
-                                              start_chunk_index_, rconf, this);
+IBaseBuilder* TimeShiftPlayerStream::CreateBuilder() {
+  RelayConfig* rconf = static_cast<RelayConfig*>(GetApi());
+  return new builders::TimeShiftPlayerBuilder(GetTimeshiftInfo(), start_chunk_index_, rconf, this);
 }
 
-void TimeShiftPlayerStream::OnInputDataFailed() { OnInputDataOK(); }
+void TimeShiftPlayerStream::OnInputDataFailed() {
+  OnInputDataOK();
+}
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

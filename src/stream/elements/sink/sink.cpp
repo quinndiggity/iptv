@@ -19,23 +19,22 @@ namespace stream {
 namespace elements {
 namespace sink {
 
-gboolean ElementSplitMuxSink::RegisterFormatLocationCallback(
-    format_location_callback_t cb, gpointer user_data) {
+gboolean ElementSplitMuxSink::RegisterFormatLocationCallback(format_location_callback_t cb, gpointer user_data) {
   return RegisterCallback("format-location", G_CALLBACK(cb), user_data);
 }
 
 #if GST_CHECK_VERSION(1, 11, 1)
-gboolean ElementSplitMuxSink::RegisterFormatLocationFullCallback(
-    format_location_full_callback_t cb, gpointer user_data) {
+gboolean ElementSplitMuxSink::RegisterFormatLocationFullCallback(format_location_full_callback_t cb,
+                                                                 gpointer user_data) {
   return RegisterCallback("format-location-full", G_CALLBACK(cb), user_data);
 }
 #endif
 
-void ElementSplitMuxSink::SetSink(Element *sink) {
+void ElementSplitMuxSink::SetSink(Element* sink) {
   SetProperty("sink", sink->GetGstElement());
 }
 
-void ElementSplitMuxSink::SetMuxer(Element *muxer) {
+void ElementSplitMuxSink::SetMuxer(Element* muxer) {
   SetProperty("muxer", muxer->GetGstElement());
 }
 
@@ -47,7 +46,7 @@ void ElementSplitMuxSink::SetSendKeyFrameRequest(gboolean send) {
   SetProperty("send-keyframe-requests", send);
 }
 
-} // namespace sink
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sink
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

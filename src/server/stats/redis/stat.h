@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include "server/stats/istat.h" // for IStat
+#include "server/stats/istat.h"  // for IStat
 
-#include "server/redis/connection.h" // for RedisConnection, redis_configuration_t...
+#include "server/redis/connection.h"  // for RedisConnection, redis_configuration_t...
 
 namespace iptv_cloud {
 namespace server {
@@ -24,31 +24,29 @@ namespace stats {
 namespace redis {
 
 class StatCredentials : public StatCredentialsBase {
-public:
-  typedef iptv_cloud::server::redis::redis_configuration_t
-      redis_configuration_t;
-  StatCredentials(const redis_configuration_t &conf);
-  const redis_configuration_t &GetConf() const;
+ public:
+  typedef iptv_cloud::server::redis::redis_configuration_t redis_configuration_t;
+  StatCredentials(const redis_configuration_t& conf);
+  const redis_configuration_t& GetConf() const;
 
-private:
+ private:
   const redis_configuration_t conf_;
 };
 
 class Stat : public IStat {
-public:
+ public:
   typedef iptv_cloud::server::redis::RedisConnection RedisConnection;
-  Stat(StatCredentials *creds); // take ownership
+  Stat(StatCredentials* creds);  // take ownership
 
-  virtual bool SetKey(const std::string &key,
-                      const std::string &value) override;
-  virtual bool GetKey(const std::string &key, std::string *value) override;
+  virtual bool SetKey(const std::string& key, const std::string& value) override;
+  virtual bool GetKey(const std::string& key, std::string* value) override;
 
-private:
+ private:
   DISALLOW_COPY_AND_ASSIGN(Stat);
   RedisConnection rc_;
 };
 
-} // namespace redis
-} // namespace stats
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace redis
+}  // namespace stats
+}  // namespace server
+}  // namespace iptv_cloud

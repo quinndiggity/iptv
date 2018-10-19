@@ -28,10 +28,10 @@ namespace pad {
 
 // wrapper for GstPad
 class Pad {
-public:
-  explicit Pad(GstPad *pad);
+ public:
+  explicit Pad(GstPad* pad);
 
-  GstPad *GetGstPad() const;
+  GstPad* GetGstPad() const;
 
   std::string GetType() const;
   std::string GetName() const;
@@ -39,26 +39,26 @@ public:
   bool IsLinked() const;
   bool IsValid() const;
 
-  void SetProperty(const char *property, bool val);
-  void SetProperty(const char *property, gfloat val);
-  void SetProperty(const char *property, gdouble val);
-  void SetProperty(const char *property, gint8 val);
-  void SetProperty(const char *property, guint8 val);
-  void SetProperty(const char *property, gint16 val);
-  void SetProperty(const char *property, guint16 val);
-  void SetProperty(const char *property, gint val);
-  void SetProperty(const char *property, guint val);
-  void SetProperty(const char *property, gint64 val);
-  void SetProperty(const char *property, guint64 val);
-  void SetProperty(const char *property, const char *val);
-  void SetProperty(const char *property, const std::string &val);
-  void SetProperty(const char *property, void *val);
+  void SetProperty(const char* property, bool val);
+  void SetProperty(const char* property, gfloat val);
+  void SetProperty(const char* property, gdouble val);
+  void SetProperty(const char* property, gint8 val);
+  void SetProperty(const char* property, guint8 val);
+  void SetProperty(const char* property, gint16 val);
+  void SetProperty(const char* property, guint16 val);
+  void SetProperty(const char* property, gint val);
+  void SetProperty(const char* property, guint val);
+  void SetProperty(const char* property, gint64 val);
+  void SetProperty(const char* property, guint64 val);
+  void SetProperty(const char* property, const char* val);
+  void SetProperty(const char* property, const std::string& val);
+  void SetProperty(const char* property, void* val);
 
-private:
+ private:
   DISALLOW_COPY_AND_ASSIGN(Pad);
-  GstPad *pad_;
+  GstPad* pad_;
 };
 
-} // namespace pad
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace pad
+}  // namespace stream
+}  // namespace iptv_cloud

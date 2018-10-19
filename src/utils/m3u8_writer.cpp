@@ -21,28 +21,23 @@ namespace utils {
 
 M3u8Writer::M3u8Writer() : file_() {}
 
-common::ErrnoError
-M3u8Writer::Open(const common::file_system::ascii_file_string_path &file_path,
-                 uint32_t flags) {
+common::ErrnoError M3u8Writer::Open(const common::file_system::ascii_file_string_path& file_path, uint32_t flags) {
   return file_.Open(file_path, flags);
 }
 
-common::ErrnoError M3u8Writer::WriteHeader(uint64_t first_index,
-                                           size_t target_duration) {
+common::ErrnoError M3u8Writer::WriteHeader(uint64_t first_index, size_t target_duration) {
   size_t writed;
-  return file_.Write(
-      common::MemSPrintf("#EXTM3U\n#EXT-X-MEDIA-SEQUENCE:%llu\n#EXT-X-ALLOW-"
-                         "CACHE:YES\n#EXT-X-VERSION:3\n#EXT-X-"
-                         "TARGETDURATION:%llu\n",
-                         first_index, target_duration),
-      &writed);
+  return file_.Write(common::MemSPrintf("#EXTM3U\n#EXT-X-MEDIA-SEQUENCE:%llu\n#EXT-X-ALLOW-"
+                                        "CACHE:YES\n#EXT-X-VERSION:3\n#EXT-X-"
+                                        "TARGETDURATION:%llu\n",
+                                        first_index, target_duration),
+                     &writed);
 }
 
-common::ErrnoError M3u8Writer::WriteLine(const ChunkInfo &chunk) {
+common::ErrnoError M3u8Writer::WriteLine(const ChunkInfo& chunk) {
   double ftime = chunk.GetDurationInSecconds();
   size_t writed;
-  return file_.Write(
-      common::MemSPrintf("#EXTINF:%.2f,\n%s\n", ftime, chunk.path), &writed);
+  return file_.Write(common::MemSPrintf("#EXTINF:%.2f,\n%s\n", ftime, chunk.path), &writed);
 }
 
 common::ErrnoError M3u8Writer::WriteFooter() {
@@ -50,7 +45,9 @@ common::ErrnoError M3u8Writer::WriteFooter() {
   return file_.Write("#EXT-X-ENDLIST", &writed);
 }
 
-common::ErrnoError M3u8Writer::Close() { return file_.Close(); }
+common::ErrnoError M3u8Writer::Close() {
+  return file_.Close();
+}
 
-} // namespace utils
-} // namespace iptv_cloud
+}  // namespace utils
+}  // namespace iptv_cloud

@@ -19,21 +19,22 @@ namespace stream {
 namespace elements {
 namespace sink {
 
-void ElementTCPServerSink::SetHost(const std::string &host) {
+void ElementTCPServerSink::SetHost(const std::string& host) {
   SetProperty("host", host);
 }
 
-void ElementTCPServerSink::SetPort(uint16_t port) { SetProperty("port", port); }
+void ElementTCPServerSink::SetPort(uint16_t port) {
+  SetProperty("port", port);
+}
 
-ElementTCPServerSink *make_tcp_server_sink(const common::net::HostAndPort &host,
-                                           element_id_t sink_id) {
-  ElementTCPServerSink *tcp_out = make_sink<ElementTCPServerSink>(sink_id);
+ElementTCPServerSink* make_tcp_server_sink(const common::net::HostAndPort& host, element_id_t sink_id) {
+  ElementTCPServerSink* tcp_out = make_sink<ElementTCPServerSink>(sink_id);
   tcp_out->SetHost(host.GetHost());
   tcp_out->SetPort(host.GetPort());
   return tcp_out;
 }
 
-} // namespace sink
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sink
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

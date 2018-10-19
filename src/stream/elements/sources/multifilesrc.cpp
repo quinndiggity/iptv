@@ -19,21 +19,23 @@ namespace stream {
 namespace elements {
 namespace sources {
 
-void ElementMultiFileSrc::SetIndex(int index) { SetProperty("index", index); }
+void ElementMultiFileSrc::SetIndex(int index) {
+  SetProperty("index", index);
+}
 
-void ElementMultiFileSrc::SetLoop(bool loop) { SetProperty("loop", loop); }
+void ElementMultiFileSrc::SetLoop(bool loop) {
+  SetProperty("loop", loop);
+}
 
-ElementMultiFileSrc *make_multifile_src(const MultiFileSrcInfo &info,
-                                        element_id_t input_id) {
-  ElementMultiFileSrc *multifile_src =
-      make_sources<ElementMultiFileSrc>(input_id);
+ElementMultiFileSrc* make_multifile_src(const MultiFileSrcInfo& info, element_id_t input_id) {
+  ElementMultiFileSrc* multifile_src = make_sources<ElementMultiFileSrc>(input_id);
   multifile_src->SetLocation(info.location);
   multifile_src->SetIndex(info.index);
   multifile_src->SetLoop(info.loop);
   return multifile_src;
 }
 
-} // namespace sources
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sources
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

@@ -19,22 +19,21 @@
 
 namespace iptv_cloud {
 
-class ChangedSouresInfo
-    : public common::serializer::JsonSerializer<ChangedSouresInfo> {
-public:
+class ChangedSouresInfo : public common::serializer::JsonSerializer<ChangedSouresInfo> {
+ public:
   typedef JsonSerializer<ChangedSouresInfo> base_class;
   typedef InputUri url_t;
   ChangedSouresInfo();
-  explicit ChangedSouresInfo(const url_t &url);
+  explicit ChangedSouresInfo(const url_t& url);
 
   url_t GetUrl() const;
 
-protected:
-  virtual common::Error DoDeSerialize(json_object *serialized) override;
-  virtual common::Error SerializeFields(json_object *out) const override;
+ protected:
+  virtual common::Error DoDeSerialize(json_object* serialized) override;
+  virtual common::Error SerializeFields(json_object* out) const override;
 
-private:
+ private:
   url_t url_;
 };
 
-} // namespace iptv_cloud
+}  // namespace iptv_cloud

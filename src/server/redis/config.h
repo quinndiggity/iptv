@@ -25,6 +25,6 @@ struct redis_configuration_t {
   std::string redis_unix_socket;
 };
 
-} // namespace redis
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace redis
+}  // namespace server
+}  // namespace iptv_cloud

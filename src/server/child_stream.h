@@ -28,9 +28,9 @@ class PipeClient;
 }
 
 class ChildStream : public common::libev::IoChild {
-public:
+ public:
   typedef common::libev::IoChild base_class;
-  ChildStream(common::libev::IoLoop *server, StreamStruct *mem);
+  ChildStream(common::libev::IoLoop* server, StreamStruct* mem);
   ~ChildStream();
 
   common::ErrnoError SendStop(protocol::sequance_id_t id) WARN_UNUSED_RESULT;
@@ -38,25 +38,25 @@ public:
 
   channel_id_t GetChannelId() const;
 
-  bool Equals(const ChildStream &stream) const;
+  bool Equals(const ChildStream& stream) const;
 
-  pipe::PipeClient *GetPipe() const;
-  void SetPipe(pipe::PipeClient *pipe);
+  pipe::PipeClient* GetPipe() const;
+  void SetPipe(pipe::PipeClient* pipe);
 
-private:
+ private:
   DISALLOW_COPY_AND_ASSIGN(ChildStream);
 
-  StreamStruct *mem_;
-  pipe::PipeClient *pipe_client_;
+  StreamStruct* mem_;
+  pipe::PipeClient* pipe_client_;
 };
 
-inline bool operator==(const ChildStream &left, const ChildStream &right) {
+inline bool operator==(const ChildStream& left, const ChildStream& right) {
   return left.Equals(right);
 }
 
-inline bool operator!=(const ChildStream &left, const ChildStream &right) {
+inline bool operator!=(const ChildStream& left, const ChildStream& right) {
   return !operator==(left, right);
 }
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

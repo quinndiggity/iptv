@@ -37,25 +37,25 @@
 
 #include "license/gen_hardware_hash.h"
 
-#define HELP_TEXT                                                              \
-  "Usage: " STREAMER_SERVICE_NAME " [options]\n"                               \
-  "  Manipulate " STREAMER_SERVICE_NAME ".\n\n"                                \
-  "    --version  display version\n"                                           \
-  "    --daemon   run as a daemon\n"                                           \
-  "    --stop     stop running instance\n"                                     \
+#define HELP_TEXT                          \
+  "Usage: " STREAMER_SERVICE_NAME          \
+  " [options]\n"                           \
+  "  Manipulate " STREAMER_SERVICE_NAME    \
+  ".\n\n"                                  \
+  "    --version  display version\n"       \
+  "    --daemon   run as a daemon\n"       \
+  "    --stop     stop running instance\n" \
   "    --reload   force running instance to reread configuration file\n"
 
 namespace {
 
 const int default_log_file_size_kb = 1024;
 
-bool create_license_key(std::string *license_key) {
+bool create_license_key(std::string* license_key) {
 #if HARDWARE_LICENSE_ALGO == 0
-  static const iptv_cloud::server::license::ALGO_TYPE license_algo =
-      iptv_cloud::server::license::HDD;
+  static const iptv_cloud::server::license::ALGO_TYPE license_algo = iptv_cloud::server::license::HDD;
 #elif HARDWARE_LICENSE_ALGO == 1
-  static const iptv_cloud::server::license::ALGO_TYPE license_algo =
-      iptv_cloud::server::license::MACHINE_ID;
+  static const iptv_cloud::server::license::ALGO_TYPE license_algo = iptv_cloud::server::license::MACHINE_ID;
 #else
 #error Unknown hardware license algo used
 #endif
@@ -64,12 +64,11 @@ bool create_license_key(std::string *license_key) {
     return false;
   }
 
-  if (SIZEOFMASS(LICENSE_KEY) == 1) { // runtime check
+  if (SIZEOFMASS(LICENSE_KEY) == 1) {  // runtime check
     CRITICAL_LOG() << "A-a-a license key is empty, don't hack me!";
   }
 
-  if (!iptv_cloud::server::license::GenerateHardwareHash(license_algo,
-                                                         license_key)) {
+  if (!iptv_cloud::server::license::GenerateHardwareHash(license_algo, license_key)) {
     WARNING_LOG() << "Failed to generate hash!";
     return false;
   }
@@ -80,9 +79,9 @@ bool create_license_key(std::string *license_key) {
   }
   return true;
 }
-} // namespace
+}  // namespace
 
-int main(int argc, char **argv, char **envp) {
+int main(int argc, char** argv, char** envp) {
   bool run_as_daemon = false;
   for (int i = 1; i < argc; ++i) {
     if (strcmp(argv[i], "--version") == 0) {
@@ -96,8 +95,7 @@ int main(int argc, char **argv, char **envp) {
         return EXIT_FAILURE;
       }
 
-      return iptv_cloud::server::ProcessSlaveWrapper::SendStopDaemonRequest(
-          license_key);
+      return iptv_cloud::server::ProcessSlaveWrapper::SendStopDaemonRequest(license_key);
     } else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
       std::cout << HELP_TEXT << std::endl;
       return EXIT_SUCCESS;
@@ -114,8 +112,7 @@ int main(int argc, char **argv, char **envp) {
   }
 
   pid_t daemon_pid = getpid();
-  std::string folder_path_to_pid =
-      common::file_system::get_dir_path(PIDFILE_PATH);
+  std::string folder_path_to_pid = common::file_system::get_dir_path(PIDFILE_PATH);
   if (folder_path_to_pid.empty()) {
     ERROR_LOG() << "Can't get pid file path: " << PIDFILE_PATH;
     return EXIT_FAILURE;
@@ -123,22 +120,19 @@ int main(int argc, char **argv, char **envp) {
 
   if (!common::file_system::is_directory_exist(folder_path_to_pid)) {
     if (!common::file_system::create_directory(folder_path_to_pid, true)) {
-      ERROR_LOG() << "Pid file directory not exists, pid file path: "
-                  << PIDFILE_PATH;
+      ERROR_LOG() << "Pid file directory not exists, pid file path: " << PIDFILE_PATH;
       return EXIT_FAILURE;
     }
   }
 
   common::ErrnoError err = common::file_system::node_access(folder_path_to_pid);
   if (err) {
-    ERROR_LOG() << "Can't have permissions to create, pid file path: "
-                << PIDFILE_PATH;
+    ERROR_LOG() << "Can't have permissions to create, pid file path: " << PIDFILE_PATH;
     return EXIT_FAILURE;
   }
 
   common::file_system::File pidfile;
-  err = pidfile.Open(PIDFILE_PATH, common::file_system::File::FLAG_CREATE |
-                                       common::file_system::File::FLAG_WRITE);
+  err = pidfile.Open(PIDFILE_PATH, common::file_system::File::FLAG_CREATE | common::file_system::File::FLAG_WRITE);
   if (err) {
     ERROR_LOG() << "Can't open pid file path: " << PIDFILE_PATH;
     return EXIT_FAILURE;
@@ -146,17 +140,14 @@ int main(int argc, char **argv, char **envp) {
 
   err = pidfile.Lock();
   if (err) {
-    ERROR_LOG() << "Can't lock pid file path: " << PIDFILE_PATH
-                << "; message: " << err->GetDescription();
+    ERROR_LOG() << "Can't lock pid file path: " << PIDFILE_PATH << "; message: " << err->GetDescription();
     return EXIT_FAILURE;
   }
-  std::string pid_str =
-      common::MemSPrintf("%ld\n", static_cast<long>(daemon_pid));
+  std::string pid_str = common::MemSPrintf("%ld\n", static_cast<long>(daemon_pid));
   size_t writed;
   err = pidfile.Write(pid_str, &writed);
   if (err) {
-    ERROR_LOG() << "Failed to write pid file path: " << PIDFILE_PATH
-                << "; message: " << err->GetDescription();
+    ERROR_LOG() << "Failed to write pid file path: " << PIDFILE_PATH << "; message: " << err->GetDescription();
     return EXIT_FAILURE;
   }
 
@@ -168,16 +159,14 @@ int main(int argc, char **argv, char **envp) {
   // start
   iptv_cloud::server::ProcessSlaveWrapper wrapper(license_key);
   std::string log_path = wrapper.GetLogPath();
-  common::logging::INIT_LOGGER(
-      STREAMER_SERVICE_NAME, log_path,
-      common::logging::LOG_LEVEL_INFO); // initialization
-                                        // of logging
-                                        // system
-  NOTICE_LOG() << "Running " PROJECT_VERSION_HUMAN << " in "
-               << (run_as_daemon ? "daemon" : "common") << " mode";
+  common::logging::INIT_LOGGER(STREAMER_SERVICE_NAME, log_path,
+                               common::logging::LOG_LEVEL_INFO);  // initialization
+                                                                  // of logging
+                                                                  // system
+  NOTICE_LOG() << "Running " PROJECT_VERSION_HUMAN << " in " << (run_as_daemon ? "daemon" : "common") << " mode";
 
-  for (char **env = envp; *env != NULL; env++) {
-    char *cur_env = *env;
+  for (char** env = envp; *env != NULL; env++) {
+    char* cur_env = *env;
     INFO_LOG() << cur_env;
   }
 
@@ -186,15 +175,13 @@ int main(int argc, char **argv, char **envp) {
 
   err = pidfile.Unlock();
   if (err) {
-    ERROR_LOG() << "Failed to unlock pidfile: " << PIDFILE_PATH
-                << "; message: " << err->GetDescription();
+    ERROR_LOG() << "Failed to unlock pidfile: " << PIDFILE_PATH << "; message: " << err->GetDescription();
     return EXIT_FAILURE;
   }
 
   err = common::file_system::remove_file(PIDFILE_PATH);
   if (err) {
-    WARNING_LOG() << "Can't remove file: " << PIDFILE_PATH
-                  << ", error: " << err->GetDescription();
+    WARNING_LOG() << "Can't remove file: " << PIDFILE_PATH << ", error: " << err->GetDescription();
   }
   return res;
 }

@@ -38,7 +38,7 @@ struct CpuShot {
   uint64_t guest_nice;
 };
 
-long double GetCpuMachineLoad(const CpuShot &prev, const CpuShot &next);
+long double GetCpuMachineLoad(const CpuShot& prev, const CpuShot& next);
 CpuShot GetMachineCpuShot();
 
 struct MemoryShot {
@@ -46,9 +46,9 @@ struct MemoryShot {
 
   long double GetAvailable() const;
 
-  uint64_t total_ram; // kb
-  uint64_t free_ram;  // kb
-  uint64_t avail_ram; // kb
+  uint64_t total_ram;  // kb
+  uint64_t free_ram;   // kb
+  uint64_t avail_ram;  // kb
 };
 
 MemoryShot GetMachineMemoryShot();
@@ -56,8 +56,8 @@ MemoryShot GetMachineMemoryShot();
 struct HddShot {
   HddShot();
 
-  uint64_t hdd_total; // kb
-  uint64_t hdd_free;  // kb
+  uint64_t hdd_total;  // kb
+  uint64_t hdd_free;   // kb
 };
 
 HddShot GetMachineHddShot();
@@ -65,8 +65,8 @@ HddShot GetMachineHddShot();
 struct NetShot {
   NetShot();
 
-  uint64_t bytes_recv; // kb
-  uint64_t bytes_send; // kb
+  uint64_t bytes_recv;  // kb
+  uint64_t bytes_send;  // kb
 };
 
 NetShot GetMachineNetShot();
@@ -80,9 +80,9 @@ struct SysinfoShot {
 
 SysinfoShot GetMachineSysinfoShot();
 
-void RemoveOldFilesByTime(
-    const common::file_system::ascii_directory_string_path &dir,
-    time_t max_life_secs, const char *ext);
+void RemoveOldFilesByTime(const common::file_system::ascii_directory_string_path& dir,
+                          time_t max_life_secs,
+                          const char* ext);
 
-} // namespace utils
-} // namespace iptv_cloud
+}  // namespace utils
+}  // namespace iptv_cloud

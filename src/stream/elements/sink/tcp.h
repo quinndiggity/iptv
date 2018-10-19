@@ -18,8 +18,8 @@
 
 // for element_id_t
 
-#include "stream/elements/element.h" // for SupportedElements::ELEMENT_UDP_SINK
-#include "stream/elements/sink/sink.h" // for ElementSync
+#include "stream/elements/element.h"    // for SupportedElements::ELEMENT_UDP_SINK
+#include "stream/elements/sink/sink.h"  // for ElementSync
 
 namespace common {
 struct HostAndPort;
@@ -31,19 +31,17 @@ namespace elements {
 namespace sink {
 
 class ElementTCPServerSink : public ElementSync<ELEMENT_TCP_SERVER_SINK> {
-public:
+ public:
   typedef ElementSync<ELEMENT_TCP_SERVER_SINK> base_class;
   using base_class::base_class;
 
-  void SetHost(
-      const std::string &host = "localhost"); // String; Default: "localhost"
-  void SetPort(uint16_t port = 5004);         // 0 - 65535; Default: 5004
+  void SetHost(const std::string& host = "localhost");  // String; Default: "localhost"
+  void SetPort(uint16_t port = 5004);                   // 0 - 65535; Default: 5004
 };
 
-ElementTCPServerSink *make_tcp_server_sink(const common::net::HostAndPort &host,
-                                           element_id_t sink_id);
+ElementTCPServerSink* make_tcp_server_sink(const common::net::HostAndPort& host, element_id_t sink_id);
 
-} // namespace sink
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sink
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

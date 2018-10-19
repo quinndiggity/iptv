@@ -25,23 +25,21 @@ namespace stream {
 namespace streams {
 namespace builders {
 
-PlaylistRelayStreamBuilder::PlaylistRelayStreamBuilder(
-    PlaylistRelayConfig *api, PlaylistRelayStream *observer)
+PlaylistRelayStreamBuilder::PlaylistRelayStreamBuilder(PlaylistRelayConfig* api, PlaylistRelayStream* observer)
     : RelayStreamBuilder(api, observer) {}
 
-void PlaylistRelayStreamBuilder::HandleAppSrcCreated(
-    elements::sources::ElementAppSrc *src) {
+void PlaylistRelayStreamBuilder::HandleAppSrcCreated(elements::sources::ElementAppSrc* src) {
   if (observer_) {
-    PlaylistRelayStream *pobs = static_cast<PlaylistRelayStream *>(observer_);
+    PlaylistRelayStream* pobs = static_cast<PlaylistRelayStream*>(observer_);
     pobs->OnAppSrcCreatedCreated(src);
   }
 }
 
-elements::Element *PlaylistRelayStreamBuilder::BuildInputSrc() {
-  elements::sources::ElementAppSrc *appsrc = elements::sources::make_app_src(0);
+elements::Element* PlaylistRelayStreamBuilder::BuildInputSrc() {
+  elements::sources::ElementAppSrc* appsrc = elements::sources::make_app_src(0);
   // g_signal_connect(appsrc, "enough-data", G_CALLBACK(enough_data), this);
 
-  pad::Pad *src_pad = appsrc->StaticPad("src");
+  pad::Pad* src_pad = appsrc->StaticPad("src");
   if (src_pad->IsValid()) {
     HandleInputSrcPadCreated(common::uri::Url::file, src_pad, 0);
   }
@@ -51,7 +49,7 @@ elements::Element *PlaylistRelayStreamBuilder::BuildInputSrc() {
   return appsrc;
 }
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

@@ -21,24 +21,21 @@ namespace server {
 
 StopServiceInfo::StopServiceInfo() : base_class(), delay_(0) {}
 
-StopServiceInfo::StopServiceInfo(const std::string &license,
-                                 common::time64_t delay)
+StopServiceInfo::StopServiceInfo(const std::string& license, common::time64_t delay)
     : base_class(license), delay_(delay) {}
 
-common::Error StopServiceInfo::SerializeFields(json_object *obj) const {
-  json_object_object_add(obj, STOP_SERVICE_INFO_DELAY_FIELD,
-                         json_object_new_int64(delay_));
+common::Error StopServiceInfo::SerializeFields(json_object* obj) const {
+  json_object_object_add(obj, STOP_SERVICE_INFO_DELAY_FIELD, json_object_new_int64(delay_));
   return base_class::SerializeFields(obj);
 }
 
-common::Error StopServiceInfo::DoDeSerialize(json_object *serialized) {
+common::Error StopServiceInfo::DoDeSerialize(json_object* serialized) {
   StopServiceInfo inf;
   common::Error err = inf.base_class::DoDeSerialize(serialized);
   UNUSED(err);
 
-  json_object *jlicense = NULL;
-  json_bool jdelay_exists = json_object_object_get_ex(
-      serialized, STOP_SERVICE_INFO_DELAY_FIELD, &jlicense);
+  json_object* jlicense = NULL;
+  json_bool jdelay_exists = json_object_object_get_ex(serialized, STOP_SERVICE_INFO_DELAY_FIELD, &jlicense);
   if (jdelay_exists) {
     inf.delay_ = json_object_get_int64(jlicense);
   }
@@ -47,7 +44,9 @@ common::Error StopServiceInfo::DoDeSerialize(json_object *serialized) {
   return common::Error();
 }
 
-common::time64_t StopServiceInfo::GetDelay() const { return delay_; }
+common::time64_t StopServiceInfo::GetDelay() const {
+  return delay_;
+}
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

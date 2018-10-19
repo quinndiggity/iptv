@@ -19,5 +19,5 @@ namespace stream {
 
 ILinker::~ILinker() {}
 
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace stream
+}  // namespace iptv_cloud

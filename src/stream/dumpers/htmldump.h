@@ -21,12 +21,10 @@ namespace stream {
 namespace dumper {
 
 class HtmlDump : public IDumper {
-public:
-  virtual bool
-  Dump(GstBin *pipeline,
-       const common::file_system::ascii_file_string_path &path) override;
+ public:
+  virtual bool Dump(GstBin* pipeline, const common::file_system::ascii_file_string_path& path) override;
 };
 
-} // namespace dumper
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace dumper
+}  // namespace stream
+}  // namespace iptv_cloud

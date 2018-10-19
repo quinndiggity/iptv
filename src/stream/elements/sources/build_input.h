@@ -29,10 +29,9 @@ namespace stream {
 namespace elements {
 namespace sources {
 
-Element *make_src(const common::uri::Url &uri, element_id_t input_id,
-                  gint timeout_secs);
+Element* make_src(const common::uri::Url& uri, element_id_t input_id, gint timeout_secs);
 
-} // namespace sources
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sources
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

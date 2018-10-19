@@ -23,13 +23,12 @@ namespace stream {
 namespace dumper {
 
 class DumpersFactory : public common::patterns::LazySingleton<DumpersFactory> {
-public:
+ public:
   friend class common::patterns::LazySingleton<DumpersFactory>;
 
-  IDumper *
-  CreateDumper(const common::file_system::ascii_file_string_path &path);
+  IDumper* CreateDumper(const common::file_system::ascii_file_string_path& path);
 };
 
-} // namespace dumper
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace dumper
+}  // namespace stream
+}  // namespace iptv_cloud

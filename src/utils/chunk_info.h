@@ -23,16 +23,16 @@ struct ChunkInfo {
   enum { SECOND = 1000000000 };
 
   ChunkInfo();
-  ChunkInfo(const std::string &path, uint64_t duration, uint64_t index);
+  ChunkInfo(const std::string& path, uint64_t duration, uint64_t index);
 
   double GetDurationInSecconds() const;
 
   std::string path;
-  uint64_t duration; // in nanoseconds
+  uint64_t duration;  // in nanoseconds
   uint64_t index;
 };
 
-inline bool operator<(const ChunkInfo &left, const ChunkInfo &right) {
+inline bool operator<(const ChunkInfo& left, const ChunkInfo& right) {
   if (left.duration != right.duration) {
     return left.duration < right.duration;
   }
@@ -40,7 +40,7 @@ inline bool operator<(const ChunkInfo &left, const ChunkInfo &right) {
   return left.index < right.index;
 }
 
-inline bool operator>(const ChunkInfo &left, const ChunkInfo &right) {
+inline bool operator>(const ChunkInfo& left, const ChunkInfo& right) {
   if (left.duration != right.duration) {
     return left.duration > right.duration;
   }
@@ -48,11 +48,10 @@ inline bool operator>(const ChunkInfo &left, const ChunkInfo &right) {
   return left.index > right.index;
 }
 
-} // namespace utils
-} // namespace iptv_cloud
+}  // namespace utils
+}  // namespace iptv_cloud
 
 namespace common {
-std::string ConvertToString(const iptv_cloud::utils::ChunkInfo &value);
-bool ConvertFromString(const std::string &from,
-                       iptv_cloud::utils::ChunkInfo *out);
-} // namespace common
+std::string ConvertToString(const iptv_cloud::utils::ChunkInfo& value);
+bool ConvertFromString(const std::string& from, iptv_cloud::utils::ChunkInfo* out);
+}  // namespace common

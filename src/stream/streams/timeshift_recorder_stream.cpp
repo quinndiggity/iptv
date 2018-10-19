@@ -29,43 +29,39 @@
 namespace iptv_cloud {
 namespace stream {
 namespace {
-pad::Pad *link_to_multiplexer(elements::Element *src, elements::Element *sink,
-                              const char *pad_name) {
-  pad::Pad *src_pad = src->StaticPad("src");
+pad::Pad* link_to_multiplexer(elements::Element* src, elements::Element* sink, const char* pad_name) {
+  pad::Pad* src_pad = src->StaticPad("src");
   if (!src_pad->IsValid()) {
     delete src_pad;
     return NULL;
   }
-  pad::Pad *sink_pad = sink->RequestPad(pad_name);
+  pad::Pad* sink_pad = sink->RequestPad(pad_name);
   if (!sink_pad->IsValid()) {
     delete src_pad;
     delete sink_pad;
     return NULL;
   }
 
-  GstPadLinkReturn ret =
-      gst_pad_link(src_pad->GetGstPad(), sink_pad->GetGstPad());
+  GstPadLinkReturn ret = gst_pad_link(src_pad->GetGstPad(), sink_pad->GetGstPad());
   DCHECK(GST_PAD_LINK_SUCCESSFUL(ret));
   delete src_pad;
   return sink_pad;
 }
-} // namespace
+}  // namespace
 namespace streams {
 
-TimeShiftRecorderStream::TimeShiftRecorderStream(TimeshiftConfig *config,
-                                                 const TimeShiftInfo &info,
-                                                 IStreamClient *client,
-                                                 StreamStruct *stats)
-    : base_class(config, info, client, stats), chunk_(), audio_pad_(nullptr),
-      video_pad_(nullptr) {}
+TimeShiftRecorderStream::TimeShiftRecorderStream(TimeshiftConfig* config,
+                                                 const TimeShiftInfo& info,
+                                                 IStreamClient* client,
+                                                 StreamStruct* stats)
+    : base_class(config, info, client, stats), chunk_(), audio_pad_(nullptr), video_pad_(nullptr) {}
 
-const char *TimeShiftRecorderStream::ClassName() const {
+const char* TimeShiftRecorderStream::ClassName() const {
   return "TimeShiftRecorderStream";
 }
 
 TimeShiftRecorderStream::~TimeShiftRecorderStream() {
-  elements::Element *splitmuxsink =
-      GetElementByName(common::MemSPrintf(SPLIT_SINK_NAME_1U, 0));
+  elements::Element* splitmuxsink = GetElementByName(common::MemSPrintf(SPLIT_SINK_NAME_1U, 0));
   if (audio_pad_) {
     splitmuxsink->ReleaseRequestedPad(audio_pad_);
   }
@@ -76,8 +72,7 @@ TimeShiftRecorderStream::~TimeShiftRecorderStream() {
   destroy(&video_pad_);
 }
 
-void TimeShiftRecorderStream::OnSplitmuxsinkCreated(
-    Connector conn, elements::sink::ElementSplitMuxSink *sink) {
+void TimeShiftRecorderStream::OnSplitmuxsinkCreated(Connector conn, elements::sink::ElementSplitMuxSink* sink) {
   TimeShiftInfo tinfo = GetTimeshiftInfo();
   chunk_index_t index = invalid_chunk_index;
   time_t file_created_time = 0;
@@ -85,17 +80,16 @@ void TimeShiftRecorderStream::OnSplitmuxsinkCreated(
     index = GetNextChunkStrategy(index, file_created_time);
   }
   chunk_ = {tinfo.timshift_dir.GetPath(), index, GST_CLOCK_TIME_NONE};
-  gboolean res = sink->RegisterFormatLocationFullCallback(
-      TimeShiftRecorderStream::path_setter_full_callback, this);
+  gboolean res = sink->RegisterFormatLocationFullCallback(TimeShiftRecorderStream::path_setter_full_callback, this);
   DCHECK(res);
 
   audio_pad_ = link_to_multiplexer(conn.audio, sink, "audio_%u");
   video_pad_ = link_to_multiplexer(conn.video, sink, "video");
 }
 
-chunk_index_t TimeShiftRecorderStream::GetNextChunkStrategy(
-    chunk_index_t last_index, time_t last_index_created_time) const {
-  TimeshiftConfig *tconf = static_cast<TimeshiftConfig *>(GetApi());
+chunk_index_t TimeShiftRecorderStream::GetNextChunkStrategy(chunk_index_t last_index,
+                                                            time_t last_index_created_time) const {
+  TimeshiftConfig* tconf = static_cast<TimeshiftConfig*>(GetApi());
   time_t cur_time = common::time::current_mstime() / 1000;
   time_t diff = cur_time - last_index_created_time;
   if (diff > 0) {
@@ -105,16 +99,14 @@ chunk_index_t TimeShiftRecorderStream::GetNextChunkStrategy(
   return last_index;
 }
 
-IBaseBuilder *TimeShiftRecorderStream::CreateBuilder() {
-  TimeshiftConfig *tconf = static_cast<TimeshiftConfig *>(GetApi());
+IBaseBuilder* TimeShiftRecorderStream::CreateBuilder() {
+  TimeshiftConfig* tconf = static_cast<TimeshiftConfig*>(GetApi());
   return new builders::TimeShiftRecorderStreamBuilder(tconf, this);
 }
 
-void TimeShiftRecorderStream::HandleDecodeBinElementAdded(GstBin *bin,
-                                                          GstElement *element) {
+void TimeShiftRecorderStream::HandleDecodeBinElementAdded(GstBin* bin, GstElement* element) {
   UNUSED(bin);
-  const std::string element_plugin_name =
-      elements::Element::GetPluginName(element);
+  const std::string element_plugin_name = elements::Element::GetPluginName(element);
   DEBUG_LOG() << "decodebin added element: " << element_plugin_name;
 }
 
@@ -123,14 +115,15 @@ gboolean TimeShiftRecorderStream::HandleMainTimerTick() {
   time_t el = GetElipsedTime();
   if (el % no_data_panic_sec == 0) {
     const chunk_hours_t chunk_time = tinfo.chunk_max_life_time_hours;
-    const time_t max_life_time =
-        common::time::current_mstime() / 1000 - (chunk_time * 60 * 60);
+    const time_t max_life_time = common::time::current_mstime() / 1000 - (chunk_time * 60 * 60);
     utils::RemoveOldFilesByTime(tinfo.timshift_dir, max_life_time, CHUNK_EXT);
   }
   return base_class::HandleMainTimerTick();
 }
 
-void TimeShiftRecorderStream::OnOutputDataFailed() { OnOutputDataOK(); }
+void TimeShiftRecorderStream::OnOutputDataFailed() {
+  OnOutputDataOK();
+}
 
 chunk_index_t TimeShiftRecorderStream::CalcNextIndex() const {
   chunk_index_t index = chunk_.index;
@@ -138,46 +131,39 @@ chunk_index_t TimeShiftRecorderStream::CalcNextIndex() const {
     index = 0;
   }
 
-  std::string old_path =
-      common::MemSPrintf("%s%llu." TS_EXTENSION, chunk_.path, index);
-  if (common::file_system::is_file_exist(
-          old_path)) { // if chunk exist move to next
+  std::string old_path = common::MemSPrintf("%s%llu." TS_EXTENSION, chunk_.path, index);
+  if (common::file_system::is_file_exist(old_path)) {  // if chunk exist move to next
     index++;
   }
 
   return index;
 }
 
-gchararray TimeShiftRecorderStream::OnPathSet(GstElement *splitmux,
-                                              guint fragment_id,
-                                              GstSample *sample) {
+gchararray TimeShiftRecorderStream::OnPathSet(GstElement* splitmux, guint fragment_id, GstSample* sample) {
   UNUSED(splitmux);
   UNUSED(fragment_id);
   UNUSED(sample);
 
   chunk_index_t ind = CalcNextIndex();
   chunk_.index = ind;
-  std::string new_path =
-      common::MemSPrintf("%s%llu." TS_EXTENSION, chunk_.path, chunk_.index);
+  std::string new_path = common::MemSPrintf("%s%llu." TS_EXTENSION, chunk_.path, chunk_.index);
   return strdup(new_path.c_str());
 }
 
-gchararray TimeShiftRecorderStream::path_setter_callback(GstElement *splitmux,
-                                                         guint fragment_id,
-                                                         gpointer user_data) {
+gchararray TimeShiftRecorderStream::path_setter_callback(GstElement* splitmux, guint fragment_id, gpointer user_data) {
   return path_setter_full_callback(splitmux, fragment_id, NULL, user_data);
 }
 
-gchararray TimeShiftRecorderStream::path_setter_full_callback(
-    GstElement *splitmux, guint fragment_id, GstSample *sample,
-    gpointer user_data) {
+gchararray TimeShiftRecorderStream::path_setter_full_callback(GstElement* splitmux,
+                                                              guint fragment_id,
+                                                              GstSample* sample,
+                                                              gpointer user_data) {
   UNUSED(splitmux);
 
-  TimeShiftRecorderStream *stream =
-      reinterpret_cast<TimeShiftRecorderStream *>(user_data);
+  TimeShiftRecorderStream* stream = reinterpret_cast<TimeShiftRecorderStream*>(user_data);
   return stream->OnPathSet(splitmux, fragment_id, sample);
 }
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

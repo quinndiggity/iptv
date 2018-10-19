@@ -221,8 +221,8 @@ class BuildRequest(object):
 
 
 if __name__ == "__main__":
-    glib_default_version = '2.53.5'
-    gstreamer_default_version = '1.12.4'
+    glib_default_version = '2.58.1'
+    gstreamer_default_version = '1.14.4'
     gst_plugins_base_default_version = gstreamer_default_version
     gst_plugins_good_default_version = gstreamer_default_version
     gst_plugins_bad_default_version = gstreamer_default_version

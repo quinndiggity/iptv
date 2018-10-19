@@ -14,7 +14,7 @@
 
 #include "stream/elements/sources/build_input.h"
 
-#include <stddef.h> // for NULL
+#include <stddef.h>  // for NULL
 
 #include "stream/elements/sources/filesrc.h"
 #include "stream/elements/sources/httpsrc.h"
@@ -27,14 +27,12 @@ namespace stream {
 namespace elements {
 namespace sources {
 
-Element *make_src(const common::uri::Url &uri, element_id_t input_id,
-                  gint timeout_secs) {
+Element* make_src(const common::uri::Url& uri, element_id_t input_id, gint timeout_secs) {
   common::uri::Url::scheme scheme = uri.GetScheme();
   if (scheme == common::uri::Url::file) {
     const common::uri::Upath upath = uri.GetPath();
     return make_file_src(upath.GetPath(), input_id);
-  } else if (scheme == common::uri::Url::http ||
-             scheme == common::uri::Url::https) {
+  } else if (scheme == common::uri::Url::http || scheme == common::uri::Url::https) {
     return make_http_src(uri.GetUrl(), timeout_secs, input_id);
   } else if (scheme == common::uri::Url::udp) {
     // udp://localhost:8080
@@ -62,7 +60,7 @@ Element *make_src(const common::uri::Url &uri, element_id_t input_id,
   return nullptr;
 }
 
-} // namespace sources
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sources
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

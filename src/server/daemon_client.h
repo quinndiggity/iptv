@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <common/libev/tcp/tcp_client.h> // for TcpClient
+#include <common/libev/tcp/tcp_client.h>  // for TcpClient
 
 #include "protocol/protocol.h"
 
@@ -22,22 +22,21 @@ namespace iptv_cloud {
 namespace server {
 
 class DaemonClient : public common::libev::tcp::TcpClient {
-public:
+ public:
   typedef common::libev::tcp::TcpClient base_class;
-  DaemonClient(common::libev::IoLoop *server,
-               const common::net::socket_info &info);
+  DaemonClient(common::libev::IoLoop* server, const common::net::socket_info& info);
   virtual ~DaemonClient();
 
   bool IsVerified() const;
   void SetVerified(bool verif);
 
-  const char *ClassName() const override;
+  const char* ClassName() const override;
 
-private:
+ private:
   bool is_verified_;
 };
 
 typedef protocol::ProtocolClient<DaemonClient> ProtocoledDaemonClient;
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

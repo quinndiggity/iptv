@@ -18,22 +18,22 @@
 
 #include "stream/ibase_stream.h"
 
-#include "timeshift.h" // for invalid_chunk_index, TimeShiftInfo (ptr...
+#include "timeshift.h"  // for invalid_chunk_index, TimeShiftInfo (ptr...
 
 namespace iptv_cloud {
 namespace stream {
 
 class StreamsFactory : public common::patterns::LazySingleton<StreamsFactory> {
-public:
+ public:
   friend class common::patterns::LazySingleton<StreamsFactory>;
 
-  IBaseStream *CreateStream(const utils::ArgsMap &args,
-                            IBaseStream::IStreamClient *client,
-                            StreamStruct *stats,
+  IBaseStream* CreateStream(const utils::ArgsMap& args,
+                            IBaseStream::IStreamClient* client,
+                            StreamStruct* stats,
                             chunk_index_t start_chunk_index);
 };
 
-bool IsTimeshiftPlayer(const utils::ArgsMap &args, TimeShiftInfo *tinfo);
+bool IsTimeshiftPlayer(const utils::ArgsMap& args, TimeShiftInfo* tinfo);
 
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace stream
+}  // namespace iptv_cloud

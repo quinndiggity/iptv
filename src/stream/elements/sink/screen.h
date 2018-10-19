@@ -16,8 +16,8 @@
 
 // for element_id_t, device_output_t, deckl...
 
-#include "stream/elements/element.h" // for Element (ptr only), SupportedElement...
-#include "stream/elements/sink/sink.h" // for ElementSync
+#include "stream/elements/element.h"    // for Element (ptr only), SupportedElement...
+#include "stream/elements/sink/sink.h"  // for ElementSync
 
 namespace iptv_cloud {
 namespace stream {
@@ -27,26 +27,26 @@ namespace sink {
 typedef ElementSync<ELEMENT_VIDEO_SCREEN_SINK> ElementVideoScreenSink;
 typedef ElementSync<ELEMENT_AUDIO_SCREEN_SINK> ElementAudioScreenSink;
 
-ElementVideoScreenSink *make_video_screen_sink(element_id_t sink_id);
-ElementAudioScreenSink *make_audio_screen_sink(element_id_t sink_id);
+ElementVideoScreenSink* make_video_screen_sink(element_id_t sink_id);
+ElementAudioScreenSink* make_audio_screen_sink(element_id_t sink_id);
 
 class ElementVideoDeckSink : public ElementSync<ELEMENT_VIDEO_DECK_SINK> {
-public:
+ public:
   typedef ElementSync<ELEMENT_VIDEO_DECK_SINK> base_class;
   using base_class::base_class;
 
-  void SetMode(decklink_video_mode_t mode = 1); // 0 - 30 Default: 1, "ntsc"
+  void SetMode(decklink_video_mode_t mode = 1);  // 0 - 30 Default: 1, "ntsc"
 };
 
 typedef ElementSync<ELEMENT_AUDIO_DECK_SINK> ElementAudioDeckSink;
 
-ElementVideoDeckSink *make_video_deck_sink(element_id_t sink_id);
-ElementAudioDeckSink *make_audio_deck_sink(element_id_t sink_id);
+ElementVideoDeckSink* make_video_deck_sink(element_id_t sink_id);
+ElementAudioDeckSink* make_audio_deck_sink(element_id_t sink_id);
 
-Element *make_video_device_sink(SinkDeviceType dev, element_id_t sink_id);
-Element *make_audio_device_sink(SinkDeviceType dev, element_id_t sink_id);
+Element* make_video_device_sink(SinkDeviceType dev, element_id_t sink_id);
+Element* make_audio_device_sink(SinkDeviceType dev, element_id_t sink_id);
 
-} // namespace sink
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sink
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

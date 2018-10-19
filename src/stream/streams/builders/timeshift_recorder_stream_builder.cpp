@@ -26,19 +26,16 @@ namespace stream {
 namespace streams {
 namespace builders {
 
-TimeShiftRecorderStreamBuilder::TimeShiftRecorderStreamBuilder(
-    TimeshiftConfig *api, TimeShiftRecorderStream *observer)
+TimeShiftRecorderStreamBuilder::TimeShiftRecorderStreamBuilder(TimeshiftConfig* api, TimeShiftRecorderStream* observer)
     : base_class(api, observer) {}
 
 Connector TimeShiftRecorderStreamBuilder::BuildOutput(Connector conn) {
-  elements::sink::ElementSplitMuxSink *splitmuxsink =
-      new elements::sink::ElementSplitMuxSink(
-          common::MemSPrintf(SPLIT_SINK_NAME_1U, 0));
+  elements::sink::ElementSplitMuxSink* splitmuxsink =
+      new elements::sink::ElementSplitMuxSink(common::MemSPrintf(SPLIT_SINK_NAME_1U, 0));
   ElementAdd(splitmuxsink);
 
-  TimeshiftConfig *tconf = static_cast<TimeshiftConfig *>(api_);
-  elements::muxer::ElementMPEGTSMux *mpegtsmux =
-      elements::muxer::make_mpegtsmux(0);
+  TimeshiftConfig* tconf = static_cast<TimeshiftConfig*>(api_);
+  elements::muxer::ElementMPEGTSMux* mpegtsmux = elements::muxer::make_mpegtsmux(0);
   guint64 mst_nsec = tconf->GetTimeShiftChunkDuration() * GST_SECOND;
   splitmuxsink->SetMuxer(mpegtsmux);
   delete mpegtsmux;
@@ -48,16 +45,15 @@ Connector TimeShiftRecorderStreamBuilder::BuildOutput(Connector conn) {
   return conn;
 }
 
-void TimeShiftRecorderStreamBuilder::HandleSplitmuxsinkCreated(
-    Connector conn, elements::sink::ElementSplitMuxSink *sink) {
+void TimeShiftRecorderStreamBuilder::HandleSplitmuxsinkCreated(Connector conn,
+                                                               elements::sink::ElementSplitMuxSink* sink) {
   if (observer_) {
-    TimeShiftRecorderStream *ts_observer =
-        static_cast<TimeShiftRecorderStream *>(observer_);
+    TimeShiftRecorderStream* ts_observer = static_cast<TimeShiftRecorderStream*>(observer_);
     ts_observer->OnSplitmuxsinkCreated(conn, sink);
   }
 }
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

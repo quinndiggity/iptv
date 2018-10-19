@@ -24,31 +24,31 @@ namespace stream {
 namespace streams {
 namespace builders {
 
-RelayStreamBuilder::RelayStreamBuilder(RelayConfig *config,
-                                       SrcDecodeBinStream *observer)
+RelayStreamBuilder::RelayStreamBuilder(RelayConfig* config, SrcDecodeBinStream* observer)
     : SrcDecodeStreamBuilder(config, observer) {}
 
-Connector RelayStreamBuilder::BuildPostProc(Connector conn) { return conn; }
+Connector RelayStreamBuilder::BuildPostProc(Connector conn) {
+  return conn;
+}
 
-elements::Element *RelayStreamBuilder::BuildVideoUdbConnection() {
-  RelayConfig *rconfig = static_cast<RelayConfig *>(api_);
+elements::Element* RelayStreamBuilder::BuildVideoUdbConnection() {
+  RelayConfig* rconfig = static_cast<RelayConfig*>(api_);
   const std::string video_parser = rconfig->GetVideoParser();
-  elements::Element *video = elements::parser::make_video_parser(
-      video_parser,
-      common::MemSPrintf(UDB_VIDEO_NAME_1U, 0)); // tsparse, h264parse
+  elements::Element* video = elements::parser::make_video_parser(
+      video_parser, common::MemSPrintf(UDB_VIDEO_NAME_1U, 0));  // tsparse, h264parse
   return video;
 }
 
-elements::Element *RelayStreamBuilder::BuildAudioUdbConnection() {
-  RelayConfig *rconfig = static_cast<RelayConfig *>(api_);
+elements::Element* RelayStreamBuilder::BuildAudioUdbConnection() {
+  RelayConfig* rconfig = static_cast<RelayConfig*>(api_);
   const std::string audio_parser = rconfig->GetAudioParser();
-  elements::Element *audio = elements::parser::make_audio_parser(
-      audio_parser, common::MemSPrintf(UDB_AUDIO_NAME_1U, 0));
+  elements::Element* audio =
+      elements::parser::make_audio_parser(audio_parser, common::MemSPrintf(UDB_AUDIO_NAME_1U, 0));
   return audio;
 }
 
 SupportedVideoCodecs RelayStreamBuilder::GetVideoCodecType() const {
-  RelayConfig *conf = static_cast<RelayConfig *>(api_);
+  RelayConfig* conf = static_cast<RelayConfig*>(api_);
   const std::string vparser = conf->GetVideoParser();
   if (vparser == elements::parser::ElementH264Parse::GetPluginName()) {
     return VIDEO_H264_CODEC;
@@ -63,12 +63,11 @@ SupportedVideoCodecs RelayStreamBuilder::GetVideoCodecType() const {
 }
 
 SupportedAudioCodecs RelayStreamBuilder::GetAudioCodecType() const {
-  RelayConfig *conf = static_cast<RelayConfig *>(api_);
+  RelayConfig* conf = static_cast<RelayConfig*>(api_);
   const std::string aparser = conf->GetAudioParser();
   if (aparser == elements::parser::ElementAACParse::GetPluginName()) {
     return AUDIO_AAC_CODEC;
-  } else if (aparser ==
-             elements::parser::ElementMPEGAudioParse::GetPluginName()) {
+  } else if (aparser == elements::parser::ElementMPEGAudioParse::GetPluginName()) {
     return AUDIO_MPEG_CODEC;
   } else if (aparser == elements::parser::ElementAC3Parse::GetPluginName()) {
     return AUDIO_AC3_CODEC;
@@ -78,17 +77,15 @@ SupportedAudioCodecs RelayStreamBuilder::GetAudioCodecType() const {
   return AUDIO_MPEG_CODEC;
 }
 Connector RelayStreamBuilder::BuildConverter(Connector conn) {
-  RelayConfig *rconfig = static_cast<RelayConfig *>(api_);
+  RelayConfig* rconfig = static_cast<RelayConfig*>(api_);
   if (rconfig->HaveVideo()) {
-    elements::ElementTee *tee =
-        new elements::ElementTee(common::MemSPrintf(VIDEO_TEE_NAME_1U, 0));
+    elements::ElementTee* tee = new elements::ElementTee(common::MemSPrintf(VIDEO_TEE_NAME_1U, 0));
     ElementAdd(tee);
     ElementLink(conn.video, tee);
     conn.video = tee;
   }
   if (rconfig->HaveAudio()) {
-    elements::ElementTee *tee =
-        new elements::ElementTee(common::MemSPrintf(AUDIO_TEE_NAME_1U, 0));
+    elements::ElementTee* tee = new elements::ElementTee(common::MemSPrintf(AUDIO_TEE_NAME_1U, 0));
     ElementAdd(tee);
     ElementLink(conn.audio, tee);
     conn.audio = tee;
@@ -96,7 +93,7 @@ Connector RelayStreamBuilder::BuildConverter(Connector conn) {
   return conn;
 }
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

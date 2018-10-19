@@ -30,65 +30,64 @@ namespace elements {
 namespace sink {
 
 class ElementFileSink : public ElementEx<ELEMENT_FILE_SINK> {
-public:
+ public:
   typedef ElementEx<ELEMENT_FILE_SINK> base_class;
   using base_class::base_class;
 };
 
 class ElementMultiFileSink : public ElementEx<ELEMENT_MULTIFILE_SINK> {
-public:
+ public:
   typedef ElementEx<ELEMENT_MULTIFILE_SINK> base_class;
   using base_class::base_class;
 };
 
 class ElementSplitMuxSink : public ElementEx<ELEMENT_SPLIT_MUX_SINK> {
-public:
+ public:
   typedef ElementEx<ELEMENT_SPLIT_MUX_SINK> base_class;
-  typedef gchararray (*format_location_callback_t)(GstElement *splitmux,
-                                                   guint fragment_id,
-                                                   gpointer user_data);
-  typedef gchararray (*format_location_full_callback_t)(GstElement *splitmux,
+  typedef gchararray (*format_location_callback_t)(GstElement* splitmux, guint fragment_id, gpointer user_data);
+  typedef gchararray (*format_location_full_callback_t)(GstElement* splitmux,
                                                         guint fragment_id,
-                                                        GstSample *sample,
+                                                        GstSample* sample,
                                                         gpointer user_data);
 
   using base_class::base_class;
-  gboolean
-  RegisterFormatLocationCallback(format_location_callback_t cb,
-                                 gpointer user_data) WARN_UNUSED_RESULT;
+  gboolean RegisterFormatLocationCallback(format_location_callback_t cb, gpointer user_data) WARN_UNUSED_RESULT;
 #if GST_CHECK_VERSION(1, 11, 1)
-  gboolean
-  RegisterFormatLocationFullCallback(format_location_full_callback_t cb,
-                                     gpointer user_data) WARN_UNUSED_RESULT;
+  gboolean RegisterFormatLocationFullCallback(format_location_full_callback_t cb,
+                                              gpointer user_data) WARN_UNUSED_RESULT;
 #endif
 
-  void SetSink(Element *sink);
-  void SetMuxer(Element *muxer);
-  void SetMaxSizeTime(guint64 val = 0); // 0 - 18446744073709551615 Default: 0
-  void SetSendKeyFrameRequest(gboolean send); // Default: false
+  void SetSink(Element* sink);
+  void SetMuxer(Element* muxer);
+  void SetMaxSizeTime(guint64 val = 0);        // 0 - 18446744073709551615 Default: 0
+  void SetSendKeyFrameRequest(gboolean send);  // Default: false
 };
 
-template <SupportedElements el> class ElementSync : public ElementEx<el> {
-public:
+template <SupportedElements el>
+class ElementSync : public ElementEx<el> {
+ public:
   typedef ElementEx<el> base_class;
   using base_class::base_class;
 
   void SetSync(bool sync) { ElementEx<el>::SetProperty("sync", sync); }
 };
 
-template <typename T> T *make_video_sink(element_id_t parser_id) {
+template <typename T>
+T* make_video_sink(element_id_t parser_id) {
   return make_element<T>(common::MemSPrintf(VIDEO_SINK_NAME_1U, parser_id));
 }
 
-template <typename T> T *make_audio_sink(element_id_t parser_id) {
+template <typename T>
+T* make_audio_sink(element_id_t parser_id) {
   return make_element<T>(common::MemSPrintf(AUDIO_SINK_NAME_1U, parser_id));
 }
 
-template <typename T> T *make_sink(element_id_t parser_id) {
+template <typename T>
+T* make_sink(element_id_t parser_id) {
   return make_element<T>(common::MemSPrintf(SINK_NAME_1U, parser_id));
 }
 
-} // namespace sink
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sink
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

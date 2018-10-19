@@ -21,28 +21,24 @@ namespace stream {
 namespace streams {
 
 class CatchupStream : public TimeShiftRecorderStream {
-public:
+ public:
   typedef TimeShiftRecorderStream base_class;
-  CatchupStream(TimeshiftConfig *config, const TimeShiftInfo &info,
-                IStreamClient *client, StreamStruct *stats);
+  CatchupStream(TimeshiftConfig* config, const TimeShiftInfo& info, IStreamClient* client, StreamStruct* stats);
 
-  virtual const char *ClassName() const override;
+  virtual const char* ClassName() const override;
 
-protected:
-  virtual chunk_index_t
-  GetNextChunkStrategy(chunk_index_t last_index,
-                       time_t last_index_created_time) const override;
-  virtual IBaseBuilder *CreateBuilder() override;
+ protected:
+  virtual chunk_index_t GetNextChunkStrategy(chunk_index_t last_index, time_t last_index_created_time) const override;
+  virtual IBaseBuilder* CreateBuilder() override;
 
   virtual void PostLoop(ExitStatus status) override;
-  virtual gchararray OnPathSet(GstElement *splitmux, guint fragment_id,
-                               GstSample *sample) override;
+  virtual gchararray OnPathSet(GstElement* splitmux, guint fragment_id, GstSample* sample) override;
 
-private:
+ private:
   void WriteM3u8List();
   std::vector<utils::ChunkInfo> chunks_;
 };
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

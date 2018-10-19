@@ -31,24 +31,24 @@ void ElementH265Parse::SetConfigInterval(guint interval) {
   SetProperty("config-interval", interval);
 }
 
-ElementMpegParse *make_mpeg2_parser(element_id_t parser_id) {
+ElementMpegParse* make_mpeg2_parser(element_id_t parser_id) {
   return make_video_parser<ElementMpegParse>(parser_id);
 }
 
-ElementTsParse *make_ts_parser(element_id_t parser_id) {
+ElementTsParse* make_ts_parser(element_id_t parser_id) {
   return make_video_parser<ElementTsParse>(parser_id);
 }
 
-ElementH264Parse *make_h264_parser(element_id_t parser_id) {
-  ElementH264Parse *par = make_video_parser<ElementH264Parse>(parser_id);
+ElementH264Parse* make_h264_parser(element_id_t parser_id) {
+  ElementH264Parse* par = make_video_parser<ElementH264Parse>(parser_id);
   return par;
 }
 
-ElementH265Parse *make_h265_parser(element_id_t parser_id) {
+ElementH265Parse* make_h265_parser(element_id_t parser_id) {
   return make_video_parser<ElementH265Parse>(parser_id);
 }
 
-Element *make_video_parser(const std::string &parser, const std::string &name) {
+Element* make_video_parser(const std::string& parser, const std::string& name) {
   if (parser == ElementH264Parse::GetPluginName()) {
     return new ElementH264Parse(name);
   } else if (parser == ElementH265Parse::GetPluginName()) {
@@ -63,7 +63,7 @@ Element *make_video_parser(const std::string &parser, const std::string &name) {
   return nullptr;
 }
 
-} // namespace parser
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace parser
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

@@ -22,17 +22,15 @@
 
 namespace iptv_cloud {
 
-class StreamStructInfo
-    : public common::serializer::JsonSerializer<StreamStructInfo> {
-public:
+class StreamStructInfo : public common::serializer::JsonSerializer<StreamStructInfo> {
+ public:
   typedef JsonSerializer<StreamStructInfo> base_class;
   typedef double cpu_load_t;
   typedef long rss_t;
   typedef std::shared_ptr<StreamStruct> stream_struct_t;
 
   StreamStructInfo();
-  StreamStructInfo(const StreamStruct &str, StreamStatus st,
-                   cpu_load_t cpu_load, rss_t rss, time_t time);
+  StreamStructInfo(const StreamStruct& str, StreamStatus st, cpu_load_t cpu_load, rss_t rss, time_t time);
 
   stream_struct_t GetStreamStruct() const;
   StreamStatus GetStatus() const;
@@ -40,11 +38,11 @@ public:
   rss_t GetRss() const;
   time_t GetTime() const;
 
-protected:
-  virtual common::Error SerializeFields(json_object *out) const override;
-  virtual common::Error DoDeSerialize(json_object *serialized) override;
+ protected:
+  virtual common::Error SerializeFields(json_object* out) const override;
+  virtual common::Error DoDeSerialize(json_object* serialized) override;
 
-private:
+ private:
   stream_struct_t stream_struct_;
   StreamStatus status_;
   cpu_load_t cpu_load_;
@@ -52,4 +50,4 @@ private:
   time_t time_;
 };
 
-} // namespace iptv_cloud
+}  // namespace iptv_cloud

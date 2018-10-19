@@ -22,12 +22,12 @@ namespace streams {
 namespace builders {
 
 class TestStreamBuilder : public EncodingStreamBuilder {
-public:
-  TestStreamBuilder(EncodingConfig *api, SrcDecodeBinStream *observer);
+ public:
+  TestStreamBuilder(EncodingConfig* api, SrcDecodeBinStream* observer);
   virtual Connector BuildInput() override;
 };
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

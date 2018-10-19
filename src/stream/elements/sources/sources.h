@@ -16,7 +16,7 @@
 
 #include <common/sprintf.h>
 
-#include "stream/elements/element.h" // for ElementEx, SupportedElements, Supporte...
+#include "stream/elements/element.h"  // for ElementEx, SupportedElements, Supporte...
 
 #include "stream/stypes.h"
 
@@ -28,21 +28,21 @@ namespace sources {
 typedef ElementEx<ELEMENT_VIDEO_TEST_SRC> ElementVideoTestSrc;
 typedef ElementEx<ELEMENT_AUDIO_TEST_SRC> ElementAudioTestSrc;
 
-template <SupportedElements el> class ElementLocation : public ElementEx<el> {
-public:
+template <SupportedElements el>
+class ElementLocation : public ElementEx<el> {
+ public:
   typedef ElementEx<el> base_class;
   using base_class::base_class;
 
-  void SetLocation(const std::string &location) {
-    base_class::SetProperty("location", location);
-  }
+  void SetLocation(const std::string& location) { base_class::SetProperty("location", location); }
 };
 
-template <typename T> T *make_sources(element_id_t source_id) {
+template <typename T>
+T* make_sources(element_id_t source_id) {
   return make_element<T>(common::MemSPrintf(SRC_NAME_1U, source_id));
 }
 
-} // namespace sources
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace sources
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

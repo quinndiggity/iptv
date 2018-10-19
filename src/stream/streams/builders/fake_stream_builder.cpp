@@ -14,17 +14,16 @@
 
 #include "stream/streams/builders/fake_stream_builder.h"
 
-#include "stream/pad/pad.h" // for Pads
+#include "stream/pad/pad.h"  // for Pads
 
-#include "stream/elements/sink/fake.h" // for make_fake_sink, ElementFakeSink (ptr...
+#include "stream/elements/sink/fake.h"  // for make_fake_sink, ElementFakeSink (ptr...
 
 namespace iptv_cloud {
 namespace stream {
 namespace streams {
 namespace builders {
 
-FakeStreamBuilder::FakeStreamBuilder(EncodingConfig *api,
-                                     SrcDecodeBinStream *observer)
+FakeStreamBuilder::FakeStreamBuilder(EncodingConfig* api, SrcDecodeBinStream* observer)
     : EncodingStreamBuilder(api, observer) {}
 
 Connector FakeStreamBuilder::BuildOutput(Connector conn) {
@@ -32,11 +31,11 @@ Connector FakeStreamBuilder::BuildOutput(Connector conn) {
 }
 
 Connector FakeStreamBuilder::BuildFakeOutput(Connector conn) {
-  EncodingConfig *conf = static_cast<EncodingConfig *>(api_);
+  EncodingConfig* conf = static_cast<EncodingConfig*>(api_);
   if (conf->HaveVideo()) {
-    elements::sink::ElementFakeSink *video = elements::sink::make_fake_sink(0);
+    elements::sink::ElementFakeSink* video = elements::sink::make_fake_sink(0);
     ElementAdd(video);
-    pad::Pad *sink_pad = video->StaticPad("sink");
+    pad::Pad* sink_pad = video->StaticPad("sink");
     if (sink_pad->IsValid()) {
       HandleOutputSinkPadCreated(common::uri::Url::unknown, sink_pad, 0);
     }
@@ -47,9 +46,9 @@ Connector FakeStreamBuilder::BuildFakeOutput(Connector conn) {
   }
 
   if (conf->HaveAudio()) {
-    elements::sink::ElementFakeSink *audio = elements::sink::make_fake_sink(1);
+    elements::sink::ElementFakeSink* audio = elements::sink::make_fake_sink(1);
     ElementAdd(audio);
-    pad::Pad *sink_pad = audio->StaticPad("sink");
+    pad::Pad* sink_pad = audio->StaticPad("sink");
     if (sink_pad->IsValid()) {
       HandleOutputSinkPadCreated(common::uri::Url::unknown, sink_pad, 0);
     }
@@ -62,7 +61,7 @@ Connector FakeStreamBuilder::BuildFakeOutput(Connector conn) {
   return conn;
 }
 
-} // namespace builders
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace builders
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

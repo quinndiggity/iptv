@@ -19,10 +19,10 @@ namespace iptv_cloud {
 namespace server {
 
 class ActivateInfo : public LicenseInfo {
-public:
+ public:
   ActivateInfo();
-  explicit ActivateInfo(const std::string &license);
+  explicit ActivateInfo(const std::string& license);
 };
 
-} // namespace server
-} // namespace iptv_cloud
+}  // namespace server
+}  // namespace iptv_cloud

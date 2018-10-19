@@ -14,20 +14,18 @@
 
 #include "stream/dumpers/htmldump.h"
 
-#include <fstream>
 #include <gst/gst.h>
+#include <fstream>
 
 #include "stream/elements/element.h"
 
-#define JS_LIB                                                                 \
-  "https://github.com/mdaines/viz.js/releases/download/v1.7.0/viz-lite.js"
+#define JS_LIB "https://github.com/mdaines/viz.js/releases/download/v1.7.0/viz-lite.js"
 
 namespace iptv_cloud {
 namespace stream {
 namespace dumper {
 
-bool HtmlDump::Dump(GstBin *pipeline,
-                    const common::file_system::ascii_file_string_path &path) {
+bool HtmlDump::Dump(GstBin* pipeline, const common::file_system::ascii_file_string_path& path) {
   if (!path.IsValid()) {
     return false;
   }
@@ -37,8 +35,7 @@ bool HtmlDump::Dump(GstBin *pipeline,
     return false;
   }
 
-  char *dot_description =
-      gst_debug_bin_to_dot_data(pipeline, GST_DEBUG_GRAPH_SHOW_ALL);
+  char* dot_description = gst_debug_bin_to_dot_data(pipeline, GST_DEBUG_GRAPH_SHOW_ALL);
   if (!dot_description) {
     return false;
   }
@@ -48,8 +45,7 @@ bool HtmlDump::Dump(GstBin *pipeline,
            << "<body>"
            << "  <script type=\"text/javascript\" src=\"" JS_LIB "\"></script>"
            << "  <script>"
-           << "    document.body.innerHTML += Viz(String.raw`"
-           << pipeline_description << "`);"
+           << "    document.body.innerHTML += Viz(String.raw`" << pipeline_description << "`);"
            << "  </script>"
            << "</body>"
            << "</html>";
@@ -57,6 +53,6 @@ bool HtmlDump::Dump(GstBin *pipeline,
   return true;
 }
 
-} // namespace dumper
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace dumper
+}  // namespace stream
+}  // namespace iptv_cloud

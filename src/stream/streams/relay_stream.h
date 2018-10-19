@@ -23,32 +23,27 @@ namespace stream {
 namespace streams {
 
 class RelayStream : public SrcDecodeBinStream {
-public:
-  RelayStream(RelayConfig *config, IStreamClient *client, StreamStruct *stats);
+ public:
+  RelayStream(RelayConfig* config, IStreamClient* client, StreamStruct* stats);
 
-  virtual const char *ClassName() const override;
+  virtual const char* ClassName() const override;
 
-protected:
-  virtual IBaseBuilder *CreateBuilder() override;
+ protected:
+  virtual IBaseBuilder* CreateBuilder() override;
 
-  virtual gboolean HandleDecodeBinAutoplugger(GstElement *elem, GstPad *pad,
-                                              GstCaps *caps) override;
-  virtual void HandleDecodeBinPadAdded(GstElement *src,
-                                       GstPad *new_pad) override;
+  virtual gboolean HandleDecodeBinAutoplugger(GstElement* elem, GstPad* pad, GstCaps* caps) override;
+  virtual void HandleDecodeBinPadAdded(GstElement* src, GstPad* new_pad) override;
 
-  virtual GValueArray *HandleAutoplugSort(GstElement *bin, GstPad *pad,
-                                          GstCaps *caps,
-                                          GValueArray *factories) override;
-  virtual GstAutoplugSelectResult
-  HandleAutoplugSelect(GstElement *bin, GstPad *pad, GstCaps *caps,
-                       GstElementFactory *factory) override;
+  virtual GValueArray* HandleAutoplugSort(GstElement* bin, GstPad* pad, GstCaps* caps, GValueArray* factories) override;
+  virtual GstAutoplugSelectResult HandleAutoplugSelect(GstElement* bin,
+                                                       GstPad* pad,
+                                                       GstCaps* caps,
+                                                       GstElementFactory* factory) override;
 
-  virtual void HandleDecodeBinElementAdded(GstBin *bin,
-                                           GstElement *element) override;
-  virtual void HandleDecodeBinElementRemoved(GstBin *bin,
-                                             GstElement *element) override;
+  virtual void HandleDecodeBinElementAdded(GstBin* bin, GstElement* element) override;
+  virtual void HandleDecodeBinElementRemoved(GstBin* bin, GstElement* element) override;
 };
 
-} // namespace streams
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace streams
+}  // namespace stream
+}  // namespace iptv_cloud

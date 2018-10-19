@@ -24,16 +24,16 @@ namespace elements {
 class Element;
 }
 
-typedef std::vector<elements::Element *> elements_line_t;
+typedef std::vector<elements::Element*> elements_line_t;
 
 struct Connector {
-  elements::Element *video;
-  elements::Element *audio;
+  elements::Element* video;
+  elements::Element* audio;
 };
 
 enum EncoderType { GPU_MFX, GPU_VAAPI, CPU };
 
-bool GetTypeEncoder(const std::string &encoder, EncoderType *enc);
+bool GetTypeEncoder(const std::string& encoder, EncoderType* enc);
 
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace stream
+}  // namespace iptv_cloud

@@ -19,13 +19,17 @@ namespace stream {
 namespace elements {
 namespace audio {
 
-void ElementVolume::SetVolume(gdouble volume) { SetProperty("volume", volume); }
+void ElementVolume::SetVolume(gdouble volume) {
+  SetProperty("volume", volume);
+}
 
 void ElementRGVolume::SetPreAmp(gdouble volume) {
   SetProperty("pre-amp", volume);
 }
 
-void ElementSpectrum::SetBands(guint bands) { SetProperty("bands", bands); }
+void ElementSpectrum::SetBands(guint bands) {
+  SetProperty("bands", bands);
+}
 
 void ElementSpectrum::SetTheshold(gint threshold) {
   SetProperty("threshold", threshold);
@@ -39,7 +43,7 @@ void ElementSpectrum::SetMessagePhase(gboolean mp) {
   SetProperty("message-phase", mp);
 }
 
-} // namespace audio
-} // namespace elements
-} // namespace stream
-} // namespace iptv_cloud
+}  // namespace audio
+}  // namespace elements
+}  // namespace stream
+}  // namespace iptv_cloud

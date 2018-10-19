@@ -18,13 +18,13 @@
 namespace iptv_cloud {
 
 class StopInfo : public common::serializer::JsonSerializer<StopInfo> {
-public:
+ public:
   typedef JsonSerializer<StopInfo> base_class;
   StopInfo();
 
-protected:
-  virtual common::Error DoDeSerialize(json_object *serialized) override;
-  virtual common::Error SerializeFields(json_object *out) const override;
+ protected:
+  virtual common::Error DoDeSerialize(json_object* serialized) override;
+  virtual common::Error SerializeFields(json_object* out) const override;
 };
 
-} // namespace iptv_cloud
+}  // namespace iptv_cloud
