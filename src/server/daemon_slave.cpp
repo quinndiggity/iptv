@@ -157,7 +157,7 @@ int main(int argc, char** argv, char** envp) {
 
   // start
   iptv_cloud::server::ProcessSlaveWrapper wrapper(license_key);
-  std::string log_path = wrapper.GetLogPath();
+  const std::string log_path = wrapper.GetLogPath();
   common::logging::INIT_LOGGER(STREAMER_SERVICE_NAME, log_path,
                                common::logging::LOG_LEVEL_INFO);  // initialization
                                                                   // of logging
