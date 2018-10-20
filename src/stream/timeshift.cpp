@@ -79,11 +79,11 @@ bool TimeShiftInfo::FindChunkToPlay(time_t chunk_duration, chunk_index_t* index)
   }
 
   auto files = common::file_system::ScanFolder(timshift_dir, CHUNK_EXT, false);
+  files = StableFindedFiles(files);
   if (files.empty()) {
     return false;
   }
 
-  files = StableFindedFiles(files);
   std::sort(files.begin(), files.end(), compare_files);
   chunk_index_t prev_index = invalid_chunk_index;
   for (size_t i = 0; i < files.size(); ++i) {
@@ -121,11 +121,11 @@ bool TimeShiftInfo::FindLastChunk(chunk_index_t* index, time_t* file_created_tim
     CRITICAL_LOG() << "Folder with chunks doesn't exist: " << absolute_path;
   }
   auto files = common::file_system::ScanFolder(timshift_dir, CHUNK_EXT, false);
+  files = StableFindedFiles(files);
   if (files.empty()) {
     return false;
   }
 
-  files = StableFindedFiles(files);
   std::sort(files.begin(), files.end(), compare_files);
   common::file_system::ascii_file_string_path last_file = files.back();
   common::file_system::get_file_time_last_modification(last_file.GetPath(), file_created_time);
