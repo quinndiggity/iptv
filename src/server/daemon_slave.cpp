@@ -110,8 +110,8 @@ int main(int argc, char** argv, char** envp) {
     }
   }
 
-  pid_t daemon_pid = getpid();
-  std::string folder_path_to_pid = common::file_system::get_dir_path(PIDFILE_PATH);
+  const pid_t daemon_pid = getpid();
+  const std::string folder_path_to_pid = common::file_system::get_dir_path(PIDFILE_PATH);
   if (folder_path_to_pid.empty()) {
     ERROR_LOG() << "Can't get pid file path: " << PIDFILE_PATH;
     return EXIT_FAILURE;

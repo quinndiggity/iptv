@@ -5,6 +5,15 @@
 #include "server/options/options.h"
 #include "utils/arg_converter.h"
 
+namespace {
+const std::string kTimeshiftRecorderConfig = R"({
+    "id" : "test_1",
+    "input" : {"urls" : [ {"id" : 1, "uri" : "http://example.com/manager/fo/forward2.php?cid=14"} ]},
+    "output" : {"urls" : [ {"id" : 80, "timeshift_dir" : "/var/www/html/live/14"} ]},
+    "type" : "timeshift_recorder"
+  })";
+}
+
 TEST(Options, logo_path) {
   std::string cfg = "{\"" LOGO_PATH_FIELD "\" : \"file:///home/user/logo.png\"}";
   auto args = iptv_cloud::server::options::ValidateConfig(cfg);
@@ -32,14 +41,9 @@ TEST(Options, logo_path) {
   cfg = "{\"" LOGO_PATH_FIELD "\" : \"/homefile:///user/logo.png\"}";
   args = iptv_cloud::server::options::ValidateConfig(cfg);
   ASSERT_TRUE(args.empty());
+}
 
-  const std::string cfg_ext = R"({
-    "id" : "test_1",
-    "input" : {"urls" : [ {"id" : 1, "uri" : "http://example.com/manager/fo/forward2.php?cid=14"} ]},
-    "output" : {"urls" : [ {"id" : 80, "timeshift_dir" : "/var/www/html/live/14"} ]},
-    "type" : "timeshift"
-  })";
-
-  args = iptv_cloud::server::options::ValidateConfig(cfg_ext);
+TEST(Options, cfgs) {
+  auto args = iptv_cloud::server::options::ValidateConfig(kTimeshiftRecorderConfig);
   ASSERT_EQ(args.size(), 4);
 }

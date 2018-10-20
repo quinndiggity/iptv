@@ -31,7 +31,7 @@ class LicenseInfo : public common::serializer::JsonSerializer<LicenseInfo> {
   virtual common::Error SerializeFields(json_object* out) const override;
 
  private:
-  std::string license_;  // utc time
+  std::string license_;
 };
 
 }  // namespace server
