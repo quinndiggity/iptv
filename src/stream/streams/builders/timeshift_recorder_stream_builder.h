@@ -35,6 +35,7 @@ class TimeShiftRecorderStreamBuilder : public RelayStreamBuilder {
   TimeShiftRecorderStreamBuilder(TimeshiftConfig* api, TimeShiftRecorderStream* observer);
 
   virtual Connector BuildOutput(Connector conn) override;
+  virtual Connector BuildConverter(Connector conn) override;
 
  protected:
   void HandleSplitmuxsinkCreated(Connector conn, elements::sink::ElementSplitMuxSink* sink);

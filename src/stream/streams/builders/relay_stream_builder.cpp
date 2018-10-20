@@ -76,6 +76,7 @@ SupportedAudioCodecs RelayStreamBuilder::GetAudioCodecType() const {
   NOTREACHED();
   return AUDIO_MPEG_CODEC;
 }
+
 Connector RelayStreamBuilder::BuildConverter(Connector conn) {
   RelayConfig* rconfig = static_cast<RelayConfig*>(api_);
   if (rconfig->HaveVideo()) {

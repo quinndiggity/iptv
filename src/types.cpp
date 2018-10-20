@@ -22,7 +22,7 @@
 namespace iptv_cloud {
 namespace {
 const std::array<const char*, NUM_STREAM_TYPES> stream_types = {
-    {"screen", "relay", "encoding", "timeshift", "catchup"}};
+    {"screen", "relay", "encoding", "timeshift_player", "timeshift_recorder", "catchup"}};
 }
 
 const stream_id_t invalid_stream_id = std::numeric_limits<stream_id_t>::max();

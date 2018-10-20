@@ -54,14 +54,18 @@ GstElement* Element::GetGstElement() const {
 pad::Pad* Element::StaticPad(const gchar* name) const {
   GstPad* pad = gst_element_get_static_pad(element_, name);
   pad::Pad* p = new pad::Pad(pad);
-  gst_object_unref(pad);
+  if (pad) {
+    gst_object_unref(pad);
+  }
   return p;
 }
 
 pad::Pad* Element::RequestPad(const gchar* name) const {
   GstPad* pad = gst_element_get_request_pad(element_, name);
   pad::Pad* p = new pad::Pad(pad);
-  gst_object_unref(pad);
+  if (pad) {
+    gst_object_unref(pad);
+  }
   return p;
 }
 

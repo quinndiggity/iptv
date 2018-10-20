@@ -787,7 +787,11 @@ common::ErrnoError ProcessSlaveWrapper::CreateChildStream(common::libev::IoLoop*
     return err;
   }
 
+#if !defined(TEST)
   pid_t pid = fork();
+#else
+  pid_t pid = 0;
+#endif
   if (pid == 0) {  // child
     typedef int (*stream_exec_t)(const char* process_name, const struct cmd_args* cmd_args, void* config_args,
                                  void* command_client, void* mem);
@@ -831,6 +835,7 @@ common::ErrnoError ProcessSlaveWrapper::CreateChildStream(common::libev::IoLoop*
     app_name[new_process_name.length()] = 0;
     prctl(PR_SET_NAME, new_name);
 
+#if !defined(TEST)
     // close not needed pipes
     common::ErrnoError errn = common::file_system::close_descriptor(read_responce_client);
     if (errn) {
@@ -840,6 +845,7 @@ common::ErrnoError ProcessSlaveWrapper::CreateChildStream(common::libev::IoLoop*
     if (errn) {
       DEBUG_MSG_ERROR(errn, common::logging::LOG_LEVEL_WARNING);
     }
+#endif
 
     pipe::PipeClient* client = new pipe::PipeClient(nullptr, read_command_client, write_responce_client);
     int res = stream_exec_func(new_name, &client_args, &config_args, client, mem);

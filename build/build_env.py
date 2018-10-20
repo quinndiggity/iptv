@@ -81,7 +81,7 @@ class BuildRequest(object):
                 dep_libs = ['gcc', 'g++', 'git', 'make', 'cmake', 'autoconf', 'libtool', 'pkg-config', 'gettext',
                             'libssl-dev',
                             'libcairo2-dev',
-                            'libmount-dev', 'libdrm-dev', 'libudev-dev', 'libjpeg-dev', 'freeglut3-dev',
+                            'libmount-dev', 'libdrm-dev', 'libsoup2.4-dev', 'libudev-dev', 'libjpeg-dev', 'freeglut3-dev',
                             'libegl1-mesa-dev',
                             'zlib1g-dev', 'libffi-dev', 'yasm', 'bison', 'flex', 'libxrandr-dev', 'libfaac-dev',
                             'libfaad-dev',

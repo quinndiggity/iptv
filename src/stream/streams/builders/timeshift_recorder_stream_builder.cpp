@@ -45,6 +45,10 @@ Connector TimeShiftRecorderStreamBuilder::BuildOutput(Connector conn) {
   return conn;
 }
 
+Connector TimeShiftRecorderStreamBuilder::BuildConverter(Connector conn) {
+  return conn;
+}
+
 void TimeShiftRecorderStreamBuilder::HandleSplitmuxsinkCreated(Connector conn,
                                                                elements::sink::ElementSplitMuxSink* sink) {
   if (observer_) {

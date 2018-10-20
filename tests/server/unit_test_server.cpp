@@ -32,4 +32,14 @@ TEST(Options, logo_path) {
   cfg = "{\"" LOGO_PATH_FIELD "\" : \"/homefile:///user/logo.png\"}";
   args = iptv_cloud::server::options::ValidateConfig(cfg);
   ASSERT_TRUE(args.empty());
+
+  const std::string cfg_ext = R"({
+    "id" : "test_1",
+    "input" : {"urls" : [ {"id" : 1, "uri" : "http://example.com/manager/fo/forward2.php?cid=14"} ]},
+    "output" : {"urls" : [ {"id" : 80, "timeshift_dir" : "/var/www/html/live/14"} ]},
+    "type" : "timeshift"
+  })";
+
+  args = iptv_cloud::server::options::ValidateConfig(cfg_ext);
+  ASSERT_EQ(args.size(), 4);
 }
