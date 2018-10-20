@@ -31,11 +31,10 @@
 #include <common/file_system/file.h>
 #include <common/file_system/file_system.h>
 #include <common/file_system/string_path_utils.h>
+#include <common/license/gen_hardware_hash.h>
 #include <common/utils.h>
 
 #include "server/process_slave_wrapper.h"
-
-#include "license/gen_hardware_hash.h"
 
 #define HELP_TEXT                          \
   "Usage: " STREAMER_SERVICE_NAME          \
@@ -53,9 +52,9 @@ const int default_log_file_size_kb = 1024;
 
 bool create_license_key(std::string* license_key) {
 #if HARDWARE_LICENSE_ALGO == 0
-  static const iptv_cloud::server::license::ALGO_TYPE license_algo = iptv_cloud::server::license::HDD;
+  static const common::license::ALGO_TYPE license_algo = common::license::HDD;
 #elif HARDWARE_LICENSE_ALGO == 1
-  static const iptv_cloud::server::license::ALGO_TYPE license_algo = iptv_cloud::server::license::MACHINE_ID;
+  static const common::license::ALGO_TYPE license_algo = common::license::MACHINE_ID;
 #else
 #error Unknown hardware license algo used
 #endif
@@ -68,7 +67,7 @@ bool create_license_key(std::string* license_key) {
     CRITICAL_LOG() << "A-a-a license key is empty, don't hack me!";
   }
 
-  if (!iptv_cloud::server::license::GenerateHardwareHash(license_algo, license_key)) {
+  if (!common::license::GenerateHardwareHash(license_algo, license_key)) {
     WARNING_LOG() << "Failed to generate hash!";
     return false;
   }

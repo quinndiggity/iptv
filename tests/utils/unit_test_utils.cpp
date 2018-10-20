@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "utils/m3u8_reader.h"
-#include "utils/m3u8_writer.h"
+#include "utils/chunk_info.h"
 
 #define TEST_PLAYLIST PROJECT_TEST_SOURCES_DIR "/playlist.m3u8"
 #define NEW_PLAYLIST PROJECT_TEST_SOURCES_DIR "/test_write.m3u8"
