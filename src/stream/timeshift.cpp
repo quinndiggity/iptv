@@ -25,6 +25,24 @@
 
 #include "stypes.h"
 
+namespace {
+template <typename CharT, typename Traits>
+std::vector<common::file_system::FileStringPath<CharT, Traits>> StableFindedFiles(
+    const std::vector<common::file_system::FileStringPath<CharT, Traits>>& files) {
+  std::vector<common::file_system::FileStringPath<CharT, Traits>> result;
+  for (size_t i = 0; i < files.size(); ++i) {
+    std::string chunk = files[i].GetBaseFileName();
+
+    iptv_cloud::stream::chunk_index_t index;
+    if (common::ConvertFromString(chunk, &index)) {
+      result.push_back(files[i]);
+    }
+  }
+  return result;
+}
+
+}  // namespace
+
 namespace iptv_cloud {
 namespace stream {
 
@@ -36,9 +54,10 @@ bool compare_files(const common::file_system::ascii_file_string_path& first,
 
   chunk_index_t first_index;
   bool ok = common::ConvertFromString(first_chunk, &first_index);
+  CHECK(ok) << "Must be index but: " << first_chunk;
   chunk_index_t second_index;
   ok = common::ConvertFromString(second_chunk, &second_index);
-  UNUSED(ok);
+  CHECK(ok) << "Must be index but: " << second_chunk;
   return first_index < second_index;
 }
 }  // namespace
@@ -64,6 +83,7 @@ bool TimeShiftInfo::FindChunkToPlay(time_t chunk_duration, chunk_index_t* index)
     return false;
   }
 
+  files = StableFindedFiles(files);
   std::sort(files.begin(), files.end(), compare_files);
   chunk_index_t prev_index = invalid_chunk_index;
   for (size_t i = 0; i < files.size(); ++i) {
@@ -105,6 +125,7 @@ bool TimeShiftInfo::FindLastChunk(chunk_index_t* index, time_t* file_created_tim
     return false;
   }
 
+  files = StableFindedFiles(files);
   std::sort(files.begin(), files.end(), compare_files);
   common::file_system::ascii_file_string_path last_file = files.back();
   common::file_system::get_file_time_last_modification(last_file.GetPath(), file_created_time);
