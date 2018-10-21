@@ -25,28 +25,17 @@
 
 #include "stypes.h"
 
-namespace {
-template <typename CharT, typename Traits>
-std::vector<common::file_system::FileStringPath<CharT, Traits>> StableFindedFiles(
-    const std::vector<common::file_system::FileStringPath<CharT, Traits>>& files) {
-  std::vector<common::file_system::FileStringPath<CharT, Traits>> result;
-  for (size_t i = 0; i < files.size(); ++i) {
-    std::string chunk = files[i].GetBaseFileName();
-
-    iptv_cloud::stream::chunk_index_t index;
-    if (common::ConvertFromString(chunk, &index)) {
-      result.push_back(files[i]);
-    }
-  }
-  return result;
-}
-
-}  // namespace
-
 namespace iptv_cloud {
 namespace stream {
 
 namespace {
+template <typename CharT, typename Traits>
+bool filter_files(const common::file_system::FileStringPath<CharT, Traits>& path) {
+  std::string file_name = path.GetBaseFileName();
+  chunk_index_t index;
+  return common::ConvertFromString(file_name, &index);
+}
+
 bool compare_files(const common::file_system::ascii_file_string_path& first,
                    const common::file_system::ascii_file_string_path& second) {  // should be 0.ts, 1.ts, 2.ts
   std::string first_chunk = first.GetBaseFileName();
@@ -78,8 +67,7 @@ bool TimeShiftInfo::FindChunkToPlay(time_t chunk_duration, chunk_index_t* index)
     CRITICAL_LOG() << "Folder with chunks doesn't exist: " << absolute_path;
   }
 
-  auto files = common::file_system::ScanFolder(timshift_dir, CHUNK_EXT, false);
-  files = StableFindedFiles(files);
+  auto files = common::file_system::ScanFolder(timshift_dir, CHUNK_EXT, false, &filter_files);
   if (files.empty()) {
     return false;
   }
@@ -120,8 +108,8 @@ bool TimeShiftInfo::FindLastChunk(chunk_index_t* index, time_t* file_created_tim
   if (!common::file_system::is_directory_exist(absolute_path)) {
     CRITICAL_LOG() << "Folder with chunks doesn't exist: " << absolute_path;
   }
-  auto files = common::file_system::ScanFolder(timshift_dir, CHUNK_EXT, false);
-  files = StableFindedFiles(files);
+
+  auto files = common::file_system::ScanFolder(timshift_dir, CHUNK_EXT, false, &filter_files);
   if (files.empty()) {
     return false;
   }
