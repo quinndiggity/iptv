@@ -14,6 +14,19 @@
 
 #include "utils/arg_converter.h"
 
+#include <string>
+
+namespace common {
+bool ConvertFromString(const std::string& from, std::string* out) {
+  if (!out) {
+    return false;
+  }
+
+  *out = from;
+  return true;
+}
+}  // namespace common
+
 namespace iptv_cloud {
 namespace utils {}  // namespace utils
 }  // namespace iptv_cloud

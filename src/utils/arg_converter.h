@@ -14,9 +14,15 @@
 
 #pragma once
 
+#include <string>
+
 #include <common/convert2string.h>
 
 #include "utils/arg_reader.h"
+
+namespace common {
+bool ConvertFromString(const std::string& from, std::string* out) WARN_UNUSED_RESULT;
+}
 
 namespace iptv_cloud {
 namespace utils {

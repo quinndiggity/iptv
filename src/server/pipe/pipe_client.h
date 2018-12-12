@@ -27,23 +27,22 @@ class PipeClient : public common::libev::IoClient {
   PipeClient(common::libev::IoLoop* server, descriptor_t read_fd, descriptor_t write_fd);
   virtual ~PipeClient();
 
-  virtual const char* ClassName() const override;
+  const char* ClassName() const override;
 
-  virtual common::ErrnoError Write(const void* data, size_t size, size_t* nwrite_out) override;
-  virtual common::ErrnoError Read(char* out, size_t max_size, size_t* nread) override;
-  virtual common::ErrnoError Read(unsigned char* out, size_t max_size, size_t* nread) override;
+  common::ErrnoError Write(const void* data, size_t size, size_t* nwrite_out) override;
+  common::ErrnoError Read(void* out, size_t max_size, size_t* nread) override;
 
  protected:
-  virtual descriptor_t GetFd() const override;
+  descriptor_t GetFd() const override;
 
  private:
-  virtual common::ErrnoError DoClose() override;
-
-  DISALLOW_COPY_AND_ASSIGN(PipeClient);
+  common::ErrnoError DoClose() override;
 
   common::libev::PipeReadClient* pipe_read_client_;
   common::libev::PipeWriteClient* pipe_write_client_;
   const descriptor_t read_fd_;
+
+  DISALLOW_COPY_AND_ASSIGN(PipeClient);
 };
 
 typedef protocol::ProtocolClient<PipeClient> ProtocoledPipeClient;

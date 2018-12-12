@@ -28,11 +28,7 @@ common::ErrnoError PipeClient::Write(const void* data, size_t size, size_t* nwri
   return pipe_write_client_->Write(data, size, nwrite_out);
 }
 
-common::ErrnoError PipeClient::Read(char* out, size_t max_size, size_t* nread) {
-  return pipe_read_client_->Read(out, max_size, nread);
-}
-
-common::ErrnoError PipeClient::Read(unsigned char* out, size_t max_size, size_t* nread) {
+common::ErrnoError PipeClient::Read(void* out, size_t max_size, size_t* nread) {
   return pipe_read_client_->Read(out, max_size, nread);
 }
 

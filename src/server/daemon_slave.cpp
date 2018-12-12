@@ -144,7 +144,7 @@ int main(int argc, char** argv, char** envp) {
   }
   std::string pid_str = common::MemSPrintf("%ld\n", static_cast<long>(daemon_pid));
   size_t writed;
-  err = pidfile.Write(pid_str, &writed);
+  err = pidfile.WriteBuffer(pid_str, &writed);
   if (err) {
     ERROR_LOG() << "Failed to write pid file path: " << PIDFILE_PATH << "; message: " << err->GetDescription();
     return EXIT_FAILURE;

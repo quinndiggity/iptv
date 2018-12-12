@@ -27,22 +27,22 @@ common::ErrnoError M3u8Writer::Open(const common::file_system::ascii_file_string
 
 common::ErrnoError M3u8Writer::WriteHeader(uint64_t first_index, size_t target_duration) {
   size_t writed;
-  return file_.Write(common::MemSPrintf("#EXTM3U\n#EXT-X-MEDIA-SEQUENCE:%llu\n#EXT-X-ALLOW-"
-                                        "CACHE:YES\n#EXT-X-VERSION:3\n#EXT-X-"
-                                        "TARGETDURATION:%llu\n",
-                                        first_index, target_duration),
-                     &writed);
+  return file_.WriteBuffer(common::MemSPrintf("#EXTM3U\n#EXT-X-MEDIA-SEQUENCE:%llu\n#EXT-X-ALLOW-"
+                                              "CACHE:YES\n#EXT-X-VERSION:3\n#EXT-X-"
+                                              "TARGETDURATION:%llu\n",
+                                              first_index, target_duration),
+                           &writed);
 }
 
 common::ErrnoError M3u8Writer::WriteLine(const ChunkInfo& chunk) {
   double ftime = chunk.GetDurationInSecconds();
   size_t writed;
-  return file_.Write(common::MemSPrintf("#EXTINF:%.2f,\n%s\n", ftime, chunk.path), &writed);
+  return file_.WriteBuffer(common::MemSPrintf("#EXTINF:%.2f,\n%s\n", ftime, chunk.path), &writed);
 }
 
 common::ErrnoError M3u8Writer::WriteFooter() {
   size_t writed;
-  return file_.Write("#EXT-X-ENDLIST", &writed);
+  return file_.WriteBuffer("#EXT-X-ENDLIST", &writed);
 }
 
 common::ErrnoError M3u8Writer::Close() {
