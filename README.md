@@ -2,7 +2,7 @@ About IPTV cloud
 ===============
 Free IPTV cloud server
 
-Visit our site: [www.fastogt.com](http://www.fastogt.com)
+Visit our site: [www.fastotv.com](http://www.fastotv.com)
 
 Contribute
 ==========
